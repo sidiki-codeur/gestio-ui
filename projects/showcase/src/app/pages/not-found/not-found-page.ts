@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { GestioButton } from '@gestiolabs/ui';
+import { GestioButton } from '@gestiolabs336/ui';
 import { PageHeader } from '../../shared/page-header';
 
 @Component({

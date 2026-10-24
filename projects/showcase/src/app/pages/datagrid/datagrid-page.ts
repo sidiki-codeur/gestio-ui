@@ -8,7 +8,7 @@ import {
   GestioDataGridColumn,
   GestioSort,
   GestioToastService,
-} from '@gestiolabs/ui';
+} from '@gestiolabs336/ui';
 import { ApiRow, ApiTable } from '../../shared/api-table';
 import { Example } from '../../shared/example';
 import { PageHeader } from '../../shared/page-header';

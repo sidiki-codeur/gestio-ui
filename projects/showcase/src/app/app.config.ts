@@ -1,6 +1,6 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
-import { provideGestioToast } from '@gestiolabs/ui';
+import { provideGestioToast } from '@gestiolabs336/ui';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {

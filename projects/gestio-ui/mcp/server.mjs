@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Serveur MCP (Model Context Protocol) de @gestiolabs/ui.
+ * Serveur MCP (Model Context Protocol) de @gestiolabs336/ui.
  *
  * Donne aux assistants IA la documentation exacte de la bibliothèque installée :
  * composants, entrées, exemples, pièges, guides et design tokens.
@@ -77,20 +77,29 @@ export function parseTokens(css) {
 const normalize = (text) => text.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 
 function findComponent(name) {
-  const key = normalize(String(name ?? '').trim()).replace(/^gestio-?/, '');
-  return catalog.components.find(
-    (c) =>
-      c.id === key ||
-      normalize(c.title) === key ||
-      c.exports.some((e) => normalize(e) === normalize(String(name))) ||
-      c.classes?.some((k) => normalize(k.selector).includes(key)),
-  );
+  const raw = normalize(String(name ?? '').trim());
+  const key = raw.replace(/^gestio-?/, '');
+  // Les correspondances exactes passent avant les correspondances partielles :
+  // « grid » doit désigner gestio-grid, pas gestio-datagrid.
+  const selectors = (c) =>
+    (c.classes ?? []).flatMap((k) => k.selector.split(',').map((s) => normalize(s.trim())));
+  const passes = [
+    (c) => c.id === key || normalize(c.title) === key,
+    (c) => c.exports.some((e) => normalize(e) === raw),
+    (c) => selectors(c).some((s) => s === raw || s === `gestio-${key}` || s === `[gestio${key}]`),
+    (c) => selectors(c).some((s) => s.includes(key)),
+  ];
+  for (const pass of passes) {
+    const match = catalog.components.find(pass);
+    if (match) return match;
+  }
+  return undefined;
 }
 
 function formatComponent(c) {
   const lines = [`# ${c.title} (${c.id})`, '', c.summary, ''];
   lines.push(
-    `Import : import { ${c.exports.filter((e) => /^[A-Z]/.test(e) && !/^Gestio\w*(Variant|Size|Type|Value|Appearance|Padding|Position)$/.test(e)).join(', ')} } from '@gestiolabs/ui';`,
+    `Import : import { ${c.exports.filter((e) => /^[A-Z]/.test(e) && !/^Gestio\w*(Variant|Size|Type|Value|Appearance|Padding|Position)$/.test(e)).join(', ')} } from '@gestiolabs336/ui';`,
   );
   if (c.classes?.length) {
     lines.push('', '## Sélecteurs');
@@ -191,7 +200,7 @@ const failure = (message) => ({ content: [{ type: 'text', text: message }], isEr
 const tools = [
   {
     name: 'get_setup_guide',
-    title: 'Mise en place de @gestiolabs/ui',
+    title: 'Mise en place de @gestiolabs336/ui',
     description:
       "Explique comment installer et configurer gestio-ui dans un projet Angular (thème CSS, imports, notifications, modales). À appeler avant d'utiliser la bibliothèque.",
     inputSchema: { type: 'object', properties: {}, additionalProperties: false },
@@ -207,7 +216,7 @@ const tools = [
     name: 'list_components',
     title: 'Lister les composants',
     description:
-      'Liste les composants et services de @gestiolabs/ui avec leur sélecteur et un résumé.',
+      'Liste les composants et services de @gestiolabs336/ui avec leur sélecteur et un résumé.',
     inputSchema: { type: 'object', properties: {}, additionalProperties: false },
     annotations: { readOnlyHint: true },
     run: () =>
@@ -263,7 +272,7 @@ const tools = [
     name: 'search_docs',
     title: 'Rechercher dans la documentation',
     description:
-      'Recherche plein texte dans la documentation des composants et les guides de @gestiolabs/ui.',
+      'Recherche plein texte dans la documentation des composants et les guides de @gestiolabs336/ui.',
     inputSchema: {
       type: 'object',
       properties: {

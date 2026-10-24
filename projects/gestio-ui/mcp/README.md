@@ -1,8 +1,8 @@
-# Serveur MCP de @gestiolabs/ui
+# Serveur MCP de @gestiolabs336/ui
 
 Ce serveur [Model Context Protocol](https://modelcontextprotocol.io) donne aux assistants IA
 (Claude Code, Cursor, VS Code / Copilot, Windsurf…) la documentation exacte de la version de
-`@gestiolabs/ui` installée dans le projet : composants, entrées, exemples, pièges, guides et design
+`@gestiolabs336/ui` installée dans le projet : composants, entrées, exemples, pièges, guides et design
 tokens. L'assistant n'a donc pas à deviner l'API.
 
 Il est livré avec la bibliothèque : aucune installation supplémentaire et aucune dépendance.
@@ -10,7 +10,7 @@ Il fonctionne hors ligne (transport stdio) et n'accède qu'aux fichiers du paque
 
 ## Configuration
 
-Une fois `@gestiolabs/ui` installé dans le projet, la commande `npx gestio-ui-mcp` lance le serveur.
+Une fois `@gestiolabs336/ui` installé dans le projet, la commande `npx gestio-ui-mcp` lance le serveur.
 
 **Claude Code** : `.mcp.json` à la racine du projet (ou `claude mcp add gestio-ui -- npx gestio-ui-mcp`) :
 
@@ -34,7 +34,7 @@ Une fois `@gestiolabs/ui` installé dans le projet, la commande `npx gestio-ui-m
 
 **Cursor** (`.cursor/mcp.json`) : même format que Claude Code.
 
-Sans `npx` : `node node_modules/@gestiolabs/ui/mcp/server.mjs`.
+Sans `npx` : `node node_modules/@gestiolabs336/ui/mcp/server.mjs`.
 
 ## Outils exposés
 

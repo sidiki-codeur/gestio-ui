@@ -25,7 +25,7 @@ import {
   GestioSelectOption,
   GestioTextarea,
   GestioToastService,
-} from '@gestiolabs/ui';
+} from '@gestiolabs336/ui';
 import { CodeBlock } from '../../shared/code-block';
 import { PageHeader } from '../../shared/page-header';
 

@@ -15,7 +15,7 @@ d’administration, accompagnée d’un catalogue interactif (showcase).
 ```
 projects/
   gestio-ui/                    Bibliothèque (ng-packagr)
-    src/public-api.ts           API publique : tout import passe par « @gestiolabs/ui »
+    src/public-api.ts           API publique : tout import passe par « @gestiolabs336/ui »
     src/styles/gestio-ui.css    Thème : tokens, modes clair / sombre / système, styles d’overlay
     src/lib/
       core/                     Utilitaires internes (identifiants, types, styles de champ partagés)
@@ -60,7 +60,7 @@ npm run serve:showcase
 
 ### 1. Dépendances
 
-`@gestiolabs/ui` déclare en `peerDependencies` : `@angular/core`, `@angular/common`, `@angular/forms`
+`@gestiolabs336/ui` déclare en `peerDependencies` : `@angular/core`, `@angular/common`, `@angular/forms`
 et `@angular/cdk` (^22.2).
 
 ### 2. Importer le thème
@@ -70,12 +70,12 @@ Le fichier `styles/gestio-ui.css` est copié dans le paquet et exposé dans `exp
 
 ```json
 "styles": [
-  "node_modules/@gestiolabs/ui/styles/gestio-ui.css",
+  "node_modules/@gestiolabs336/ui/styles/gestio-ui.css",
   "src/styles.css"
 ]
 ```
 
-ou, dans une feuille de styles globale : `@import '@gestiolabs/ui/styles/gestio-ui.css';`
+ou, dans une feuille de styles globale : `@import '@gestiolabs336/ui/styles/gestio-ui.css';`
 
 Dans ce workspace, le showcase référence directement `dist/gestio-ui/styles/gestio-ui.css`.
 
@@ -93,7 +93,7 @@ Placez l’attribut sur `<html>` : les modales et notifications, rendues dans `<
 ### 4. Composants
 
 ```ts
-import { GestioButton, GestioInput, GestioSelect, GestioSelectOption } from '@gestiolabs/ui';
+import { GestioButton, GestioInput, GestioSelect, GestioSelectOption } from '@gestiolabs336/ui';
 
 @Component({
   imports: [ReactiveFormsModule, GestioButton, GestioInput, GestioSelect],
@@ -320,9 +320,9 @@ Familles de tokens : couleurs (`--gestio-color-*`), typographie (`--gestio-font-
 - Sélecteur natif uniquement : pas de recherche, de sélection multiple ni de groupes d’options.
 - Pas de combobox, date picker, menu déroulant ni infobulle.
 - Taille du bundle : la bibliothèque est un seul module ESM ; le code de tous les composants
-  utilisés par l’application se retrouve dans le chunk qui importe `@gestiolabs/ui` en premier
+  utilisés par l’application se retrouve dans le chunk qui importe `@gestiolabs336/ui` en premier
   (souvent le chunk initial). Le showcase dépasse ainsi l’avertissement de budget (≈ 515 kB pour
-  500 kB). Correctif prévu : points d’entrée secondaires (`@gestiolabs/ui/datagrid`…).
+  500 kB). Correctif prévu : points d’entrée secondaires (`@gestiolabs336/ui/datagrid`…).
 - `gestioGridSpan` supérieur au nombre de colonnes crée des colonnes implicites.
 - Datagrid : traitements côté client uniquement ; pas de navigation cellule par cellule (motif
   ARIA grid), d’édition en ligne, de colonnes redimensionnables ni de défilement virtuel.

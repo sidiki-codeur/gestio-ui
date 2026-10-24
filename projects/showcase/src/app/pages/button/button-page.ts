@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { GestioButton, GestioButtonVariant } from '@gestiolabs/ui';
+import { GestioButton, GestioButtonVariant } from '@gestiolabs336/ui';
 import { ApiRow, ApiTable } from '../../shared/api-table';
 import { Example } from '../../shared/example';
 import { PageHeader } from '../../shared/page-header';

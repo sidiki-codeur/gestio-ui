@@ -1,4 +1,4 @@
-# @gestiolabs/ui
+# @gestiolabs336/ui
 
 Composants Angular 22 sobres et accessibles pour les tableaux de bord, logiciels de gestion et
 interfaces d’administration.
@@ -11,7 +11,7 @@ interfaces d’administration.
 ## Installation
 
 ```bash
-npm install @gestiolabs/ui @angular/cdk
+npm install @gestiolabs336/ui @angular/cdk
 ```
 
 Dépendances pairs : `@angular/core`, `@angular/common`, `@angular/forms`, `@angular/cdk` (^22.2).
@@ -19,7 +19,7 @@ Dépendances pairs : `@angular/core`, `@angular/common`, `@angular/forms`, `@ang
 Importez le thème dans `angular.json`, avant vos propres styles :
 
 ```json
-"styles": ["node_modules/@gestiolabs/ui/styles/gestio-ui.css", "src/styles.css"]
+"styles": ["node_modules/@gestiolabs336/ui/styles/gestio-ui.css", "src/styles.css"]
 ```
 
 Thème sombre : `<html data-gestio-theme="dark">` (ou `"system"` pour suivre le système).
@@ -27,7 +27,7 @@ Thème sombre : `<html data-gestio-theme="dark">` (ou `"system"` pour suivre le 
 ## Utilisation
 
 ```ts
-import { GestioButton, GestioInput } from '@gestiolabs/ui';
+import { GestioButton, GestioInput } from '@gestiolabs336/ui';
 
 @Component({
   imports: [ReactiveFormsModule, GestioButton, GestioInput],

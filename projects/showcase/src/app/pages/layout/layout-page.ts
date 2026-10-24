@@ -11,7 +11,7 @@ import {
   GestioInput,
   GestioStack,
   GestioTextarea,
-} from '@gestiolabs/ui';
+} from '@gestiolabs336/ui';
 import { ApiRow, ApiTable } from '../../shared/api-table';
 import { CodeBlock } from '../../shared/code-block';
 import { Example } from '../../shared/example';

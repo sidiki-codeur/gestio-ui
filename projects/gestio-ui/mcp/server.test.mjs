@@ -61,6 +61,28 @@ test('initialisation, outils et ressources', async () => {
   assert.ok(resources.result.resources.some((r) => r.uri === 'gestio-ui://components/button'));
 });
 
+test('get_component privilégie la correspondance exacte', async () => {
+  const cases = {
+    grid: '# Grille (grid)',
+    'gestio-grid': '# Grille (grid)',
+    datagrid: '# Datagrid (datagrid)',
+    'gestio-table-container': '# Tableau (table)',
+    table: '# Tableau (table)',
+    GestioGridItem: '# Grille (grid)',
+    'gestio-tab': '# Onglets (tabs)',
+    'app-shell': "# Coque d'application (app-shell)",
+  };
+  const names = Object.keys(cases);
+  const responses = await session([
+    init,
+    ...names.map((name, i) => call(i + 2, 'get_component', { name })),
+  ]);
+  names.forEach((name, i) => {
+    const title = responses[i + 1].result.content[0].text.split('\n')[0];
+    assert.equal(title, cases[name], `get_component("${name}")`);
+  });
+});
+
 test('get_component retrouve un composant par id, classe ou sélecteur', async () => {
   const responses = await session([
     init,

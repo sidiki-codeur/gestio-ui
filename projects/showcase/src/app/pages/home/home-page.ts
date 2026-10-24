@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { GestioBadge, GestioButton, GestioCard } from '@gestiolabs/ui';
+import { GestioBadge, GestioButton, GestioCard } from '@gestiolabs336/ui';
 import { CodeBlock } from '../../shared/code-block';
 import { PageHeader } from '../../shared/page-header';
 
@@ -39,7 +39,7 @@ import { PageHeader } from '../../shared/page-header';
       <h2 id="home-install">Mise en place</h2>
       <p>
         Dans ce workspace, la bibliothèque est compilée dans <code>dist/gestio-ui</code> et
-        consommée par le showcase via l’alias TypeScript <code>@gestiolabs/ui</code>.
+        consommée par le showcase via l’alias TypeScript <code>@gestiolabs336/ui</code>.
       </p>
       <div class="sc-stack">
         <sc-code-block language="bash" [code]="buildCode" />
@@ -115,11 +115,11 @@ npm start`;
 
   protected readonly stylesCode = `// angular.json de l'application hôte
 "styles": [
-  "node_modules/@gestiolabs/ui/styles/gestio-ui.css",
+  "node_modules/@gestiolabs336/ui/styles/gestio-ui.css",
   "src/styles.css"
 ]`;
 
-  protected readonly importCode = `import { GestioButton, GestioInput } from '@gestiolabs/ui';
+  protected readonly importCode = `import { GestioButton, GestioInput } from '@gestiolabs336/ui';
 
 @Component({
   imports: [GestioButton, GestioInput],
