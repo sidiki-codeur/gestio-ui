@@ -1,0 +1,1541 @@
+{
+  "library": "@gestiolabs/ui",
+  "summary": "Bibliothèque de composants Angular 22 (standalone, signaux, OnPush, zoneless) pour tableaux de bord, logiciels de gestion et interfaces d'administration. Tous les imports se font depuis '@gestiolabs/ui' (installation : npm install @gestiolabs/ui @angular/cdk).",
+  "guides": [
+    {
+      "id": "setup",
+      "title": "Installation et mise en place",
+      "content": "1. Installation : npm install @gestiolabs/ui (et @angular/cdk si absent). Dépendances pairs : @angular/core, @angular/common, @angular/forms et @angular/cdk (^22.2). Installer @angular/cdk si absent : npm install @angular/cdk@^22.2\n\n2. Importer le thème (obligatoire, sinon les composants n'ont ni couleurs ni espacements). Dans angular.json > projects > <app> > architect > build > options > styles, AVANT les styles de l'application :\n\"styles\": [\"node_modules/@gestiolabs/ui/styles/gestio-ui.css\", \"src/styles.css\"]\nAlternative dans une feuille globale : @import '@gestiolabs/ui/styles/gestio-ui.css';\n\n3. Importer chaque composant dans le tableau `imports` du composant standalone qui l'utilise :\nimport { GestioButton, GestioInput } from '@gestiolabs/ui';\n@Component({ imports: [GestioButton, GestioInput], ... })\n\n4. Notifications (si utilisées) : placer <gestio-toaster /> UNE seule fois dans le template du composant racine, et éventuellement provideGestioToast({...}) dans app.config.ts.\n\n5. Modales : aucune configuration globale. Injecter GestioDialogService.\n\nLe thème ne stylise aucun élément HTML de l'application : définir soi-même body { background: var(--gestio-color-background); color: var(--gestio-color-text); font-family: var(--gestio-font-sans); } si souhaité."
+    },
+    {
+      "id": "theming",
+      "title": "Thèmes et personnalisation",
+      "content": "Thème clair par défaut. Thème sombre : <html data-gestio-theme=\"dark\">. Suivre le système : <html data-gestio-theme=\"system\">. Toujours poser l'attribut sur <html> pour que les modales et notifications (rendues dans <body>) en héritent.\n\nBascule en TypeScript (compatible SSR) :\nprivate readonly document = inject(DOCUMENT);\nsetDark(dark: boolean) { this.document.documentElement.setAttribute('data-gestio-theme', dark ? 'dark' : 'light'); }\n\nPersonnalisation : surcharger les variables --gestio-* dans une feuille chargée APRÈS gestio-ui.css :\n:root { --gestio-color-primary: #0f766e; --gestio-color-primary-hover: #115e59; --gestio-color-primary-active: #134e4a; --gestio-color-primary-subtle: #f0fdfa; --gestio-color-primary-subtle-hover: #ccfbf1; --gestio-color-primary-text: #115e59; --gestio-color-primary-border: #99f6e4; --gestio-color-focus-ring: #14b8a6; }\n[data-gestio-theme='dark'] { --gestio-color-primary: #2dd4bf; }\nChanger la couleur principale implique de surcharger toute la famille --gestio-color-primary-* et de vérifier le contraste WCAG AA. Utiliser l'outil list_design_tokens pour la liste exacte. Dans les styles de l'application, réutiliser les tokens (var(--gestio-space-4), var(--gestio-radius-md)…) plutôt que des valeurs en dur."
+    },
+    {
+      "id": "responsive",
+      "title": "Mise en page responsive",
+      "content": "Points de rupture (largeur minimale) : sm 640 px, md 768 px, lg 1024 px, xl 1280 px (constante GESTIO_BREAKPOINTS). Approche mobile first.\n\nValeurs responsives (type GestioResponsive<T>) : une valeur fixe (ex. [columns]=\"3\") ou un objet par point de rupture (ex. [columns]=\"{ base: 1, md: 2, xl: 4 }\") ; chaque point hérite du précédent.\n\ngestio-grid et gestio-stack réagissent à la largeur de LEUR CONTENEUR (container queries), pas à celle de l'écran : une grille { base: 1, md: 2 } dans une carte de 500 px reste sur 1 colonne même sur grand écran. gestio-app-shell et le service GestioBreakpoints réagissent à la largeur de la fenêtre.\n\nChoix rapide :\n- page complète d'application (en-tête + menu latéral) : gestio-app-shell ;\n- largeur maximale centrée avec marges : gestio-container ;\n- éléments empilés ou en ligne, avec espacement : gestio-stack ;\n- cartes, indicateurs, champs de formulaire en colonnes : gestio-grid ;\n- logique TypeScript selon l'écran : inject(GestioBreakpoints).md() etc.\n\nEspacements (type GestioSpace) : 0, 1, 2, 3, 4, 5, 6, 8, 10, 12 → var(--gestio-space-N).\n\nTableau de bord type :\n<gestio-container>\n  <gestio-stack [gap]=\"6\">\n    <gestio-stack [direction]=\"{ base: 'column', md: 'row' }\" justify=\"between\" align=\"center\">\n      <h1>Tableau de bord</h1>\n      <button gestioButton>Nouvelle facture</button>\n    </gestio-stack>\n    <gestio-grid [columns]=\"{ base: 1, sm: 2, lg: 4 }\">…4 indicateurs…</gestio-grid>\n    <gestio-grid [columns]=\"{ base: 1, lg: 3 }\">\n      <gestio-card [gestioGridSpan]=\"{ base: 1, lg: 2 }\">…</gestio-card>\n      <gestio-card>…</gestio-card>\n    </gestio-grid>\n  </gestio-stack>\n</gestio-container>"
+    },
+    {
+      "id": "forms",
+      "title": "Formulaires (Reactive Forms)",
+      "content": "gestio-input, gestio-textarea, gestio-checkbox et gestio-select implémentent ControlValueAccessor : utiliser formControlName, [formControl] ou [(ngModel)] directement sur le composant. Importer ReactiveFormsModule dans le composant hôte.\n\nTypes de valeurs : gestio-input renvoie string, sauf type=\"number\" qui renvoie number | null ; gestio-textarea renvoie string ; gestio-checkbox renvoie boolean ; gestio-select renvoie la valeur typée de l'option (string ou number) ou null.\n\nLes composants n'affichent PAS automatiquement les erreurs de validation : l'application calcule le message et le passe à l'entrée [error] (string | null). Passer `required` en plus de Validators.required pour l'astérisque et l'attribut natif.\n\nModèle recommandé :\nsubmitted = signal(false);\nerrorFor(control: AbstractControl, messages: Record<string, string>): string | null {\n  if (!control.errors || !(control.touched || this.submitted())) return null;\n  const key = Object.keys(messages).find((k) => control.hasError(k));\n  return key ? messages[key] : null;\n}\n<gestio-input label=\"E-mail\" type=\"email\" formControlName=\"email\" required [error]=\"errorFor(form.controls.email, { required: 'Saisissez une adresse e-mail.', email: 'Adresse invalide.' })\" />\n\nPour désactiver un champ lié à un formulaire, utiliser control.disable() plutôt que [disabled]. Validators.requiredTrue sur une case à cocher produit l'erreur 'required'."
+    },
+    {
+      "id": "accessibility",
+      "title": "Règles d'accessibilité",
+      "content": "- Chaque champ a besoin d'un label (entrée `label`) ou, à défaut, de `ariaLabel`. Le placeholder ne remplace jamais le label.\n- Un bouton contenant seulement une icône doit avoir aria-label ; l'icône SVG porte aria-hidden=\"true\".\n- Utiliser <button gestioButton> pour une action et <a gestioButton href> pour une navigation.\n- Le badge ne doit pas porter l'information par la couleur seule : libellé explicite.\n- gestio-tabs : renseigner ariaLabel pour nommer la liste d'onglets.\n- Modales : utiliser <gestio-dialog title=\"…\"> dans le contenu (nom accessible automatique) ou passer ariaLabel dans la configuration. L'attribut cdkFocusInitial choisit l'élément focalisé à l'ouverture.\n- Les notifications ne prennent jamais le focus : ne pas y mettre d'action critique.\n- Les composants respectent prefers-reduced-motion et le mode de contraste forcé."
+    },
+    {
+      "id": "ssr",
+      "title": "SSR et contraintes",
+      "content": "La bibliothèque n'accède pas directement à window, document ni localStorage. GestioToastService est fourni à la racine de l'application (une instance par requête SSR) et ne crée ses minuteurs que dans le navigateur. Dans le code applicatif, utiliser DOCUMENT, isPlatformBrowser ou afterNextRender pour les accès au DOM."
+    },
+    {
+      "id": "limits",
+      "title": "Limites de la version actuelle",
+      "content": "Non disponible (ne pas inventer d'API) : édition en ligne, colonnes redimensionnables ou défilement virtuel dans la datagrid, combobox avec recherche, sélection multiple, groupes d'options, date picker, menu déroulant, infobulle, popover, pagination, avatar, spinner autonome, accordéon, drawer. gestio-select est un <select> natif. Les notifications au-delà de maxVisible retirent les plus anciennes (pas de file d'attente). Pas d'intégration directe Signal Forms. Libellés internes en français, surchargeables par entrées (closeLabel, loadingLabel, showPasswordLabel…). Il n'existe pas de NgModule : importer les composants standalone individuellement."
+    }
+  ],
+  "components": [
+    {
+      "id": "button",
+      "title": "Bouton",
+      "kind": "component",
+      "exports": ["GestioButton", "GestioButtonVariant", "GestioButtonSize", "GestioButtonType"],
+      "classes": [
+        {
+          "class": "GestioButton",
+          "selector": "button[gestioButton], a[gestioButton]"
+        }
+      ],
+      "summary": "Composant à sélecteur d'attribut appliqué sur un <button> ou un <a> natif. Garde le comportement natif (clavier, soumission, navigation).",
+      "inputs": [
+        {
+          "name": "variant",
+          "type": "'primary' | 'secondary' | 'outline' | 'ghost' | 'danger'",
+          "default": "'primary'",
+          "description": "Style visuel. danger pour une action destructrice."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "'md'",
+          "description": "Hauteur 32, 40 ou 48 px."
+        },
+        {
+          "name": "type",
+          "type": "'button' | 'submit' | 'reset'",
+          "default": "'button'",
+          "description": "Type natif. Mettre type=\"submit\" explicitement pour soumettre un formulaire."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Désactive (attribut natif sur button ; aria-disabled + tabindex -1 sur un lien)."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "description": "Indicateur de chargement, aria-busy, bloque clics et soumission, garde la largeur et le focus."
+        },
+        {
+          "name": "fullWidth",
+          "type": "boolean",
+          "default": "false",
+          "description": "Occupe toute la largeur."
+        },
+        {
+          "name": "loadingLabel",
+          "type": "string",
+          "default": "'Chargement en cours'",
+          "description": "Texte annoncé pendant le chargement."
+        }
+      ],
+      "outputs": [],
+      "slots": [
+        {
+          "selector": "[gestioButtonIcon]",
+          "description": "Icône avant le libellé (ex. <svg gestioButtonIcon aria-hidden=\"true\">)."
+        },
+        {
+          "selector": "[gestioButtonIconEnd]",
+          "description": "Icône après le libellé."
+        },
+        {
+          "selector": "(défaut)",
+          "description": "Libellé."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Variantes",
+          "code": "<button gestioButton variant=\"primary\">Enregistrer</button>\n<button gestioButton variant=\"outline\">Annuler</button>\n<button gestioButton variant=\"danger\">Supprimer</button>"
+        },
+        {
+          "title": "Soumission avec chargement",
+          "code": "<button gestioButton type=\"submit\" [loading]=\"saving()\">Créer le client</button>"
+        },
+        {
+          "title": "Lien et icône seule",
+          "code": "<a gestioButton variant=\"ghost\" routerLink=\"/aide\">Aide</a>\n<button gestioButton variant=\"outline\" aria-label=\"Paramètres\">\n  <svg gestioButtonIcon aria-hidden=\"true\" width=\"16\" height=\"16\">…</svg>\n</button>"
+        }
+      ],
+      "pitfalls": [
+        "Ne pas écrire <gestio-button> : ce sélecteur n'existe pas. Utiliser <button gestioButton>.",
+        "type vaut 'button' par défaut : un bouton de formulaire doit avoir type=\"submit\".",
+        "Pendant loading, l'écouteur (click) de l'application n'est pas appelé."
+      ]
+    },
+    {
+      "id": "input",
+      "title": "Champ de saisie",
+      "kind": "component",
+      "exports": ["GestioInput", "GestioInputType", "GestioInputSize", "GestioInputValue"],
+      "classes": [
+        {
+          "class": "GestioInput",
+          "selector": "gestio-input"
+        }
+      ],
+      "summary": "Champ texte avec label, aide, erreur, préfixe/suffixe et bouton afficher/masquer pour les mots de passe. ControlValueAccessor.",
+      "forms": "ControlValueAccessor. Valeur : string ; number | null si type=\"number\".",
+      "inputs": [
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Libellé visible relié au champ."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Nom accessible si pas de label visible."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "description": "Texte indicatif."
+        },
+        {
+          "name": "hint",
+          "type": "string",
+          "description": "Aide sous le champ (aria-describedby)."
+        },
+        {
+          "name": "error",
+          "type": "string | null",
+          "description": "Message d'erreur ; active aria-invalid et le style d'erreur."
+        },
+        {
+          "name": "type",
+          "type": "'text' | 'email' | 'password' | 'tel' | 'number'",
+          "default": "'text'",
+          "description": "Type natif."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "'md'",
+          "description": "Hauteur."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Désactive (cumulé avec l'état du FormControl)."
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "default": "false",
+          "description": "Lecture seule."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "Astérisque visuel et attribut natif required."
+        },
+        {
+          "name": "inputId",
+          "type": "string",
+          "description": "id du <input> natif (généré sinon). Utile pour des liens d'ancrage vers le champ."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Attribut natif name."
+        },
+        {
+          "name": "autocomplete",
+          "type": "string",
+          "description": "Attribut natif autocomplete."
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "description": "Attribut natif min."
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "description": "Attribut natif max."
+        },
+        {
+          "name": "step",
+          "type": "number",
+          "description": "Attribut natif step."
+        },
+        {
+          "name": "maxlength",
+          "type": "number",
+          "description": "Attribut natif maxlength."
+        },
+        {
+          "name": "showPasswordLabel",
+          "type": "string",
+          "default": "'Afficher le mot de passe'",
+          "description": "Libellé du bouton de visibilité."
+        },
+        {
+          "name": "hidePasswordLabel",
+          "type": "string",
+          "default": "'Masquer le mot de passe'",
+          "description": "Libellé du bouton de visibilité."
+        }
+      ],
+      "outputs": [],
+      "slots": [
+        {
+          "selector": "[gestioPrefix]",
+          "description": "Contenu avant le texte (unité, icône, https://)."
+        },
+        {
+          "selector": "[gestioSuffix]",
+          "description": "Contenu après le texte (€, %, icône)."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Avec Reactive Forms",
+          "code": "<gestio-input label=\"Raison sociale\" formControlName=\"name\" required hint=\"Telle qu'elle figure sur le Kbis.\" [error]=\"nameError()\" />"
+        },
+        {
+          "title": "Nombre et suffixe",
+          "code": "<gestio-input label=\"Montant HT\" type=\"number\" [min]=\"0\" formControlName=\"amount\">\n  <span gestioSuffix>€</span>\n</gestio-input>"
+        },
+        {
+          "title": "Recherche sans label visible",
+          "code": "<gestio-input ariaLabel=\"Rechercher un client\" placeholder=\"Rechercher un client\">\n  <svg gestioPrefix aria-hidden=\"true\" width=\"16\" height=\"16\">…</svg>\n</gestio-input>"
+        }
+      ],
+      "pitfalls": [
+        "Pas d'entrée `value` ni d'événement `valueChange` : passer par un FormControl ou ngModel.",
+        "Ne pas mettre `id` sur <gestio-input> (dupliquerait l'id) : utiliser inputId.",
+        "Les erreurs de validation ne s'affichent que via [error]."
+      ]
+    },
+    {
+      "id": "textarea",
+      "title": "Zone de texte",
+      "kind": "component",
+      "exports": ["GestioTextarea"],
+      "classes": [
+        {
+          "class": "GestioTextarea",
+          "selector": "gestio-textarea"
+        }
+      ],
+      "summary": "Saisie multiligne avec label, aide, erreur et compteur facultatif. ControlValueAccessor (string).",
+      "forms": "ControlValueAccessor. Valeur : string.",
+      "inputs": [
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Libellé visible."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Nom accessible sans label."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "description": "Texte indicatif."
+        },
+        {
+          "name": "hint",
+          "type": "string",
+          "description": "Aide."
+        },
+        {
+          "name": "error",
+          "type": "string | null",
+          "description": "Message d'erreur."
+        },
+        {
+          "name": "rows",
+          "type": "number",
+          "default": "4",
+          "description": "Lignes visibles."
+        },
+        {
+          "name": "maxlength",
+          "type": "number",
+          "description": "Longueur maximale native."
+        },
+        {
+          "name": "showCount",
+          "type": "boolean",
+          "default": "false",
+          "description": "Compteur « n / max caractères »."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Désactive."
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "default": "false",
+          "description": "Lecture seule."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "Obligatoire."
+        },
+        {
+          "name": "textareaId",
+          "type": "string",
+          "description": "id du <textarea> natif."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Attribut name."
+        }
+      ],
+      "outputs": [],
+      "slots": [],
+      "examples": [
+        {
+          "title": "Note avec compteur",
+          "code": "<gestio-textarea label=\"Note interne\" [rows]=\"3\" [maxlength]=\"300\" showCount formControlName=\"notes\" />"
+        }
+      ],
+      "pitfalls": ["maxlength attend un nombre : [maxlength]=\"300\"."]
+    },
+    {
+      "id": "checkbox",
+      "title": "Case à cocher",
+      "kind": "component",
+      "exports": ["GestioCheckbox"],
+      "classes": [
+        {
+          "class": "GestioCheckbox",
+          "selector": "gestio-checkbox"
+        }
+      ],
+      "summary": "Case à cocher native avec label, description, erreur et état indéterminé. ControlValueAccessor (boolean) ou [(checked)].",
+      "forms": "ControlValueAccessor. Valeur : boolean.",
+      "inputs": [
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Libellé (le contenu projeté s'y ajoute)."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "Texte secondaire (aria-describedby)."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Nom accessible sans libellé visible (case seule, ex. sélection de ligne)."
+        },
+        {
+          "name": "error",
+          "type": "string | null",
+          "description": "Message d'erreur."
+        },
+        {
+          "name": "checked",
+          "type": "model<boolean>",
+          "default": "false",
+          "description": "État coché ; [(checked)] hors formulaire."
+        },
+        {
+          "name": "indeterminate",
+          "type": "model<boolean>",
+          "default": "false",
+          "description": "État mixte, remis à false au premier clic."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Désactive."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "Obligatoire."
+        },
+        {
+          "name": "checkboxId",
+          "type": "string",
+          "description": "id de l'input natif."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Attribut name."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "Attribut value natif (n'est pas la valeur du formulaire)."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "checkedChange",
+          "type": "boolean",
+          "description": "Émis par le model checked."
+        },
+        {
+          "name": "indeterminateChange",
+          "type": "boolean",
+          "description": "Émis par le model indeterminate."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "Contenu ajouté au libellé (ex. lien vers les CGV)."
+        }
+      ],
+      "examples": [
+        {
+          "title": "CGV obligatoires",
+          "code": "<gestio-checkbox label=\"J'accepte les conditions générales\" formControlName=\"terms\" required [error]=\"termsError()\" />\n// terms: new FormControl(false, { nonNullable: true, validators: [Validators.requiredTrue] })"
+        },
+        {
+          "title": "Tout sélectionner",
+          "code": "<gestio-checkbox label=\"Tout sélectionner\" [checked]=\"all()\" [indeterminate]=\"some()\" (checkedChange)=\"toggleAll($event)\" />"
+        }
+      ],
+      "pitfalls": ["Validators.requiredTrue produit l'erreur 'required'."]
+    },
+    {
+      "id": "select",
+      "title": "Sélecteur",
+      "kind": "component",
+      "exports": ["GestioSelect", "GestioSelectOption", "GestioSelectValue", "GestioSelectSize"],
+      "classes": [
+        {
+          "class": "GestioSelect",
+          "selector": "gestio-select"
+        }
+      ],
+      "summary": "<select> natif stylisé. Options typées ; le type string/number de la valeur est préservé. ControlValueAccessor.",
+      "forms": "ControlValueAccessor. Valeur : T | null où T = string | number (type de option.value).",
+      "inputs": [
+        {
+          "name": "options",
+          "type": "readonly GestioSelectOption<T>[]",
+          "default": "[]",
+          "description": "Options { label: string; value: T; disabled?: boolean }."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "description": "Option vide initiale correspondant à null."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Libellé visible."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Nom accessible sans label."
+        },
+        {
+          "name": "hint",
+          "type": "string",
+          "description": "Aide."
+        },
+        {
+          "name": "error",
+          "type": "string | null",
+          "description": "Message d'erreur."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "'md'",
+          "description": "Hauteur."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Désactive."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "Obligatoire."
+        },
+        {
+          "name": "selectId",
+          "type": "string",
+          "description": "id du <select> natif."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Attribut name."
+        }
+      ],
+      "outputs": [],
+      "slots": [],
+      "examples": [
+        {
+          "title": "Valeurs numériques",
+          "code": "delays: GestioSelectOption<number>[] = [\n  { label: 'À réception', value: 0 },\n  { label: '30 jours', value: 30 },\n];\ndelay = new FormControl<number | null>(30);\n\n<gestio-select label=\"Délai de paiement\" placeholder=\"Choisir\" [options]=\"delays\" [formControl]=\"delay\" />"
+        }
+      ],
+      "pitfalls": [
+        "Ne pas projeter d'<option> : passer les options via [options].",
+        "Pas de recherche ni de sélection multiple (select natif)."
+      ]
+    },
+    {
+      "id": "card",
+      "title": "Carte",
+      "kind": "component",
+      "exports": [
+        "GestioCard",
+        "GestioCardActions",
+        "GestioCardFooter",
+        "GESTIO_CARD_IMPORTS",
+        "GestioCardVariant",
+        "GestioCardPadding"
+      ],
+      "classes": [
+        {
+          "class": "GestioCard",
+          "selector": "gestio-card"
+        },
+        {
+          "class": "GestioCardActions",
+          "selector": "[gestioCardActions]"
+        },
+        {
+          "class": "GestioCardFooter",
+          "selector": "[gestioCardFooter]"
+        }
+      ],
+      "summary": "Conteneur sans sémantique interactive, avec zones d'en-tête, d'actions, de contenu et de pied.",
+      "inputs": [
+        {
+          "name": "variant",
+          "type": "'bordered' | 'elevated' | 'flat'",
+          "default": "'bordered'",
+          "description": "Bordure, ombre ou fond atténué."
+        },
+        {
+          "name": "padding",
+          "type": "'none' | 'sm' | 'md' | 'lg'",
+          "default": "'md'",
+          "description": "Espacement intérieur."
+        }
+      ],
+      "outputs": [],
+      "slots": [
+        {
+          "selector": "[gestioCardHeader]",
+          "description": "En-tête (simple attribut)."
+        },
+        {
+          "selector": "[gestioCardActions]",
+          "description": "Actions à droite de l'en-tête (composant GestioCardActions)."
+        },
+        {
+          "selector": "(défaut)",
+          "description": "Contenu."
+        },
+        {
+          "selector": "[gestioCardFooter]",
+          "description": "Pied aligné à droite (composant GestioCardFooter)."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Carte complète",
+          "code": "// imports: [GESTIO_CARD_IMPORTS, GestioBadge, GestioButton]\n<gestio-card>\n  <div gestioCardHeader><h3>Atelier Moreau SARL</h3></div>\n  <div gestioCardActions><gestio-badge variant=\"success\" dot>À jour</gestio-badge></div>\n  <p>Dernière facture réglée le 12 octobre.</p>\n  <div gestioCardFooter>\n    <button gestioButton variant=\"ghost\" size=\"sm\">Historique</button>\n    <button gestioButton size=\"sm\">Nouvelle facture</button>\n  </div>\n</gestio-card>"
+        }
+      ],
+      "pitfalls": [
+        "Importer GESTIO_CARD_IMPORTS (ou GestioCardActions/GestioCardFooter), sinon les boutons des zones ne sont pas espacés.",
+        "gestioCardActions et gestioCardFooter sont des composants : les poser sur un <div>, jamais sur un autre composant (<gestio-badge gestioCardActions> provoque une erreur).",
+        "Pour une carte cliquable, mettre un lien ou un bouton à l'intérieur ; ne pas ajouter (click) sur gestio-card."
+      ]
+    },
+    {
+      "id": "badge",
+      "title": "Badge",
+      "kind": "component",
+      "exports": ["GestioBadge", "GestioBadgeVariant", "GestioBadgeAppearance", "GestioBadgeSize"],
+      "classes": [
+        {
+          "class": "GestioBadge",
+          "selector": "gestio-badge"
+        }
+      ],
+      "summary": "Étiquette de statut ou de catégorie, non interactive.",
+      "inputs": [
+        {
+          "name": "variant",
+          "type": "'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info'",
+          "default": "'neutral'",
+          "description": "Couleur sémantique."
+        },
+        {
+          "name": "appearance",
+          "type": "'soft' | 'solid' | 'outline'",
+          "default": "'soft'",
+          "description": "Style."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md'",
+          "default": "'md'",
+          "description": "Taille."
+        },
+        {
+          "name": "dot",
+          "type": "boolean",
+          "default": "false",
+          "description": "Pastille décorative."
+        }
+      ],
+      "outputs": [],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "Libellé."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Statuts de facture",
+          "code": "<gestio-badge variant=\"success\" dot>Payée</gestio-badge>\n<gestio-badge variant=\"warning\">En attente</gestio-badge>\n<gestio-badge variant=\"danger\" appearance=\"outline\">Litige</gestio-badge>"
+        }
+      ],
+      "pitfalls": ["La couleur ne doit pas être la seule information : libellé explicite."]
+    },
+    {
+      "id": "table",
+      "title": "Tableau",
+      "kind": "component",
+      "exports": ["GestioTable", "GestioTableContainer", "GestioTableDensity"],
+      "classes": [
+        {
+          "class": "GestioTable",
+          "selector": "table[gestioTable]"
+        },
+        {
+          "class": "GestioTableContainer",
+          "selector": "gestio-table-container"
+        }
+      ],
+      "summary": "Style d'un <table> natif écrit à la main (données statiques ou rendu personnalisé). Pour tri, filtre, pagination ou sélection, utiliser plutôt gestio-datagrid.",
+      "inputs": [
+        {
+          "name": "density",
+          "type": "'compact' | 'comfortable'",
+          "default": "'comfortable'",
+          "description": "table[gestioTable] : hauteur des lignes."
+        },
+        {
+          "name": "striped",
+          "type": "boolean",
+          "default": "false",
+          "description": "table[gestioTable] : lignes alternées."
+        },
+        {
+          "name": "hover",
+          "type": "boolean",
+          "default": "true",
+          "description": "table[gestioTable] : surlignage au survol."
+        },
+        {
+          "name": "columnDividers",
+          "type": "boolean",
+          "default": "false",
+          "description": "table[gestioTable] : traits verticaux entre les colonnes."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "gestio-table-container : nom accessible de la zone défilante (recommandé)."
+        },
+        {
+          "name": "maxHeight",
+          "type": "string",
+          "description": "gestio-table-container : hauteur maximale ; l'en-tête reste collant."
+        }
+      ],
+      "outputs": [],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "Contenu natif : caption, thead, tbody, tfoot, th scope, td."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Tableau statique",
+          "code": "// imports: [GestioTable, GestioTableContainer, CurrencyPipe]\n<gestio-table-container label=\"Factures d'octobre\">\n  <table gestioTable striped>\n    <caption>Factures d'octobre</caption>\n    <thead>\n      <tr>\n        <th scope=\"col\">Numéro</th>\n        <th scope=\"col\">Client</th>\n        <th scope=\"col\" class=\"gestio-table-numeric\">Montant</th>\n      </tr>\n    </thead>\n    <tbody>\n      @for (f of factures; track f.id) {\n        <tr>\n          <th scope=\"row\">{{ f.numero }}</th>\n          <td>{{ f.client }}</td>\n          <td class=\"gestio-table-numeric\">{{ f.montant | currency: 'EUR' }}</td>\n        </tr>\n      }\n    </tbody>\n  </table>\n</gestio-table-container>"
+        }
+      ],
+      "pitfalls": [
+        "Le sélecteur est un attribut sur <table> : <table gestioTable>, pas <gestio-table>.",
+        "Classe utilitaire gestio-table-numeric pour aligner les montants à droite en chiffres tabulaires.",
+        "Envelopper dans <gestio-table-container label=\"…\"> pour le défilement horizontal sur mobile.",
+        "Garder la sémantique : caption, th scope=\"col\" / scope=\"row\".",
+        "columnDividers trace un trait à droite de chaque cellule sauf la dernière de sa ligne : avec rowspan, une ligne dont la dernière cellule n'est pas en bord de tableau peut perdre un séparateur."
+      ]
+    },
+    {
+      "id": "datagrid",
+      "title": "Datagrid",
+      "kind": "component",
+      "exports": [
+        "GestioDataGrid",
+        "GestioDataGridCell",
+        "GestioDataGridColumn",
+        "GestioDataGridCellContext",
+        "GestioDataGridLabels",
+        "GESTIO_DATAGRID_LABELS",
+        "GestioSort",
+        "GestioSortDirection",
+        "GestioCellValue"
+      ],
+      "classes": [
+        {
+          "class": "GestioDataGrid",
+          "selector": "gestio-datagrid"
+        },
+        {
+          "class": "GestioDataGridCell",
+          "selector": "ng-template[gestioCell]"
+        }
+      ],
+      "summary": "Grille pilotée par les données, côté client : tri par colonne, recherche (insensible aux accents), pagination, sélection par cases à cocher, gabarits de cellule, états chargement/vide et annonces aux lecteurs d'écran. Rendu en <table> natif.",
+      "api": "Colonne GestioDataGridColumn<T> : { key: string; header: string; value?: (row) => string | number | boolean | Date | null; format?: (row) => string; sortable?: boolean; align?: 'start' | 'center' | 'end'; width?: string }\n- key : identifiant ; par défaut la valeur lue est row[key].\n- value : valeur de tri et de filtre (ex. une vraie Date) ; format : texte affiché (ex. montant en euros).\n- Sans format : nombres et dates formatés en fr-FR, booléens « Oui » / « Non ».\nTri : cycle croissant → décroissant → ordre d'origine ; valeurs vides en fin. GestioSort = { key; direction: 'asc' | 'desc' }.\nSélection : tableau des clés rowKey(row) (par défaut row.id, sinon l'index). La case d'en-tête sélectionne les lignes de la page affichée.\nGabarit de cellule : <ng-template gestioCell=\"cle\" [gestioCellOf]=\"rows\" let-row let-value=\"value\" let-i=\"index\">.\nTraitements côté client uniquement : pour une pagination serveur, fournir la page chargée avec paginated=false.",
+      "inputs": [
+        {
+          "name": "columns",
+          "type": "readonly GestioDataGridColumn<T>[] (requis)",
+          "description": "Définition des colonnes."
+        },
+        {
+          "name": "rows",
+          "type": "readonly T[] (requis)",
+          "description": "Données."
+        },
+        {
+          "name": "rowKey",
+          "type": "(row: T) => unknown",
+          "default": "row => row.id",
+          "description": "Identifiant stable (sélection, rendu) ; index si undefined."
+        },
+        {
+          "name": "caption",
+          "type": "string",
+          "description": "Titre du tableau (caption + nom de la zone défilante). Recommandé."
+        },
+        {
+          "name": "showCaption",
+          "type": "boolean",
+          "default": "false",
+          "description": "Affiche la caption visuellement."
+        },
+        {
+          "name": "sort",
+          "type": "model<GestioSort | null>",
+          "default": "null",
+          "description": "Tri ; [(sort)] ou (sortChange)."
+        },
+        {
+          "name": "filterable",
+          "type": "boolean",
+          "default": "false",
+          "description": "Affiche le champ de recherche."
+        },
+        {
+          "name": "filter",
+          "type": "model<string>",
+          "default": "''",
+          "description": "Texte de recherche ; [(filter)]."
+        },
+        {
+          "name": "paginated",
+          "type": "boolean",
+          "default": "true",
+          "description": "Active la pagination."
+        },
+        {
+          "name": "page",
+          "type": "model<number>",
+          "default": "0",
+          "description": "Index de page (0 = première) ; [(page)]."
+        },
+        {
+          "name": "pageSize",
+          "type": "model<number>",
+          "default": "10",
+          "description": "Lignes par page ; [(pageSize)]."
+        },
+        {
+          "name": "pageSizeOptions",
+          "type": "readonly number[]",
+          "default": "[10, 25, 50]",
+          "description": "Choix proposés."
+        },
+        {
+          "name": "selectable",
+          "type": "boolean",
+          "default": "false",
+          "description": "Colonne de cases à cocher."
+        },
+        {
+          "name": "selection",
+          "type": "model<readonly unknown[]>",
+          "default": "[]",
+          "description": "Clés des lignes sélectionnées ; [(selection)]."
+        },
+        {
+          "name": "rowLabel",
+          "type": "(row: T) => string",
+          "description": "Nom de la ligne pour sa case (« Sélectionner … ») ; par défaut la 1re colonne."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "description": "aria-busy ; message de chargement si aucune ligne."
+        },
+        {
+          "name": "density",
+          "type": "'compact' | 'comfortable'",
+          "default": "'comfortable'",
+          "description": "Hauteur des lignes."
+        },
+        {
+          "name": "striped",
+          "type": "boolean",
+          "default": "false",
+          "description": "Lignes alternées."
+        },
+        {
+          "name": "columnDividers",
+          "type": "boolean",
+          "default": "false",
+          "description": "Traits verticaux entre les colonnes."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioDataGridLabels>",
+          "default": "{}",
+          "description": "Surcharge des libellés (i18n), voir GESTIO_DATAGRID_LABELS."
+        },
+        {
+          "name": "gestioCell",
+          "type": "string (requis)",
+          "description": "ng-template[gestioCell] : clé de la colonne personnalisée."
+        },
+        {
+          "name": "gestioCellOf",
+          "type": "readonly T[]",
+          "description": "ng-template[gestioCell] : lignes, pour typer let-row."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "sortChange",
+          "type": "GestioSort | null",
+          "description": "Changement de tri."
+        },
+        {
+          "name": "filterChange",
+          "type": "string",
+          "description": "Changement de recherche."
+        },
+        {
+          "name": "pageChange",
+          "type": "number",
+          "description": "Changement de page."
+        },
+        {
+          "name": "pageSizeChange",
+          "type": "number",
+          "description": "Changement de taille de page."
+        },
+        {
+          "name": "selectionChange",
+          "type": "readonly unknown[]",
+          "description": "Changement de sélection."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "[gestioDataGridActions]",
+          "description": "Actions de la barre d'outils (ex. bouton « Exporter »), à droite de la recherche."
+        },
+        {
+          "selector": "ng-template[gestioCell]",
+          "description": "Gabarit d'une colonne (badge, lien, bouton…)."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Liste de factures",
+          "code": "// imports: [GestioDataGrid, GestioDataGridCell, GestioBadge, GestioButton]\ninterface Invoice { id: number; number: string; client: string; date: Date; amount: number; paid: boolean }\n\nprivate readonly euros = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' });\ncolumns: GestioDataGridColumn<Invoice>[] = [\n  { key: 'number', header: 'Numéro', sortable: true },\n  { key: 'client', header: 'Client', sortable: true },\n  { key: 'date', header: 'Date', sortable: true },\n  { key: 'amount', header: 'Montant', sortable: true, align: 'end', format: (r) => this.euros.format(r.amount) },\n  { key: 'paid', header: 'Statut' },\n];\nselection = signal<readonly unknown[]>([]);\n\n<gestio-datagrid caption=\"Factures\" [columns]=\"columns\" [rows]=\"invoices()\"\n  filterable selectable [(selection)]=\"selection\" [loading]=\"loading()\">\n  <button gestioDataGridActions gestioButton variant=\"outline\" size=\"sm\">Exporter</button>\n  <ng-template gestioCell=\"paid\" [gestioCellOf]=\"invoices()\" let-row>\n    <gestio-badge [variant]=\"row.paid ? 'success' : 'warning'\" dot>\n      {{ row.paid ? 'Payée' : 'En attente' }}\n    </gestio-badge>\n  </ng-template>\n</gestio-datagrid>"
+        }
+      ],
+      "pitfalls": [
+        "Tri, filtre et pagination sont côté client : pour de gros volumes paginés par un serveur, passer paginated=false et piloter la pagination soi-même.",
+        "Pas de navigation clavier cellule par cellule (motif ARIA grid) : les contrôles natifs sont atteignables au Tab.",
+        "Pas d'édition en ligne, de colonnes redimensionnables, de regroupement ni de défilement virtuel.",
+        "La sélection contient des clés (rowKey), pas les objets ligne. Fournir rowKey si les lignes n'ont pas de propriété id.",
+        "Chaque key de colonne doit être unique.",
+        "Déclarer columns comme propriété stable (pas un nouveau tableau recréé dans le template)."
+      ]
+    },
+    {
+      "id": "app-shell",
+      "title": "Coque d'application",
+      "kind": "component",
+      "exports": ["GestioAppShell"],
+      "classes": [
+        {
+          "class": "GestioAppShell",
+          "selector": "gestio-app-shell"
+        }
+      ],
+      "summary": "Structure de page : en-tête collant, barre latérale et zone principale. À partir de lg (1024 px de fenêtre), barre latérale fixe ; en dessous, tiroir ouvert par un bouton de menu (focus déplacé, Échap, clic sur le fond, contenu inerte, retour du focus).",
+      "api": "Méthodes publiques : openSidebar(), closeSidebar(restoreFocus = false), toggleSidebar(). Signal isDesktop (≥ lg).\nLa coque fournit <header>, <main> et un lien d'évitement : ne pas ajouter d'autre <main>.\nVariables CSS : --gestio-shell-header-height (3.75rem), --gestio-shell-sidebar-width.",
+      "inputs": [
+        {
+          "name": "sidebarOpen",
+          "type": "model<boolean>",
+          "default": "false",
+          "description": "Tiroir ouvert (mobile) ; [(sidebarOpen)]."
+        },
+        {
+          "name": "withSidebar",
+          "type": "boolean",
+          "default": "true",
+          "description": "Affiche la barre latérale et le bouton de menu."
+        },
+        {
+          "name": "sidebarWidth",
+          "type": "string",
+          "default": "'16rem'",
+          "description": "Largeur de la barre latérale sur grand écran."
+        },
+        {
+          "name": "closeOnNavigate",
+          "type": "boolean",
+          "default": "true",
+          "description": "Ferme le tiroir quand un lien de la barre latérale est activé."
+        },
+        {
+          "name": "menuLabel",
+          "type": "string",
+          "default": "'Menu de navigation'",
+          "description": "Nom accessible du bouton de menu."
+        },
+        {
+          "name": "skipLinkLabel",
+          "type": "string",
+          "default": "'Aller au contenu'",
+          "description": "Texte du lien d'évitement."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "sidebarOpenChange",
+          "type": "boolean",
+          "description": "Ouverture / fermeture du tiroir."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "[gestioShellHeader]",
+          "description": "Contenu de l'en-tête (logo, recherche, profil) ; occupe la largeur après le bouton de menu."
+        },
+        {
+          "selector": "[gestioShellSidebar]",
+          "description": "Barre latérale ; utiliser <nav gestioShellSidebar aria-label=\"…\">."
+        },
+        {
+          "selector": "(défaut)",
+          "description": "Contenu principal (ex. <router-outlet />)."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Application avec routeur",
+          "code": "// imports: [GestioAppShell, RouterOutlet, RouterLink, RouterLinkActive, GestioToaster]\n<gestio-app-shell>\n  <div gestioShellHeader class=\"app-header\">\n    <a routerLink=\"/\">Mon ERP</a>\n  </div>\n  <nav gestioShellSidebar aria-label=\"Navigation principale\">\n    <a routerLink=\"/clients\" routerLinkActive=\"active\" ariaCurrentWhenActive=\"page\">Clients</a>\n    <a routerLink=\"/factures\" routerLinkActive=\"active\" ariaCurrentWhenActive=\"page\">Factures</a>\n  </nav>\n  <router-outlet />\n</gestio-app-shell>\n<gestio-toaster />"
+        }
+      ],
+      "pitfalls": [
+        "La coque contient déjà <main> : ne pas en imbriquer un second dans les pages.",
+        "Les styles des liens de la barre latérale sont à la charge de l'application.",
+        "Après une navigation, déplacer le focus sur le titre de la nouvelle page (bonne pratique d'accessibilité)."
+      ]
+    },
+    {
+      "id": "container",
+      "title": "Conteneur",
+      "kind": "component",
+      "exports": ["GestioContainer", "GestioContainerSize"],
+      "classes": [
+        {
+          "class": "GestioContainer",
+          "selector": "gestio-container"
+        }
+      ],
+      "summary": "Contenu centré à largeur maximale, avec marges latérales adaptatives (1 à 2 rem).",
+      "inputs": [
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg' | 'xl' | 'full'",
+          "default": "'xl'",
+          "description": "Largeur max : 40, 48, 64, 80 rem ou sans limite."
+        },
+        {
+          "name": "gutters",
+          "type": "boolean",
+          "default": "true",
+          "description": "Marges latérales adaptatives."
+        }
+      ],
+      "outputs": [],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "Contenu."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Page de formulaire étroite",
+          "code": "<gestio-container size=\"md\">…formulaire…</gestio-container>"
+        }
+      ],
+      "pitfalls": []
+    },
+    {
+      "id": "stack",
+      "title": "Pile",
+      "kind": "component",
+      "exports": ["GestioStack", "GestioStackDirection", "GestioStackAlign", "GestioStackJustify"],
+      "classes": [
+        {
+          "class": "GestioStack",
+          "selector": "gestio-stack"
+        }
+      ],
+      "summary": "Empile les enfants en colonne ou en ligne avec un espacement issu des tokens ; direction et espacement responsives selon la largeur du conteneur.",
+      "inputs": [
+        {
+          "name": "direction",
+          "type": "GestioResponsive<'row' | 'column'>",
+          "default": "'column'",
+          "description": "Direction, ex. { base: 'column', md: 'row' }."
+        },
+        {
+          "name": "gap",
+          "type": "GestioResponsive<GestioSpace>",
+          "default": "4",
+          "description": "Espacement (échelle --gestio-space-*)."
+        },
+        {
+          "name": "align",
+          "type": "'start' | 'center' | 'end' | 'stretch' | 'baseline'",
+          "default": "'stretch'",
+          "description": "Alignement sur l'axe secondaire."
+        },
+        {
+          "name": "justify",
+          "type": "'start' | 'center' | 'end' | 'between'",
+          "default": "'start'",
+          "description": "Répartition sur l'axe principal."
+        },
+        {
+          "name": "wrap",
+          "type": "boolean",
+          "default": "false",
+          "description": "Retour à la ligne si la place manque."
+        }
+      ],
+      "outputs": [],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "Éléments empilés."
+        }
+      ],
+      "examples": [
+        {
+          "title": "En-tête de page responsive",
+          "code": "<gestio-stack [direction]=\"{ base: 'column', md: 'row' }\" justify=\"between\" align=\"center\" [gap]=\"3\">\n  <h1>Clients</h1>\n  <button gestioButton>Nouveau client</button>\n</gestio-stack>"
+        }
+      ],
+      "pitfalls": [
+        "Les points de rupture portent sur la largeur de la pile elle-même, pas sur celle de l'écran."
+      ]
+    },
+    {
+      "id": "grid",
+      "title": "Grille",
+      "kind": "component",
+      "exports": ["GestioGrid", "GestioGridItem", "GestioGridSpan"],
+      "classes": [
+        {
+          "class": "GestioGrid",
+          "selector": "gestio-grid"
+        },
+        {
+          "class": "GestioGridItem",
+          "selector": "[gestioGridSpan]"
+        }
+      ],
+      "summary": "Grille CSS responsive : colonnes par point de rupture, ou remplissage automatique selon une largeur minimale ; étendue des éléments réglable.",
+      "inputs": [
+        {
+          "name": "columns",
+          "type": "GestioResponsive<number>",
+          "default": "1",
+          "description": "Nombre de colonnes, ex. { base: 1, sm: 2, lg: 4 }."
+        },
+        {
+          "name": "minItemWidth",
+          "type": "string",
+          "description": "Mode automatique : largeur minimale d'une colonne (ex. '16rem') ; prioritaire sur columns."
+        },
+        {
+          "name": "gap",
+          "type": "GestioResponsive<GestioSpace>",
+          "default": "4",
+          "description": "Espacement."
+        },
+        {
+          "name": "align",
+          "type": "'start' | 'center' | 'end' | 'stretch'",
+          "default": "'stretch'",
+          "description": "Alignement vertical des éléments."
+        },
+        {
+          "name": "gestioGridSpan",
+          "type": "GestioResponsive<number | 'full'> (requis)",
+          "description": "[gestioGridSpan] sur un enfant : colonnes occupées, ou 'full' pour toute la largeur."
+        }
+      ],
+      "outputs": [],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "Éléments de la grille (cartes, champs…)."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Indicateurs",
+          "code": "// imports: [GestioGrid, GestioGridItem, GestioCard]\n<gestio-grid [columns]=\"{ base: 1, sm: 2, lg: 4 }\" [gap]=\"4\">\n  <gestio-card>CA du mois</gestio-card>\n  <gestio-card>Factures en attente</gestio-card>\n  <gestio-card>Clients actifs</gestio-card>\n  <gestio-card>Taux de recouvrement</gestio-card>\n</gestio-grid>"
+        },
+        {
+          "title": "Formulaire sur deux colonnes",
+          "code": "<gestio-grid [columns]=\"{ base: 1, md: 2 }\">\n  <gestio-input label=\"Prénom\" formControlName=\"firstName\" />\n  <gestio-input label=\"Nom\" formControlName=\"lastName\" />\n  <gestio-textarea gestioGridSpan=\"full\" label=\"Notes\" formControlName=\"notes\" />\n</gestio-grid>"
+        },
+        {
+          "title": "Cartes à largeur minimale",
+          "code": "<gestio-grid minItemWidth=\"18rem\">…</gestio-grid>"
+        }
+      ],
+      "pitfalls": [
+        "Importer GestioGridItem pour utiliser [gestioGridSpan].",
+        "Une étendue (span) supérieure au nombre de colonnes crée des colonnes implicites : utiliser une valeur responsive ou 'full'.",
+        "Les points de rupture portent sur la largeur de la grille (container queries), pas sur celle de l'écran."
+      ]
+    },
+    {
+      "id": "breakpoints",
+      "title": "Points de rupture",
+      "kind": "service",
+      "exports": [
+        "GestioBreakpoints",
+        "GESTIO_BREAKPOINTS",
+        "GestioBreakpoint",
+        "GestioBreakpointOrBase",
+        "GestioResponsive",
+        "GestioSpace"
+      ],
+      "classes": [],
+      "summary": "Service de signaux indiquant si la fenêtre atteint chaque point de rupture (sm 640, md 768, lg 1024, xl 1280 px). Toujours false côté serveur.",
+      "api": "inject(GestioBreakpoints) : sm(), md(), lg(), xl() → boolean (fenêtre ≥ point de rupture) ; current() → 'base' | 'sm' | 'md' | 'lg' | 'xl'.\nGESTIO_BREAKPOINTS = { sm: 640, md: 768, lg: 1024, xl: 1280 }.",
+      "inputs": [],
+      "outputs": [],
+      "slots": [],
+      "examples": [
+        {
+          "title": "Adapter un comportement",
+          "code": "private readonly screen = inject(GestioBreakpoints);\nreadonly pageSize = computed(() => (this.screen.lg() ? 25 : 10));"
+        }
+      ],
+      "pitfalls": [
+        "Préférer les layouts (CSS) pour la mise en page ; réserver le service aux comportements (taille de page, densité…)."
+      ]
+    },
+    {
+      "id": "dialog",
+      "title": "Modale",
+      "kind": "service",
+      "exports": [
+        "GestioDialogService",
+        "GestioDialogRef",
+        "GESTIO_DIALOG_DATA",
+        "GestioDialog",
+        "GestioDialogActions",
+        "GESTIO_DIALOG_IMPORTS",
+        "GestioDialogConfig",
+        "GestioDialogSize",
+        "GestioConfirmOptions",
+        "GestioConfirmDialog"
+      ],
+      "classes": [
+        {
+          "class": "GestioDialog",
+          "selector": "gestio-dialog"
+        },
+        {
+          "class": "GestioDialogActions",
+          "selector": "[gestioDialogActions]"
+        }
+      ],
+      "summary": "Modales basées sur @angular/cdk/dialog : piège et restauration du focus, blocage du défilement, Échap et fond configurables, retour de résultat.",
+      "api": "GestioDialogService.open<R, D>(composantOuTemplate, config?: GestioDialogConfig<D>): GestioDialogRef<R>\nGestioDialogService.confirm(options: GestioConfirmOptions): GestioDialogRef<boolean>\nGestioDialogService.closeAll(): void\nGestioDialogRef<R> : close(result?: R), closed: Observable<R | undefined>, afterClosed(): Promise<R | undefined>, id, titleId, descriptionId\nGESTIO_DIALOG_DATA : jeton d'injection des données\nGestioConfirmOptions : { title; description?; confirmLabel? ('Confirmer'); cancelLabel? ('Annuler'); variant?: 'primary' | 'danger'; size?; closeOnEscape?; closeOnBackdropClick? (false) }",
+      "configOptions": [
+        {
+          "name": "data",
+          "type": "D",
+          "description": "Données injectées via GESTIO_DIALOG_DATA."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "'md'",
+          "description": "Largeur max 400 / 560 / 800 px."
+        },
+        {
+          "name": "closeOnEscape",
+          "type": "boolean",
+          "default": "true",
+          "description": "Fermeture par Échap (résultat undefined)."
+        },
+        {
+          "name": "closeOnBackdropClick",
+          "type": "boolean",
+          "default": "true",
+          "description": "Fermeture au clic sur le fond (résultat undefined)."
+        },
+        {
+          "name": "role",
+          "type": "'dialog' | 'alertdialog'",
+          "default": "'dialog'",
+          "description": "Rôle ARIA."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Nom accessible si <gestio-dialog> n'est pas utilisé."
+        },
+        {
+          "name": "autoFocus",
+          "type": "'first-tabbable' | 'dialog' | 'first-heading' | string",
+          "default": "'first-tabbable'",
+          "description": "Focus initial ; [cdkFocusInitial] prioritaire."
+        },
+        {
+          "name": "restoreFocus",
+          "type": "boolean",
+          "default": "true",
+          "description": "Rend le focus au déclencheur."
+        },
+        {
+          "name": "panelClass",
+          "type": "string | string[]",
+          "description": "Classes du panneau."
+        },
+        {
+          "name": "injector",
+          "type": "Injector",
+          "description": "Injecteur parent."
+        },
+        {
+          "name": "viewContainerRef",
+          "type": "ViewContainerRef",
+          "description": "Position logique du contenu."
+        }
+      ],
+      "inputs": [
+        {
+          "name": "title",
+          "type": "string (requis)",
+          "description": "gestio-dialog : titre, nom accessible de la modale."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "gestio-dialog : description (aria-describedby)."
+        },
+        {
+          "name": "showClose",
+          "type": "boolean",
+          "default": "true",
+          "description": "gestio-dialog : bouton de fermeture en haut à droite."
+        },
+        {
+          "name": "closeLabel",
+          "type": "string",
+          "default": "'Fermer'",
+          "description": "gestio-dialog : libellé du bouton de fermeture."
+        }
+      ],
+      "outputs": [],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "Corps défilant de gestio-dialog."
+        },
+        {
+          "selector": "[gestioDialogActions]",
+          "description": "Pied d'actions (composant GestioDialogActions), empilé sur mobile."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Confirmation",
+          "code": "private readonly dialog = inject(GestioDialogService);\n\nasync remove() {\n  const ok = await this.dialog\n    .confirm({ title: 'Supprimer ce client ?', description: 'Action définitive.', confirmLabel: 'Supprimer', variant: 'danger' })\n    .afterClosed();\n  if (ok) { /* supprimer */ }\n}"
+        },
+        {
+          "title": "Composant de contenu avec résultat",
+          "code": "@Component({\n  imports: [GESTIO_DIALOG_IMPORTS, GestioButton, GestioInput, ReactiveFormsModule],\n  template: `\n    <form [formGroup]=\"form\" (ngSubmit)=\"save()\">\n      <gestio-dialog title=\"Modifier le contact\">\n        <gestio-input label=\"Nom\" formControlName=\"name\" required />\n        <div gestioDialogActions>\n          <button gestioButton variant=\"outline\" (click)=\"ref.close()\">Annuler</button>\n          <button gestioButton type=\"submit\">Enregistrer</button>\n        </div>\n      </gestio-dialog>\n    </form>\n  `,\n})\nexport class EditContactDialog {\n  protected readonly ref = inject<GestioDialogRef<Contact>>(GestioDialogRef);\n  private readonly data = inject<Contact>(GESTIO_DIALOG_DATA);\n  protected readonly form = new FormGroup({ name: new FormControl(this.data.name, { nonNullable: true }) });\n  protected save() { this.ref.close({ ...this.data, ...this.form.getRawValue() }); }\n}\n\n// Appelant\nthis.dialog.open<Contact, Contact>(EditContactDialog, { data: contact, size: 'md' })\n  .closed.subscribe((result) => { if (result) this.save(result); });"
+        }
+      ],
+      "pitfalls": [
+        "Il n'y a pas de composant <gestio-modal> déclaratif ni d'entrée [open] : ouvrir via GestioDialogService.open().",
+        "Importer GESTIO_DIALOG_IMPORTS dans le composant de contenu (GestioDialog + GestioDialogActions).",
+        "Échap et clic sur le fond renvoient undefined : traiter ce cas comme une annulation.",
+        "Un bouton dans <div gestioDialogActions> à l'intérieur d'un <form> a type='button' par défaut ; mettre type=\"submit\" sur le bouton de validation."
+      ]
+    },
+    {
+      "id": "toast",
+      "title": "Notifications",
+      "kind": "service",
+      "exports": [
+        "GestioToastService",
+        "GestioToaster",
+        "provideGestioToast",
+        "GESTIO_TOAST_CONFIG",
+        "GESTIO_TOAST_DEFAULTS",
+        "GestioToast",
+        "GestioToastOptions",
+        "GestioToastConfig",
+        "GestioToastVariant",
+        "GestioToastPosition"
+      ],
+      "classes": [
+        {
+          "class": "GestioToaster",
+          "selector": "gestio-toaster"
+        }
+      ],
+      "summary": "Notifications éphémères annoncées aux lecteurs d'écran, sans prise de focus, en pause au survol et au focus.",
+      "api": "GestioToastService.success | error | info | warning (message: string, options?: { title?: string; duration?: number }): string (id)\nGestioToastService.show(variant, message, options?): string\nGestioToastService.dismiss(id: string): void\nGestioToastService.clear(): void\nGestioToastService.toasts: Signal<readonly GestioToast[]>\nprovideGestioToast({ duration?: number (5000); maxVisible?: number (3); position?: 'top-right' | 'top-center' | 'bottom-right' | 'bottom-center' ('bottom-right') })\nduration: 0 = notification persistante.",
+      "inputs": [
+        {
+          "name": "position",
+          "type": "GestioToastPosition",
+          "description": "gestio-toaster : surcharge la position configurée."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "default": "'Notifications'",
+          "description": "gestio-toaster : nom de la région."
+        },
+        {
+          "name": "closeLabel",
+          "type": "string",
+          "default": "'Fermer la notification'",
+          "description": "gestio-toaster : libellé du bouton de fermeture."
+        }
+      ],
+      "outputs": [],
+      "slots": [],
+      "examples": [
+        {
+          "title": "Mise en place",
+          "code": "// app.config.ts\nproviders: [provideGestioToast({ duration: 5000, maxVisible: 3, position: 'bottom-right' })]\n\n// app.ts : imports: [RouterOutlet, GestioToaster]\n// app.html\n<router-outlet />\n<gestio-toaster />"
+        },
+        {
+          "title": "Utilisation",
+          "code": "private readonly toast = inject(GestioToastService);\n\nthis.toast.success('Facture envoyée à Atelier Moreau.', { title: 'Facture envoyée' });\nthis.toast.error('Le paiement a échoué.', { title: 'Erreur', duration: 8000 });\nconst id = this.toast.info('Export en préparation…', { duration: 0 });\nthis.toast.dismiss(id);"
+        }
+      ],
+      "pitfalls": [
+        "Sans <gestio-toaster /> dans le composant racine, rien ne s'affiche.",
+        "Ne placer qu'un seul <gestio-toaster />.",
+        "Ne pas mettre d'action critique dans une notification (elle ne prend pas le focus et disparaît)."
+      ]
+    },
+    {
+      "id": "tabs",
+      "title": "Onglets",
+      "kind": "component",
+      "exports": ["GestioTabs", "GestioTab", "GestioTabsVariant"],
+      "classes": [
+        {
+          "class": "GestioTabs",
+          "selector": "gestio-tabs"
+        },
+        {
+          "class": "GestioTab",
+          "selector": "gestio-tab"
+        }
+      ],
+      "summary": "Onglets accessibles (motif ARIA Tabs, activation automatique, flèches/Début/Fin, onglets désactivés ignorés).",
+      "inputs": [
+        {
+          "name": "selectedIndex",
+          "type": "model<number>",
+          "default": "0",
+          "description": "gestio-tabs : onglet actif ; [(selectedIndex)]."
+        },
+        {
+          "name": "variant",
+          "type": "'underline' | 'pills'",
+          "default": "'underline'",
+          "description": "gestio-tabs : style."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "gestio-tabs : nom accessible de la liste."
+        },
+        {
+          "name": "stretch",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-tabs : onglets pleine largeur."
+        },
+        {
+          "name": "label",
+          "type": "string (requis)",
+          "description": "gestio-tab : libellé."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-tab : non sélectionnable."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "selectedIndexChange",
+          "type": "number",
+          "description": "gestio-tabs : émis au changement d'onglet."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "gestio-tabs : éléments <gestio-tab> ; gestio-tab : contenu du panneau."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Fiche client",
+          "code": "// imports: [GestioTabs, GestioTab]\n<gestio-tabs ariaLabel=\"Fiche client\" [(selectedIndex)]=\"tab\">\n  <gestio-tab label=\"Informations\">…</gestio-tab>\n  <gestio-tab label=\"Factures\">…</gestio-tab>\n  <gestio-tab label=\"Contrats\" disabled>…</gestio-tab>\n</gestio-tabs>"
+        }
+      ],
+      "pitfalls": [
+        "Importer à la fois GestioTabs et GestioTab.",
+        "La sélection est un index numérique, pas un identifiant.",
+        "Les panneaux inactifs restent instanciés (masqués par hidden)."
+      ]
+    }
+  ]
+}

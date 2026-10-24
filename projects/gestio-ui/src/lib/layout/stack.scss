@@ -1,0 +1,44 @@
+// Points de rupture : voir GESTIO_BREAKPOINTS (responsive.ts).
+:host {
+  display: block;
+  min-width: 0;
+  container-type: inline-size;
+}
+
+.gestio-stack__inner {
+  display: flex;
+  flex-direction: var(--_dir-base);
+  flex-wrap: var(--_wrap);
+  align-items: var(--_align);
+  justify-content: var(--_justify);
+  gap: var(--_gap-base);
+  min-width: 0;
+}
+
+@container (min-width: 640px) {
+  .gestio-stack__inner {
+    flex-direction: var(--_dir-sm);
+    gap: var(--_gap-sm);
+  }
+}
+
+@container (min-width: 768px) {
+  .gestio-stack__inner {
+    flex-direction: var(--_dir-md);
+    gap: var(--_gap-md);
+  }
+}
+
+@container (min-width: 1024px) {
+  .gestio-stack__inner {
+    flex-direction: var(--_dir-lg);
+    gap: var(--_gap-lg);
+  }
+}
+
+@container (min-width: 1280px) {
+  .gestio-stack__inner {
+    flex-direction: var(--_dir-xl);
+    gap: var(--_gap-xl);
+  }
+}

@@ -3,14 +3,23 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "ng build gestio-ui && ng serve showcase",
+    "build": "ng build gestio-ui && ng build showcase",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "build:lib": "ng build gestio-ui",
+    "watch:lib": "ng build gestio-ui --watch --configuration development",
+    "serve:showcase": "ng serve showcase",
+    "build:showcase": "ng build showcase",
+    "test": "ng test gestio-ui --watch=false && ng test showcase --watch=false && npm run test:mcp",
+    "test:lib": "ng test gestio-ui",
+    "test:showcase": "ng test showcase",
+    "test:mcp": "node --test projects/gestio-ui/mcp/server.test.mjs",
+    "mcp": "node projects/gestio-ui/mcp/server.mjs"
   },
   "private": true,
   "packageManager": "npm@11.17.0",
   "dependencies": {
+    "@angular/cdk": "~22.2.4",
     "@angular/common": "^22.2.0",
     "@angular/compiler": "^22.2.0",
     "@angular/core": "^22.2.0",
@@ -21,9 +30,13 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@angular/build": "^22.2.4",
     "@angular/cli": "^22.2.4",
     "@angular/compiler-cli": "^22.2.0",
+    "jsdom": "^30.0.0",
+    "ng-packagr": "^22.2.0",
     "prettier": "^3.8.1",
-    "typescript": "~6.0.2"
+    "typescript": "~6.0.2",
+    "vitest": "^5.0.0"
   }
 }

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="fr" data-gestio-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <title>Gestio UI</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Gestio UI — bibliothèque de composants Angular pour interfaces de gestion."
+    />
+    <link rel="icon" href="favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/svg+xml" href="logo.svg" />
+    <link rel="apple-touch-icon" href="logo.svg" />
+    <script>
+      // Applique le thème mémorisé (ou celui du système) avant le premier rendu.
+      try {
+        var theme = localStorage.getItem('gestio-showcase-theme');
+        if (theme !== 'light' && theme !== 'dark') {
+          theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-gestio-theme', theme);
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <app-root></app-root>
+  </body>
+</html>

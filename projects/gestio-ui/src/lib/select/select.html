@@ -1,0 +1,67 @@
+<div class="gestio-field">
+  @if (label()) {
+    <label class="gestio-field__label" [for]="controlId()">
+      {{ label() }}
+      @if (required()) {
+        <span class="gestio-field__required" aria-hidden="true">*</span>
+      }
+    </label>
+  }
+
+  <div
+    class="gestio-field__control gestio-select__control"
+    [class.is-sm]="size() === 'sm'"
+    [class.is-lg]="size() === 'lg'"
+    [class.is-invalid]="invalid()"
+    [class.is-disabled]="isDisabled()"
+    [class.is-placeholder]="value() === null"
+  >
+    <select
+      #control
+      class="gestio-field__native gestio-select__native"
+      [id]="controlId()"
+      [disabled]="isDisabled()"
+      [required]="required()"
+      [attr.name]="name() ?? null"
+      [attr.aria-label]="label() ? null : (ariaLabel() ?? null)"
+      [attr.aria-invalid]="invalid() ? 'true' : null"
+      [attr.aria-describedby]="describedBy()"
+      (change)="handleChange(control)"
+      (blur)="handleBlur()"
+    >
+      @if (placeholder()) {
+        <option value="" [selected]="value() === null">{{ placeholder() }}</option>
+      }
+      @for (option of options(); track $index) {
+        <option
+          [value]="$index"
+          [disabled]="option.disabled ?? false"
+          [selected]="option.value === value()"
+        >
+          {{ option.label }}
+        </option>
+      }
+    </select>
+    <svg class="gestio-select__chevron" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+      <path d="M4 6l4 4 4-4" />
+    </svg>
+  </div>
+
+  @if (hint()) {
+    <p class="gestio-field__hint" [id]="hintId">{{ hint() }}</p>
+  }
+  @if (error()) {
+    <p class="gestio-field__error" [id]="errorId">
+      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5" />
+        <path
+          d="M8 4.5v4.2M8 11v.5"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+        />
+      </svg>
+      <span>{{ error() }}</span>
+    </p>
+  }
+</div>

@@ -1,0 +1,147 @@
+:host {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  /* Hauteur limitée : seul le corps défile sur petit écran. */
+  max-height: calc(100dvh - 2rem);
+  overflow: hidden;
+  background: var(--gestio-color-surface);
+  border: var(--gestio-border-width) solid var(--gestio-color-border);
+  border-radius: var(--gestio-radius-xl);
+  box-shadow: var(--gestio-shadow-lg);
+  color: var(--gestio-color-text);
+  font-family: var(--gestio-font-sans);
+  font-size: var(--gestio-font-size-md);
+  line-height: var(--gestio-line-height-normal);
+  animation: gestio-dialog-enter var(--gestio-duration-slow) var(--gestio-easing-standard);
+}
+
+.gestio-dialog__header {
+  display: flex;
+  flex: none;
+  gap: var(--gestio-space-3);
+  align-items: flex-start;
+  padding: var(--gestio-space-5) var(--gestio-space-6) var(--gestio-space-3);
+}
+
+.gestio-dialog__header.has-close {
+  padding-inline-end: calc(var(--gestio-space-6) + 2rem);
+}
+
+.gestio-dialog__heading {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.gestio-dialog__title {
+  margin: 0;
+  font-size: var(--gestio-font-size-xl);
+  font-weight: var(--gestio-font-weight-semibold);
+  line-height: var(--gestio-line-height-tight);
+  overflow-wrap: anywhere;
+}
+
+.gestio-dialog__description {
+  margin: var(--gestio-space-1) 0 0;
+  color: var(--gestio-color-text-muted);
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.gestio-dialog__close {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: var(--gestio-space-4);
+  inset-inline-end: var(--gestio-space-4);
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--gestio-radius-md);
+  background: transparent;
+  color: var(--gestio-color-text-muted);
+  cursor: pointer;
+  transition:
+    background-color var(--gestio-duration-fast) var(--gestio-easing-standard),
+    color var(--gestio-duration-fast) var(--gestio-easing-standard);
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+  }
+
+  &:hover {
+    background: var(--gestio-color-surface-hover);
+    color: var(--gestio-color-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+.gestio-dialog__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--gestio-space-2) var(--gestio-space-6) var(--gestio-space-5);
+
+  &:empty {
+    display: none;
+  }
+}
+
+.gestio-dialog__footer {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  gap: var(--gestio-space-2);
+  justify-content: flex-end;
+  padding: var(--gestio-space-4) var(--gestio-space-6);
+  border-top: var(--gestio-border-width) solid var(--gestio-color-border);
+  background: var(--gestio-color-surface-muted);
+
+  &:empty {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .gestio-dialog__header {
+    padding-inline: var(--gestio-space-4);
+  }
+
+  .gestio-dialog__body {
+    padding-inline: var(--gestio-space-4);
+  }
+
+  .gestio-dialog__footer {
+    padding-inline: var(--gestio-space-4);
+  }
+}
+
+@keyframes gestio-dialog-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host {
+    animation: none;
+  }
+}

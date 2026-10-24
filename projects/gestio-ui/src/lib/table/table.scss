@@ -1,0 +1,90 @@
+// Styles non encapsulés : chaque règle est limitée à table.gestio-table.
+// :where() garde une spécificité nulle pour faciliter les surcharges.
+
+:where(table.gestio-table) {
+  --_cell-py: var(--gestio-space-3);
+  --_cell-px: var(--gestio-space-4);
+
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--gestio-color-surface);
+  color: var(--gestio-color-text);
+  font-family: var(--gestio-font-sans);
+  font-size: var(--gestio-font-size-md);
+  line-height: var(--gestio-line-height-normal);
+}
+
+:where(table.gestio-table--compact) {
+  --_cell-py: var(--gestio-space-2);
+  --_cell-px: var(--gestio-space-3);
+}
+
+:where(table.gestio-table) > :where(caption) {
+  padding: var(--gestio-space-3) var(--_cell-px);
+  caption-side: top;
+  color: var(--gestio-color-text-muted);
+  font-size: var(--gestio-font-size-sm);
+  text-align: start;
+}
+
+:where(table.gestio-table) > :where(thead, tbody, tfoot) > tr > :where(th, td) {
+  padding: var(--_cell-py) var(--_cell-px);
+  border-bottom: var(--gestio-border-width) solid var(--gestio-color-border);
+  text-align: start;
+  vertical-align: middle;
+}
+
+:where(table.gestio-table) > :where(thead) > tr > :where(th, td) {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--gestio-color-surface-muted);
+  color: var(--gestio-color-text-muted);
+  font-size: var(--gestio-font-size-sm);
+  font-weight: var(--gestio-font-weight-semibold);
+  white-space: nowrap;
+}
+
+:where(table.gestio-table) > :where(tbody) > tr > :where(th) {
+  font-weight: var(--gestio-font-weight-medium);
+}
+
+:where(table.gestio-table) > :where(tbody) > tr:last-child > :where(th, td) {
+  border-bottom: 0;
+}
+
+:where(table.gestio-table) > :where(tfoot) > tr > :where(th, td) {
+  border-top: var(--gestio-border-width) solid var(--gestio-color-border-strong);
+  border-bottom: 0;
+  font-weight: var(--gestio-font-weight-semibold);
+}
+
+/* Séparateurs de colonnes : trait à droite de chaque cellule sauf la dernière de la ligne. */
+:where(table.gestio-table--column-dividers)
+  > :where(thead, tbody, tfoot)
+  > tr
+  > :where(th, td):not(:last-child) {
+  border-inline-end: var(--gestio-border-width) solid var(--gestio-color-border);
+}
+
+:where(table.gestio-table--striped) > :where(tbody) > tr:nth-child(even) > :where(th, td) {
+  background: color-mix(in srgb, var(--gestio-color-surface-muted) 70%, transparent);
+}
+
+:where(table.gestio-table--hover) > :where(tbody) > tr:hover > :where(th, td) {
+  background: var(--gestio-color-surface-hover);
+}
+
+/* Spécificité volontairement supérieure à la règle des cellules (text-align: start). */
+:where(table.gestio-table) :is(th, td).gestio-table-numeric {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :where(table.gestio-table) > :where(tbody) > tr > :where(th, td) {
+    transition: background-color var(--gestio-duration-fast) var(--gestio-easing-standard);
+  }
+}

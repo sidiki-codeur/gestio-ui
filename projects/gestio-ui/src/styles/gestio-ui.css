@@ -1,0 +1,337 @@
+/*
+ * Gestio UI — thème et design tokens.
+ *
+ * Ce fichier ne contient que :
+ * - des propriétés personnalisées préfixées --gestio- ;
+ * - des classes préfixées .gestio- utilisées par les overlays (modales).
+ * Il ne modifie aucun élément HTML de l'application hôte.
+ *
+ * Thème clair : par défaut, sur :root.
+ * Thème sombre : data-gestio-theme="dark" (idéalement sur <html> pour que
+ * les overlays, rendus dans <body>, héritent aussi des tokens).
+ * Thème système : data-gestio-theme="system" suit prefers-color-scheme.
+ */
+
+:root,
+[data-gestio-theme='light'] {
+  color-scheme: light;
+
+  /* Palette indigo (couleur principale) */
+  --gestio-indigo-50: #eef2ff;
+  --gestio-indigo-100: #e0e7ff;
+  --gestio-indigo-200: #c7d2fe;
+  --gestio-indigo-300: #a5b4fc;
+  --gestio-indigo-400: #818cf8;
+  --gestio-indigo-500: #6366f1;
+  --gestio-indigo-600: #4f46e5;
+  --gestio-indigo-700: #4338ca;
+  --gestio-indigo-800: #3730a3;
+  --gestio-indigo-900: #312e81;
+
+  /* Couleur principale */
+  --gestio-color-primary: var(--gestio-indigo-600);
+  --gestio-color-primary-hover: var(--gestio-indigo-700);
+  --gestio-color-primary-active: var(--gestio-indigo-800);
+  --gestio-color-on-primary: #ffffff;
+  --gestio-color-primary-subtle: var(--gestio-indigo-50);
+  --gestio-color-primary-subtle-hover: var(--gestio-indigo-100);
+  --gestio-color-primary-text: var(--gestio-indigo-700);
+  --gestio-color-primary-border: var(--gestio-indigo-200);
+
+  /* Couleurs sémantiques */
+  --gestio-color-success: #15803d;
+  --gestio-color-on-success: #ffffff;
+  --gestio-color-success-subtle: #ecfdf3;
+  --gestio-color-success-text: #166534;
+  --gestio-color-success-border: #bbf7d0;
+
+  --gestio-color-warning: #b45309;
+  --gestio-color-on-warning: #ffffff;
+  --gestio-color-warning-subtle: #fffbeb;
+  --gestio-color-warning-text: #92400e;
+  --gestio-color-warning-border: #fde68a;
+
+  --gestio-color-danger: #dc2626;
+  --gestio-color-danger-hover: #b91c1c;
+  --gestio-color-danger-active: #991b1b;
+  --gestio-color-on-danger: #ffffff;
+  --gestio-color-danger-subtle: #fef2f2;
+  --gestio-color-danger-text: #b91c1c;
+  --gestio-color-danger-border: #fecaca;
+
+  --gestio-color-info: #0369a1;
+  --gestio-color-on-info: #ffffff;
+  --gestio-color-info-subtle: #f0f9ff;
+  --gestio-color-info-text: #075985;
+  --gestio-color-info-border: #bae6fd;
+
+  --gestio-color-neutral: #4a5068;
+  --gestio-color-on-neutral: #ffffff;
+  --gestio-color-neutral-subtle: #eef0f5;
+  --gestio-color-neutral-subtle-hover: #e3e6ee;
+  --gestio-color-neutral-text: #3a3f55;
+  --gestio-color-neutral-border: #d7dbe6;
+
+  /* Surfaces (neutres légèrement teintés d'indigo) */
+  --gestio-color-background: #f6f7fb;
+  --gestio-color-surface: #ffffff;
+  --gestio-color-surface-muted: #f1f3f8;
+  --gestio-color-surface-hover: #f0f1f7;
+  --gestio-color-surface-active: #e6e8f1;
+  --gestio-color-surface-disabled: #f1f2f6;
+  --gestio-color-backdrop: rgb(17 20 38 / 0.48);
+
+  /* Textes */
+  --gestio-color-text: #161a2b;
+  --gestio-color-text-muted: #4f5670;
+  --gestio-color-text-subtle: #646a82;
+  --gestio-color-text-disabled: #8d92a7;
+  --gestio-color-text-inverse: #ffffff;
+
+  /* Bordures */
+  --gestio-color-border: #e1e4ed;
+  --gestio-color-border-strong: #c9cedb;
+  --gestio-color-border-hover: #aab0c2;
+  --gestio-color-focus-ring: var(--gestio-indigo-500);
+
+  /* Typographie */
+  --gestio-font-sans:
+    system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    'Liberation Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+  --gestio-font-mono:
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  --gestio-font-size-xs: 0.75rem;
+  --gestio-font-size-sm: 0.8125rem;
+  --gestio-font-size-md: 0.875rem;
+  --gestio-font-size-lg: 1rem;
+  --gestio-font-size-xl: 1.125rem;
+  --gestio-font-size-2xl: 1.375rem;
+  --gestio-font-size-3xl: 1.75rem;
+  --gestio-font-weight-regular: 400;
+  --gestio-font-weight-medium: 500;
+  --gestio-font-weight-semibold: 600;
+  --gestio-font-weight-bold: 700;
+  --gestio-line-height-tight: 1.25;
+  --gestio-line-height-normal: 1.5;
+
+  /* Espacements (base 4 px) */
+  --gestio-space-0: 0;
+  --gestio-space-1: 0.25rem;
+  --gestio-space-2: 0.5rem;
+  --gestio-space-3: 0.75rem;
+  --gestio-space-4: 1rem;
+  --gestio-space-5: 1.25rem;
+  --gestio-space-6: 1.5rem;
+  --gestio-space-8: 2rem;
+  --gestio-space-10: 2.5rem;
+  --gestio-space-12: 3rem;
+
+  /* Hauteurs de contrôles */
+  --gestio-control-height-sm: 2rem;
+  --gestio-control-height-md: 2.5rem;
+  --gestio-control-height-lg: 3rem;
+
+  /* Rayons */
+  --gestio-radius-sm: 0.25rem;
+  --gestio-radius-md: 0.375rem;
+  --gestio-radius-lg: 0.5rem;
+  --gestio-radius-xl: 0.75rem;
+  --gestio-radius-full: 9999px;
+
+  /* Bordures */
+  --gestio-border-width: 1px;
+
+  /* Ombres */
+  --gestio-shadow-xs: 0 1px 2px rgb(22 26 43 / 0.06);
+  --gestio-shadow-sm: 0 1px 3px rgb(22 26 43 / 0.08), 0 1px 2px rgb(22 26 43 / 0.04);
+  --gestio-shadow-md: 0 4px 12px rgb(22 26 43 / 0.08), 0 2px 4px rgb(22 26 43 / 0.04);
+  --gestio-shadow-lg: 0 16px 40px rgb(22 26 43 / 0.14), 0 4px 12px rgb(22 26 43 / 0.06);
+
+  /* Animations */
+  --gestio-duration-fast: 120ms;
+  --gestio-duration-normal: 180ms;
+  --gestio-duration-slow: 260ms;
+  --gestio-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --gestio-easing-emphasized: cubic-bezier(0.3, 0, 0, 1.2);
+
+  /* Niveaux de superposition */
+  --gestio-z-base: 0;
+  --gestio-z-dropdown: 1000;
+  --gestio-z-sticky: 1100;
+  --gestio-z-overlay: 1200;
+  --gestio-z-modal: 1300;
+  --gestio-z-toast: 1400;
+}
+
+/* Thème sombre — tokens communs aux modes "dark" et "system" (sombre). */
+[data-gestio-theme='dark'] {
+  color-scheme: dark;
+
+  --gestio-color-primary: var(--gestio-indigo-400);
+  --gestio-color-primary-hover: var(--gestio-indigo-300);
+  --gestio-color-primary-active: var(--gestio-indigo-200);
+  --gestio-color-on-primary: #12142a;
+  --gestio-color-primary-subtle: #1f2250;
+  --gestio-color-primary-subtle-hover: #282c63;
+  --gestio-color-primary-text: var(--gestio-indigo-200);
+  --gestio-color-primary-border: #3b3f87;
+
+  --gestio-color-success: #4ade80;
+  --gestio-color-on-success: #06200f;
+  --gestio-color-success-subtle: #0f2a1a;
+  --gestio-color-success-text: #86efac;
+  --gestio-color-success-border: #1d5233;
+
+  --gestio-color-warning: #fbbf24;
+  --gestio-color-on-warning: #241600;
+  --gestio-color-warning-subtle: #2d2108;
+  --gestio-color-warning-text: #fcd34d;
+  --gestio-color-warning-border: #5c4310;
+
+  --gestio-color-danger: #f87171;
+  --gestio-color-danger-hover: #fca5a5;
+  --gestio-color-danger-active: #fecaca;
+  --gestio-color-on-danger: #2a0909;
+  --gestio-color-danger-subtle: #321316;
+  --gestio-color-danger-text: #fca5a5;
+  --gestio-color-danger-border: #6b2428;
+
+  --gestio-color-info: #38bdf8;
+  --gestio-color-on-info: #04192a;
+  --gestio-color-info-subtle: #0b2535;
+  --gestio-color-info-text: #7dd3fc;
+  --gestio-color-info-border: #164a66;
+
+  --gestio-color-neutral: #c3c8d8;
+  --gestio-color-on-neutral: #151823;
+  --gestio-color-neutral-subtle: #252a3a;
+  --gestio-color-neutral-subtle-hover: #2e3446;
+  --gestio-color-neutral-text: #d5d9e5;
+  --gestio-color-neutral-border: #3a4157;
+
+  --gestio-color-background: #0d0f17;
+  --gestio-color-surface: #151823;
+  --gestio-color-surface-muted: #1b1f2c;
+  --gestio-color-surface-hover: #212636;
+  --gestio-color-surface-active: #2a3042;
+  --gestio-color-surface-disabled: #1a1d28;
+  --gestio-color-backdrop: rgb(3 4 10 / 0.66);
+
+  --gestio-color-text: #e9ebf3;
+  --gestio-color-text-muted: #aeb4c8;
+  --gestio-color-text-subtle: #959bb2;
+  --gestio-color-text-disabled: #646a80;
+  --gestio-color-text-inverse: #12142a;
+
+  --gestio-color-border: #2a3042;
+  --gestio-color-border-strong: #3a4157;
+  --gestio-color-border-hover: #535b75;
+  --gestio-color-focus-ring: var(--gestio-indigo-300);
+
+  --gestio-shadow-xs: 0 1px 2px rgb(0 0 0 / 0.4);
+  --gestio-shadow-sm: 0 1px 3px rgb(0 0 0 / 0.45), 0 1px 2px rgb(0 0 0 / 0.3);
+  --gestio-shadow-md: 0 4px 14px rgb(0 0 0 / 0.45), 0 2px 4px rgb(0 0 0 / 0.3);
+  --gestio-shadow-lg: 0 18px 44px rgb(0 0 0 / 0.6), 0 4px 12px rgb(0 0 0 / 0.4);
+}
+
+/* Mode "system" : applique les tokens sombres si l'OS le demande. */
+@media (prefers-color-scheme: dark) {
+  [data-gestio-theme='system'] {
+    color-scheme: dark;
+
+    --gestio-color-primary: var(--gestio-indigo-400);
+    --gestio-color-primary-hover: var(--gestio-indigo-300);
+    --gestio-color-primary-active: var(--gestio-indigo-200);
+    --gestio-color-on-primary: #12142a;
+    --gestio-color-primary-subtle: #1f2250;
+    --gestio-color-primary-subtle-hover: #282c63;
+    --gestio-color-primary-text: var(--gestio-indigo-200);
+    --gestio-color-primary-border: #3b3f87;
+
+    --gestio-color-success: #4ade80;
+    --gestio-color-on-success: #06200f;
+    --gestio-color-success-subtle: #0f2a1a;
+    --gestio-color-success-text: #86efac;
+    --gestio-color-success-border: #1d5233;
+
+    --gestio-color-warning: #fbbf24;
+    --gestio-color-on-warning: #241600;
+    --gestio-color-warning-subtle: #2d2108;
+    --gestio-color-warning-text: #fcd34d;
+    --gestio-color-warning-border: #5c4310;
+
+    --gestio-color-danger: #f87171;
+    --gestio-color-danger-hover: #fca5a5;
+    --gestio-color-danger-active: #fecaca;
+    --gestio-color-on-danger: #2a0909;
+    --gestio-color-danger-subtle: #321316;
+    --gestio-color-danger-text: #fca5a5;
+    --gestio-color-danger-border: #6b2428;
+
+    --gestio-color-info: #38bdf8;
+    --gestio-color-on-info: #04192a;
+    --gestio-color-info-subtle: #0b2535;
+    --gestio-color-info-text: #7dd3fc;
+    --gestio-color-info-border: #164a66;
+
+    --gestio-color-neutral: #c3c8d8;
+    --gestio-color-on-neutral: #151823;
+    --gestio-color-neutral-subtle: #252a3a;
+    --gestio-color-neutral-subtle-hover: #2e3446;
+    --gestio-color-neutral-text: #d5d9e5;
+    --gestio-color-neutral-border: #3a4157;
+
+    --gestio-color-background: #0d0f17;
+    --gestio-color-surface: #151823;
+    --gestio-color-surface-muted: #1b1f2c;
+    --gestio-color-surface-hover: #212636;
+    --gestio-color-surface-active: #2a3042;
+    --gestio-color-surface-disabled: #1a1d28;
+    --gestio-color-backdrop: rgb(3 4 10 / 0.66);
+
+    --gestio-color-text: #e9ebf3;
+    --gestio-color-text-muted: #aeb4c8;
+    --gestio-color-text-subtle: #959bb2;
+    --gestio-color-text-disabled: #646a80;
+    --gestio-color-text-inverse: #12142a;
+
+    --gestio-color-border: #2a3042;
+    --gestio-color-border-strong: #3a4157;
+    --gestio-color-border-hover: #535b75;
+    --gestio-color-focus-ring: var(--gestio-indigo-300);
+
+    --gestio-shadow-xs: 0 1px 2px rgb(0 0 0 / 0.4);
+    --gestio-shadow-sm: 0 1px 3px rgb(0 0 0 / 0.45), 0 1px 2px rgb(0 0 0 / 0.3);
+    --gestio-shadow-md: 0 4px 14px rgb(0 0 0 / 0.45), 0 2px 4px rgb(0 0 0 / 0.3);
+    --gestio-shadow-lg: 0 18px 44px rgb(0 0 0 / 0.6), 0 4px 12px rgb(0 0 0 / 0.4);
+  }
+}
+
+/* Animations réduites : les durées des tokens deviennent quasi nulles. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --gestio-duration-fast: 1ms;
+    --gestio-duration-normal: 1ms;
+    --gestio-duration-slow: 1ms;
+  }
+}
+
+/*
+ * Overlays (modales) — classes préfixées appliquées par GestioDialogService
+ * au fond et au panneau CDK. Les styles structurels du CDK sont chargés
+ * automatiquement par @angular/cdk.
+ */
+.gestio-dialog-backdrop {
+  background: var(--gestio-color-backdrop);
+  opacity: 0;
+  transition: opacity var(--gestio-duration-normal) var(--gestio-easing-standard);
+}
+
+.gestio-dialog-backdrop.cdk-overlay-backdrop-showing {
+  opacity: 1;
+}
+
+.gestio-dialog-pane {
+  /* Laisse respirer la modale sur les petits écrans. */
+  max-height: calc(100dvh - 2rem);
+}

@@ -4,6 +4,9 @@
   "compileOnSave": false,
   "compilerOptions": {
     "noImplicitOverride": true,
+    "paths": {
+      "@gestiolabs/ui": ["./dist/gestio-ui"]
+    },
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
@@ -19,5 +22,19 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true
   },
-  "files": []
+  "files": [],
+  "references": [
+    {
+      "path": "./projects/gestio-ui/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/gestio-ui/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/showcase/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/showcase/tsconfig.spec.json"
+    }
+  ]
 }

@@ -1,0 +1,35 @@
+@use '../core/field' as field;
+
+@include field.field;
+
+.gestio-field__control--multiline {
+  align-items: stretch;
+  padding: 0;
+
+  .gestio-field__native {
+    min-height: 4.5rem;
+    padding: var(--gestio-space-2) var(--gestio-space-3);
+    resize: vertical;
+    border-radius: inherit;
+  }
+}
+
+.gestio-field__meta {
+  display: flex;
+  gap: var(--gestio-space-3);
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.gestio-field__count {
+  margin: 0 0 0 auto;
+  flex: none;
+  color: var(--gestio-color-text-muted);
+  font-size: var(--gestio-font-size-sm);
+  font-variant-numeric: tabular-nums;
+
+  &.is-limit {
+    color: var(--gestio-color-warning-text);
+    font-weight: var(--gestio-font-weight-medium);
+  }
+}

@@ -1,0 +1,68 @@
+// Styles non encapsulés, tous préfixés par .gestio-grid.
+// Points de rupture : voir GESTIO_BREAKPOINTS (responsive.ts).
+
+.gestio-grid {
+  display: block;
+  min-width: 0;
+  container-type: inline-size;
+}
+
+.gestio-grid__inner {
+  display: grid;
+  grid-template-columns: repeat(var(--gestio-grid-cols-base), minmax(0, 1fr));
+  gap: var(--gestio-grid-gap-base);
+  align-items: var(--gestio-grid-align);
+}
+
+.gestio-grid__inner > .gestio-grid-item {
+  grid-column: var(--gestio-grid-span-base);
+}
+
+@container (min-width: 640px) {
+  .gestio-grid__inner {
+    grid-template-columns: repeat(var(--gestio-grid-cols-sm), minmax(0, 1fr));
+    gap: var(--gestio-grid-gap-sm);
+  }
+
+  .gestio-grid__inner > .gestio-grid-item {
+    grid-column: var(--gestio-grid-span-sm);
+  }
+}
+
+@container (min-width: 768px) {
+  .gestio-grid__inner {
+    grid-template-columns: repeat(var(--gestio-grid-cols-md), minmax(0, 1fr));
+    gap: var(--gestio-grid-gap-md);
+  }
+
+  .gestio-grid__inner > .gestio-grid-item {
+    grid-column: var(--gestio-grid-span-md);
+  }
+}
+
+@container (min-width: 1024px) {
+  .gestio-grid__inner {
+    grid-template-columns: repeat(var(--gestio-grid-cols-lg), minmax(0, 1fr));
+    gap: var(--gestio-grid-gap-lg);
+  }
+
+  .gestio-grid__inner > .gestio-grid-item {
+    grid-column: var(--gestio-grid-span-lg);
+  }
+}
+
+@container (min-width: 1280px) {
+  .gestio-grid__inner {
+    grid-template-columns: repeat(var(--gestio-grid-cols-xl), minmax(0, 1fr));
+    gap: var(--gestio-grid-gap-xl);
+  }
+
+  .gestio-grid__inner > .gestio-grid-item {
+    grid-column: var(--gestio-grid-span-xl);
+  }
+}
+
+// Mode automatique : prioritaire sur les colonnes déclarées (sélecteur plus spécifique).
+.gestio-grid.gestio-grid--auto > .gestio-grid__inner {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--gestio-grid-min)), 1fr));
+}

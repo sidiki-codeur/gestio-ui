@@ -1,0 +1,44 @@
+<a class="gestio-shell__skip" [href]="'#' + mainId">{{ skipLinkLabel() }}</a>
+
+<header class="gestio-shell__header">
+  @if (withSidebar()) {
+    <button
+      #toggle
+      type="button"
+      class="gestio-shell__toggle"
+      [attr.aria-expanded]="drawerOpen()"
+      [attr.aria-controls]="sidebarId"
+      (click)="toggleSidebar()"
+    >
+      <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+        @if (drawerOpen()) {
+          <path d="M5 5l10 10M15 5L5 15" />
+        } @else {
+          <path d="M3 6h14M3 10h14M3 14h14" />
+        }
+      </svg>
+      <span class="gestio-shell__sr-only">{{ menuLabel() }}</span>
+    </button>
+  }
+  <div class="gestio-shell__header-content"><ng-content select="[gestioShellHeader]" /></div>
+</header>
+
+<div class="gestio-shell__body">
+  @if (withSidebar()) {
+    <div
+      #sidebar
+      class="gestio-shell__sidebar"
+      tabindex="-1"
+      [id]="sidebarId"
+      (click)="onSidebarClick($event)"
+    >
+      <ng-content select="[gestioShellSidebar]" />
+    </div>
+  }
+  @if (drawerOpen()) {
+    <div class="gestio-shell__backdrop" aria-hidden="true" (click)="closeSidebar(true)"></div>
+  }
+  <main class="gestio-shell__main" tabindex="-1" [id]="mainId" [inert]="drawerOpen()">
+    <ng-content />
+  </main>
+</div>

@@ -1,0 +1,71 @@
+@use '../core/field' as field;
+
+@include field.field;
+
+.gestio-field__affix {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  color: var(--gestio-color-text-muted);
+  font-size: var(--gestio-font-size-md);
+
+  &:empty {
+    display: none;
+  }
+}
+
+/* Masque les flèches natives du champ numérique pour un rendu homogène. */
+.gestio-field__native[type='number'] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+.gestio-field__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin-inline-end: calc(var(--gestio-space-1) * -1);
+  padding: 0;
+  border: 0;
+  border-radius: var(--gestio-radius-sm);
+  background: transparent;
+  color: var(--gestio-color-text-muted);
+  cursor: pointer;
+  transition:
+    background-color var(--gestio-duration-fast) var(--gestio-easing-standard),
+    color var(--gestio-duration-fast) var(--gestio-easing-standard);
+
+  svg {
+    width: 1.125rem;
+    height: 1.125rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  &:hover:not(:disabled) {
+    background: var(--gestio-color-surface-hover);
+    color: var(--gestio-color-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: 1px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}

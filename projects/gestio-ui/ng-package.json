@@ -1,0 +1,19 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/gestio-ui",
+  "lib": {
+    "entryFile": "src/public-api.ts"
+  },
+  "assets": [
+    {
+      "input": "src/styles",
+      "glob": "**/*.css",
+      "output": "styles"
+    },
+    {
+      "input": "mcp",
+      "glob": "{server.mjs,catalog.json,README.md}",
+      "output": "mcp"
+    }
+  ]
+}

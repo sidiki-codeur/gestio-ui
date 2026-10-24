@@ -1,0 +1,28 @@
+<div
+  class="gestio-tabs__list"
+  role="tablist"
+  aria-orientation="horizontal"
+  [class.is-stretched]="stretch()"
+  [attr.aria-label]="ariaLabel() ?? null"
+  (keydown)="handleKeydown($event)"
+>
+  @for (tab of tabs(); track tab; let i = $index) {
+    <button
+      #tabButton
+      type="button"
+      role="tab"
+      class="gestio-tabs__tab"
+      [id]="tab.tabId()"
+      [attr.aria-selected]="i === activeIndex()"
+      [attr.aria-controls]="tab.panelId()"
+      [attr.tabindex]="i === activeIndex() ? 0 : -1"
+      [disabled]="tab.disabled()"
+      (click)="select(i)"
+    >
+      {{ tab.label() }}
+    </button>
+  }
+</div>
+<div class="gestio-tabs__panels">
+  <ng-content />
+</div>

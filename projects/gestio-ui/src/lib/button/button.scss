@@ -1,0 +1,177 @@
+@use '../core/field' as field;
+
+:host {
+  --_bg: var(--gestio-color-primary);
+  --_bg-hover: var(--gestio-color-primary-hover);
+  --_bg-active: var(--gestio-color-primary-active);
+  --_fg: var(--gestio-color-on-primary);
+  --_border: transparent;
+  --_border-hover: transparent;
+  --_shadow: var(--gestio-shadow-xs);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: var(--gestio-control-height-md);
+  margin: 0;
+  padding: 0 var(--gestio-space-4);
+  border: var(--gestio-border-width) solid var(--_border);
+  border-radius: var(--gestio-radius-md);
+  background: var(--_bg);
+  box-shadow: var(--_shadow);
+  color: var(--_fg);
+  font-family: var(--gestio-font-sans);
+  font-size: var(--gestio-font-size-md);
+  font-weight: var(--gestio-font-weight-medium);
+  line-height: var(--gestio-line-height-tight);
+  text-decoration: none;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--gestio-duration-fast) var(--gestio-easing-standard),
+    border-color var(--gestio-duration-fast) var(--gestio-easing-standard),
+    color var(--gestio-duration-fast) var(--gestio-easing-standard),
+    box-shadow var(--gestio-duration-fast) var(--gestio-easing-standard),
+    transform var(--gestio-duration-fast) var(--gestio-easing-standard);
+}
+
+:host(:hover:not([disabled]):not([aria-disabled='true'])) {
+  background: var(--_bg-hover);
+  border-color: var(--_border-hover);
+}
+
+:host(:active:not([disabled]):not([aria-disabled='true'])) {
+  background: var(--_bg-active);
+  transform: translateY(1px);
+}
+
+:host(:focus-visible) {
+  outline: 2px solid var(--gestio-color-focus-ring);
+  outline-offset: 2px;
+}
+
+:host([disabled]),
+:host([aria-disabled='true']:not([aria-busy='true'])) {
+  opacity: 0.5;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+:host(.gestio-button--loading) {
+  cursor: progress;
+}
+
+/* Tailles */
+:host(.gestio-button--sm) {
+  min-height: var(--gestio-control-height-sm);
+  padding-inline: var(--gestio-space-3);
+  font-size: var(--gestio-font-size-sm);
+  border-radius: var(--gestio-radius-sm);
+}
+
+:host(.gestio-button--lg) {
+  min-height: var(--gestio-control-height-lg);
+  padding-inline: var(--gestio-space-5);
+  font-size: var(--gestio-font-size-lg);
+  border-radius: var(--gestio-radius-lg);
+}
+
+:host(.gestio-button--full-width) {
+  display: flex;
+  width: 100%;
+}
+
+/* Variantes */
+:host(.gestio-button--secondary) {
+  --_bg: var(--gestio-color-primary-subtle);
+  --_bg-hover: var(--gestio-color-primary-subtle-hover);
+  --_bg-active: var(--gestio-color-primary-subtle-hover);
+  --_fg: var(--gestio-color-primary-text);
+  --_shadow: none;
+}
+
+:host(.gestio-button--outline) {
+  --_bg: var(--gestio-color-surface);
+  --_bg-hover: var(--gestio-color-surface-hover);
+  --_bg-active: var(--gestio-color-surface-active);
+  --_fg: var(--gestio-color-text);
+  --_border: var(--gestio-color-border-strong);
+  --_border-hover: var(--gestio-color-border-hover);
+}
+
+:host(.gestio-button--ghost) {
+  --_bg: transparent;
+  --_bg-hover: var(--gestio-color-surface-hover);
+  --_bg-active: var(--gestio-color-surface-active);
+  --_fg: var(--gestio-color-text);
+  --_shadow: none;
+}
+
+:host(.gestio-button--danger) {
+  --_bg: var(--gestio-color-danger);
+  --_bg-hover: var(--gestio-color-danger-hover);
+  --_bg-active: var(--gestio-color-danger-active);
+  --_fg: var(--gestio-color-on-danger);
+}
+
+.gestio-button__content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gestio-space-2);
+  transition: opacity var(--gestio-duration-fast) var(--gestio-easing-standard);
+}
+
+/* Le contenu reste dans le flux (largeur stable) mais devient invisible. */
+:host(.gestio-button--loading) .gestio-button__content {
+  opacity: 0;
+}
+
+.gestio-button__spinner {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 1em;
+  height: 1em;
+  box-sizing: border-box;
+  border: 2px solid currentColor;
+  border-inline-end-color: transparent;
+  border-radius: 50%;
+  animation: gestio-button-spin 700ms linear infinite;
+}
+
+.gestio-button__sr-only {
+  @include field.sr-only;
+}
+
+@keyframes gestio-button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host {
+    transition: none;
+  }
+
+  :host(:active:not([disabled]):not([aria-disabled='true'])) {
+    transform: none;
+  }
+
+  /* La rotation reste visible (information d'état) mais ralentie. */
+  .gestio-button__spinner {
+    animation-duration: 1600ms;
+  }
+}
+
+@media (forced-colors: active) {
+  :host {
+    border-color: ButtonText;
+  }
+}

@@ -1,0 +1,210 @@
+@use '../core/field' as field;
+
+:host {
+  display: contents;
+}
+
+.gestio-toaster {
+  position: fixed;
+  z-index: var(--gestio-z-toast);
+  box-sizing: border-box;
+  width: min(24rem, calc(100vw - 2rem));
+  pointer-events: none;
+  font-family: var(--gestio-font-sans);
+
+  &--top-right {
+    top: var(--gestio-space-4);
+    right: var(--gestio-space-4);
+  }
+
+  &--bottom-right {
+    bottom: var(--gestio-space-4);
+    right: var(--gestio-space-4);
+  }
+
+  &--top-center,
+  &--bottom-center {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &--top-center {
+    top: var(--gestio-space-4);
+  }
+
+  &--bottom-center {
+    bottom: var(--gestio-space-4);
+  }
+}
+
+.gestio-toaster__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gestio-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gestio-toast {
+  --_accent: var(--gestio-color-info);
+
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--gestio-space-3);
+  align-items: start;
+  overflow: hidden;
+  padding: var(--gestio-space-3) var(--gestio-space-3) var(--gestio-space-3) var(--gestio-space-4);
+  border: var(--gestio-border-width) solid var(--gestio-color-border);
+  border-radius: var(--gestio-radius-lg);
+  background: var(--gestio-color-surface);
+  box-shadow: var(--gestio-shadow-lg);
+  color: var(--gestio-color-text);
+  pointer-events: auto;
+  animation: gestio-toast-enter var(--gestio-duration-slow) var(--gestio-easing-standard);
+
+  &--success {
+    --_accent: var(--gestio-color-success);
+  }
+
+  &--error {
+    --_accent: var(--gestio-color-danger);
+  }
+
+  &--warning {
+    --_accent: var(--gestio-color-warning);
+  }
+
+  &:hover .gestio-toast__progress,
+  &:focus-within .gestio-toast__progress {
+    animation-play-state: paused;
+  }
+}
+
+.gestio-toast__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-block-start: 0.0625rem;
+  border-radius: 50%;
+  background: var(--_accent);
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: var(--gestio-color-surface);
+    stroke-width: 2.25;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
+
+.gestio-toast__content {
+  min-width: 0;
+  font-size: var(--gestio-font-size-md);
+  line-height: var(--gestio-line-height-normal);
+}
+
+.gestio-toast__title {
+  margin: 0;
+  font-weight: var(--gestio-font-weight-semibold);
+}
+
+.gestio-toast__message {
+  margin: 0;
+  color: var(--gestio-color-text-muted);
+  overflow-wrap: anywhere;
+
+  .gestio-toast__title + & {
+    margin-block-start: 0.125rem;
+  }
+}
+
+.gestio-toast__sr-only {
+  @include field.sr-only;
+}
+
+.gestio-toast__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: -0.125rem 0 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--gestio-radius-md);
+  background: transparent;
+  color: var(--gestio-color-text-muted);
+  cursor: pointer;
+
+  svg {
+    width: 0.875rem;
+    height: 0.875rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+  }
+
+  &:hover {
+    background: var(--gestio-color-surface-hover);
+    color: var(--gestio-color-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: 1px;
+  }
+}
+
+.gestio-toast__progress {
+  position: absolute;
+  inset-inline-start: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--_accent);
+  opacity: 0.55;
+  transform-origin: left center;
+  animation: gestio-toast-progress linear forwards;
+}
+
+@keyframes gestio-toast-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes gestio-toast-progress {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .gestio-toaster {
+    left: var(--gestio-space-4);
+    right: var(--gestio-space-4);
+    width: auto;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gestio-toast {
+    animation: none;
+  }
+
+  .gestio-toast__progress {
+    display: none;
+  }
+}

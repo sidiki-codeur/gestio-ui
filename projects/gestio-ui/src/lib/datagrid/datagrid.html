@@ -1,0 +1,228 @@
+@if (filterable()) {
+  <div class="gestio-datagrid__toolbar">
+    <gestio-input
+      class="gestio-datagrid__filter"
+      type="text"
+      size="sm"
+      [ariaLabel]="text().filter"
+      [placeholder]="text().filterPlaceholder"
+      [ngModel]="filter()"
+      (ngModelChange)="onFilter($event)"
+    >
+      <svg
+        gestioPrefix
+        viewBox="0 0 16 16"
+        width="16"
+        height="16"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5" />
+        <path
+          d="M10.5 10.5L14 14"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+        />
+      </svg>
+    </gestio-input>
+    <div class="gestio-datagrid__actions"><ng-content select="[gestioDataGridActions]" /></div>
+  </div>
+} @else {
+  <div class="gestio-datagrid__toolbar gestio-datagrid__toolbar--actions-only">
+    <div class="gestio-datagrid__actions"><ng-content select="[gestioDataGridActions]" /></div>
+  </div>
+}
+
+<div
+  class="gestio-datagrid__scroll"
+  tabindex="0"
+  [attr.role]="caption() ? 'region' : null"
+  [attr.aria-label]="caption() ?? null"
+>
+  <table
+    gestioTable
+    [density]="density()"
+    [striped]="striped()"
+    [columnDividers]="columnDividers()"
+    [attr.aria-busy]="loading() ? 'true' : null"
+  >
+    @if (caption()) {
+      <caption [class.gestio-datagrid__sr-only]="!showCaption()">
+        {{
+          caption()
+        }}
+      </caption>
+    }
+    <thead>
+      <tr>
+        @if (selectable()) {
+          <th scope="col" class="gestio-datagrid__select">
+            <gestio-checkbox
+              [ariaLabel]="text().selectPage"
+              [checked]="pageSelection().all"
+              [indeterminate]="pageSelection().some"
+              [disabled]="!visible().length"
+              (checkedChange)="togglePage($event)"
+            />
+          </th>
+        }
+        @for (column of columns(); track column.key) {
+          <th
+            scope="col"
+            [attr.aria-sort]="ariaSort(column)"
+            [style.width]="column.width ?? null"
+            [class.gestio-datagrid__cell--end]="column.align === 'end'"
+            [class.gestio-datagrid__cell--center]="column.align === 'center'"
+          >
+            @if (column.sortable) {
+              <button type="button" class="gestio-datagrid__sort" (click)="toggleSort(column)">
+                <span>{{ column.header }}</span>
+                <svg
+                  class="gestio-datagrid__sort-icon"
+                  [class.is-asc]="ariaSort(column) === 'ascending'"
+                  [class.is-desc]="ariaSort(column) === 'descending'"
+                  viewBox="0 0 16 16"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path class="gestio-datagrid__sort-up" d="M5 6.5L8 3.5l3 3" />
+                  <path class="gestio-datagrid__sort-down" d="M5 9.5l3 3 3-3" />
+                </svg>
+              </button>
+            } @else {
+              {{ column.header }}
+            }
+          </th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @if (loading() && !visible().length) {
+        <tr>
+          <td class="gestio-datagrid__state" [attr.colspan]="columnCount()">
+            <span class="gestio-datagrid__spinner" aria-hidden="true"></span>
+            {{ text().loading }}
+          </td>
+        </tr>
+      } @else {
+        @for (item of visible(); track item.key; let i = $index) {
+          <tr [class.is-selected]="isSelected(item)">
+            @if (selectable()) {
+              <td class="gestio-datagrid__select">
+                <gestio-checkbox
+                  [ariaLabel]="rowSelectLabel(item.row)"
+                  [checked]="isSelected(item)"
+                  (checkedChange)="toggleRow(item, $event)"
+                />
+              </td>
+            }
+            @for (column of columns(); track column.key) {
+              <td
+                [class.gestio-datagrid__cell--end]="column.align === 'end'"
+                [class.gestio-datagrid__cell--center]="column.align === 'center'"
+              >
+                @if (templates().get(column.key); as cell) {
+                  <ng-container
+                    *ngTemplateOutlet="
+                      cell.template;
+                      context: {
+                        $implicit: item.row,
+                        row: item.row,
+                        value: value(column, item.row),
+                        index: i,
+                      }
+                    "
+                  />
+                } @else {
+                  {{ display(column, item.row) }}
+                }
+              </td>
+            }
+          </tr>
+        } @empty {
+          <tr>
+            <td class="gestio-datagrid__state" [attr.colspan]="columnCount()">
+              {{ filter().trim() ? text().noResults : text().empty }}
+            </td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>
+
+@if (paginated() && total() > 0) {
+  <div class="gestio-datagrid__footer">
+    <div class="gestio-datagrid__page-size">
+      <label [for]="id + '-page-size'">{{ text().rowsPerPage }}</label>
+      <gestio-select
+        size="sm"
+        [selectId]="id + '-page-size'"
+        [options]="pageSizeChoices()"
+        [ngModel]="pageSize()"
+        (ngModelChange)="onPageSize($event)"
+      />
+    </div>
+    <p class="gestio-datagrid__range">{{ rangeText() }}</p>
+    <div class="gestio-datagrid__pager">
+      <button
+        gestioButton
+        variant="ghost"
+        size="sm"
+        [attr.aria-label]="text().previousPage"
+        [disabled]="currentPage() === 0"
+        (click)="goTo(currentPage() - 1)"
+      >
+        <svg
+          gestioButtonIcon
+          viewBox="0 0 16 16"
+          width="16"
+          height="16"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            d="M10 3.5L5.5 8l4.5 4.5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+      <span class="gestio-datagrid__page">{{ currentPage() + 1 }} / {{ pageCount() }}</span>
+      <button
+        gestioButton
+        variant="ghost"
+        size="sm"
+        [attr.aria-label]="text().nextPage"
+        [disabled]="currentPage() >= pageCount() - 1"
+        (click)="goTo(currentPage() + 1)"
+      >
+        <svg
+          gestioButtonIcon
+          viewBox="0 0 16 16"
+          width="16"
+          height="16"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            d="M6 3.5L10.5 8 6 12.5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+}
+
+<span class="gestio-datagrid__sr-only" aria-live="polite" aria-atomic="true">{{
+  announcement()
+}}</span>

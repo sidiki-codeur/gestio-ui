@@ -1,0 +1,178 @@
+@use '../core/field' as field;
+
+// Point de rupture du tiroir : lg = 1024 px (GESTIO_BREAKPOINTS.lg).
+
+:host {
+  --gestio-shell-header-height: 3.75rem;
+  --gestio-shell-sidebar-width: 16rem;
+
+  display: block;
+  min-height: 100dvh;
+  background: var(--gestio-color-background);
+  color: var(--gestio-color-text);
+  font-family: var(--gestio-font-sans);
+}
+
+.gestio-shell__skip {
+  position: absolute;
+  top: -100px;
+  left: var(--gestio-space-4);
+  z-index: calc(var(--gestio-z-modal) + 1);
+  padding: var(--gestio-space-2) var(--gestio-space-4);
+  border-radius: var(--gestio-radius-md);
+  background: var(--gestio-color-primary);
+  color: var(--gestio-color-on-primary);
+  font-weight: var(--gestio-font-weight-semibold);
+
+  &:focus {
+    top: var(--gestio-space-2);
+  }
+}
+
+.gestio-shell__header {
+  position: sticky;
+  top: 0;
+  z-index: var(--gestio-z-sticky);
+  display: flex;
+  align-items: center;
+  gap: var(--gestio-space-3);
+  box-sizing: border-box;
+  height: var(--gestio-shell-header-height);
+  padding: 0 var(--gestio-space-4);
+  border-bottom: var(--gestio-border-width) solid var(--gestio-color-border);
+  background: color-mix(in srgb, var(--gestio-color-surface) 90%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+/* Grille à une colonne : l'élément [gestioShellHeader] projeté occupe toute la place. */
+.gestio-shell__header-content {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  min-width: 0;
+}
+
+.gestio-shell__toggle {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: var(--gestio-border-width) solid var(--gestio-color-border-strong);
+  border-radius: var(--gestio-radius-md);
+  background: var(--gestio-color-surface);
+  color: var(--gestio-color-text);
+  cursor: pointer;
+
+  svg {
+    width: 1.125rem;
+    height: 1.125rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+  }
+
+  &:hover {
+    background: var(--gestio-color-surface-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+.gestio-shell__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.gestio-shell__sidebar {
+  box-sizing: border-box;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--gestio-color-surface);
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.gestio-shell__main {
+  min-width: 0;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+/* ---- Petits écrans : tiroir ---- */
+@media (max-width: 1023.98px) {
+  .gestio-shell__sidebar {
+    position: fixed;
+    top: var(--gestio-shell-header-height);
+    bottom: 0;
+    left: 0;
+    z-index: var(--gestio-z-modal);
+    display: none;
+    width: min(20rem, 85vw);
+    border-right: var(--gestio-border-width) solid var(--gestio-color-border);
+    box-shadow: var(--gestio-shadow-lg);
+  }
+
+  :host(.gestio-app-shell--drawer-open) .gestio-shell__sidebar {
+    display: block;
+    animation: gestio-shell-drawer var(--gestio-duration-slow) var(--gestio-easing-standard);
+  }
+
+  .gestio-shell__backdrop {
+    position: fixed;
+    inset: var(--gestio-shell-header-height) 0 0 0;
+    z-index: var(--gestio-z-overlay);
+    background: var(--gestio-color-backdrop);
+  }
+}
+
+/* ---- Grands écrans : barre latérale fixe ---- */
+@media (min-width: 1024px) {
+  .gestio-shell__toggle {
+    display: none;
+  }
+
+  .gestio-shell__body {
+    grid-template-columns: var(--gestio-shell-sidebar-width) minmax(0, 1fr);
+  }
+
+  .gestio-shell__sidebar {
+    position: sticky;
+    top: var(--gestio-shell-header-height);
+    align-self: start;
+    height: calc(100dvh - var(--gestio-shell-header-height));
+    border-right: var(--gestio-border-width) solid var(--gestio-color-border);
+    background: transparent;
+  }
+
+  :host(.gestio-app-shell--no-sidebar) .gestio-shell__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.gestio-shell__sr-only {
+  @include field.sr-only;
+}
+
+@keyframes gestio-shell-drawer {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host(.gestio-app-shell--drawer-open) .gestio-shell__sidebar {
+    animation: none;
+  }
+}

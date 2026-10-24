@@ -1,0 +1,9 @@
+<span class="gestio-button__content">
+  <ng-content select="[gestioButtonIcon]" />
+  <ng-content />
+  <ng-content select="[gestioButtonIconEnd]" />
+</span>
+@if (loading()) {
+  <span class="gestio-button__spinner" aria-hidden="true"></span>
+  <span class="gestio-button__sr-only">{{ loadingLabel() }}</span>
+}

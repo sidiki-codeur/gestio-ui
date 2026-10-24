@@ -1,0 +1,56 @@
+<div
+  class="gestio-checkbox"
+  [class.is-disabled]="isDisabled()"
+  [class.is-invalid]="!!error()"
+  [class.is-unlabelled]="!!ariaLabel() && !label()"
+>
+  <label class="gestio-checkbox__label" [for]="controlId()">
+    <span class="gestio-checkbox__box">
+      <input
+        #control
+        type="checkbox"
+        class="gestio-checkbox__input"
+        [id]="controlId()"
+        [checked]="checked()"
+        [indeterminate]="indeterminate()"
+        [disabled]="isDisabled()"
+        [required]="required()"
+        [attr.name]="name() ?? null"
+        [attr.value]="value() ?? null"
+        [attr.aria-label]="ariaLabel() ?? null"
+        [attr.aria-invalid]="error() ? 'true' : null"
+        [attr.aria-describedby]="describedBy()"
+        (change)="handleChange(control)"
+        (blur)="handleBlur()"
+      />
+      <svg
+        class="gestio-checkbox__icon gestio-checkbox__icon--check"
+        viewBox="0 0 16 16"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path d="M3.5 8.5l3 3 6-7" />
+      </svg>
+      <svg
+        class="gestio-checkbox__icon gestio-checkbox__icon--dash"
+        viewBox="0 0 16 16"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path d="M4 8h8" />
+      </svg>
+    </span>
+    <span class="gestio-checkbox__text">
+      {{ label() }}<ng-content />
+      @if (required()) {
+        <span class="gestio-checkbox__required" aria-hidden="true">*</span>
+      }
+    </span>
+  </label>
+  @if (description()) {
+    <p class="gestio-checkbox__description" [id]="descriptionId">{{ description() }}</p>
+  }
+  @if (error()) {
+    <p class="gestio-checkbox__error" [id]="errorId">{{ error() }}</p>
+  }
+</div>

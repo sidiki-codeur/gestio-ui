@@ -1,0 +1,26 @@
+<div class="gestio-dialog__header" [class.has-close]="showClose()">
+  <div class="gestio-dialog__heading">
+    <h2 class="gestio-dialog__title" [id]="titleId">{{ title() }}</h2>
+    <!-- Toujours présent pour que la référence aria-describedby reste valide. -->
+    <p class="gestio-dialog__description" [id]="descriptionId" [hidden]="!description()">
+      {{ description() }}
+    </p>
+  </div>
+</div>
+<div class="gestio-dialog__body">
+  <ng-content />
+</div>
+<div class="gestio-dialog__footer"><ng-content select="[gestioDialogActions]" /></div>
+<!-- En fin de DOM : le focus initial va au contenu ; affiché en haut à droite. -->
+@if (showClose()) {
+  <button
+    type="button"
+    class="gestio-dialog__close"
+    [attr.aria-label]="closeLabel()"
+    (click)="close()"
+  >
+    <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+      <path d="M4 4l8 8M12 4l-8 8" />
+    </svg>
+  </button>
+}

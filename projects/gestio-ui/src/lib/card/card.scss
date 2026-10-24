@@ -1,0 +1,99 @@
+:host {
+  --_padding: var(--gestio-space-5);
+
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-width: 0;
+  background: var(--gestio-color-surface);
+  border: var(--gestio-border-width) solid var(--gestio-color-border);
+  border-radius: var(--gestio-radius-xl);
+  color: var(--gestio-color-text);
+  font-family: var(--gestio-font-sans);
+}
+
+:host(.gestio-card--elevated) {
+  border-color: transparent;
+  box-shadow: var(--gestio-shadow-md);
+}
+
+:host(.gestio-card--flat) {
+  border-color: transparent;
+  background: var(--gestio-color-surface-muted);
+}
+
+:host(.gestio-card--padding-none) {
+  --_padding: 0;
+}
+
+:host(.gestio-card--padding-sm) {
+  --_padding: var(--gestio-space-3);
+}
+
+:host(.gestio-card--padding-lg) {
+  --_padding: var(--gestio-space-8);
+}
+
+.gestio-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gestio-space-3);
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: var(--_padding) var(--_padding) 0;
+
+  &:has(.gestio-card__heading:empty):has(.gestio-card__actions:empty) {
+    display: none;
+  }
+}
+
+.gestio-card__heading {
+  flex: 1 1 12rem;
+  min-width: 0;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.gestio-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gestio-space-2);
+  align-items: center;
+  margin-inline-start: auto;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.gestio-card__body {
+  flex: 1 1 auto;
+  padding: var(--_padding);
+
+  &:empty {
+    display: none;
+  }
+}
+
+.gestio-card__footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gestio-space-2);
+  align-items: center;
+  justify-content: flex-end;
+  padding: var(--gestio-space-3) var(--_padding);
+  border-top: var(--gestio-border-width) solid var(--gestio-color-border);
+  background: color-mix(in srgb, var(--gestio-color-surface-muted) 60%, transparent);
+  border-end-start-radius: inherit;
+  border-end-end-radius: inherit;
+
+  &:empty {
+    display: none;
+  }
+
+  :host(.gestio-card--padding-none) & {
+    padding: var(--gestio-space-3) var(--gestio-space-4);
+  }
+}

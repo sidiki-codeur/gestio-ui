@@ -1,0 +1,71 @@
+<div class="gestio-field">
+  @if (label()) {
+    <label class="gestio-field__label" [for]="controlId()">
+      {{ label() }}
+      @if (required()) {
+        <span class="gestio-field__required" aria-hidden="true">*</span>
+      }
+    </label>
+  }
+
+  <div
+    class="gestio-field__control gestio-field__control--multiline"
+    [class.is-invalid]="invalid()"
+    [class.is-disabled]="isDisabled()"
+    [class.is-readonly]="readonly()"
+  >
+    <textarea
+      #control
+      class="gestio-field__native"
+      [id]="controlId()"
+      [rows]="rows()"
+      [value]="value()"
+      [disabled]="isDisabled()"
+      [readOnly]="readonly()"
+      [required]="required()"
+      [attr.name]="name() ?? null"
+      [attr.maxlength]="maxlength() ?? null"
+      [attr.placeholder]="placeholder() ?? null"
+      [attr.aria-label]="label() ? null : (ariaLabel() ?? null)"
+      [attr.aria-invalid]="invalid() ? 'true' : null"
+      [attr.aria-describedby]="describedBy()"
+      (input)="handleInput(control)"
+      (blur)="handleBlur()"
+    ></textarea>
+  </div>
+
+  @if (hint() || showCount()) {
+    <div class="gestio-field__meta">
+      @if (hint()) {
+        <p class="gestio-field__hint" [id]="hintId">{{ hint() }}</p>
+      }
+      @if (showCount()) {
+        <p
+          class="gestio-field__count"
+          [id]="countId"
+          [class.is-limit]="maxlength() !== undefined && length() >= maxlength()!"
+        >
+          @if (maxlength() !== undefined) {
+            {{ length() }} / {{ maxlength() }} caractères
+          } @else {
+            {{ length() }} caractères
+          }
+        </p>
+      }
+    </div>
+  }
+  @if (error()) {
+    <p class="gestio-field__error" [id]="errorId">
+      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5" />
+        <path
+          d="M8 4.5v4.2M8 11v.5"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+        />
+      </svg>
+      <span>{{ error() }}</span>
+    </p>
+  }
+</div>

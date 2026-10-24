@@ -1,0 +1,58 @@
+@use '../core/field' as field;
+
+@include field.field;
+
+.gestio-select__control {
+  padding: 0;
+}
+
+.gestio-select__native {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  min-height: inherit;
+  padding-inline: var(--gestio-space-3) var(--gestio-space-8);
+  border-radius: inherit;
+  cursor: pointer;
+
+  .is-sm > & {
+    padding-inline: var(--gestio-space-2) var(--gestio-space-6);
+  }
+
+  .is-lg > & {
+    padding-inline: var(--gestio-space-4) var(--gestio-space-10);
+  }
+
+  .is-placeholder > & {
+    color: var(--gestio-color-text-subtle);
+  }
+
+  /* Les options héritent des couleurs du thème (color-scheme gère la liste native). */
+  option {
+    color: var(--gestio-color-text);
+    background: var(--gestio-color-surface);
+  }
+}
+
+.gestio-select__chevron {
+  position: absolute;
+  inset-inline-end: var(--gestio-space-3);
+  top: 50%;
+  width: 1rem;
+  height: 1rem;
+  transform: translateY(-50%);
+  fill: none;
+  stroke: var(--gestio-color-text-muted);
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+
+  .is-sm > & {
+    inset-inline-end: var(--gestio-space-2);
+  }
+
+  .is-disabled > & {
+    stroke: var(--gestio-color-text-disabled);
+  }
+}
