@@ -3,6 +3,15 @@
   "version": "0.1.0",
   "description": "Bibliothèque de composants Angular pour interfaces de gestion et d'administration.",
   "license": "MIT",
+  "homepage": "https://sidiki-codeur.github.io/gestio-ui/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sidiki-codeur/gestio-ui.git",
+    "directory": "projects/gestio-ui"
+  },
+  "bugs": {
+    "url": "https://github.com/sidiki-codeur/gestio-ui/issues"
+  },
   "keywords": [
     "angular",
     "components",

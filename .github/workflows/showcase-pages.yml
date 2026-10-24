@@ -1,0 +1,60 @@
+# Construit la bibliothèque puis le showcase et le déploie sur GitHub Pages.
+# Site : https://sidiki-codeur.github.io/gestio-ui/
+name: Showcase (GitHub Pages)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Un seul déploiement à la fois ; un nouveau push annule celui en attente.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Compiler la bibliothèque
+        run: npm run build:lib
+
+      - name: Tests (bibliothèque, showcase, serveur MCP)
+        run: npm test
+
+      - name: Compiler le showcase pour GitHub Pages
+        run: npx ng build showcase --base-href /gestio-ui/
+
+      - name: Préparer le site (routes de l'application, Jekyll désactivé)
+        run: |
+          cp dist/showcase/browser/index.html dist/showcase/browser/404.html
+          touch dist/showcase/browser/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/showcase/browser
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

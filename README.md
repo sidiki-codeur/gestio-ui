@@ -3,6 +3,9 @@
 Bibliothèque de composants Angular pour les tableaux de bord, logiciels de gestion et interfaces
 d’administration, accompagnée d’un catalogue interactif (showcase).
 
+- Documentation en ligne : https://sidiki-codeur.github.io/gestio-ui/
+- Paquet npm : https://www.npmjs.com/package/@gestiolabs336/ui
+
 - Angular 22 (composants standalone, signaux, détection OnPush par défaut, zoneless)
 - `@angular/cdk` 22 pour la modale (overlay, piège et restauration du focus) et les annonces
   accessibles des notifications
@@ -36,18 +39,19 @@ Le showcase importe la bibliothèque via l’alias TypeScript `gestio-ui` → `d
 
 ## Commandes
 
-| Commande                 | Effet                                                      |
-| ------------------------ | ---------------------------------------------------------- |
-| `npm start`              | Compile la bibliothèque puis lance le showcase (port 4200) |
-| `npm run build`          | Compile la bibliothèque puis le showcase (production)      |
-| `npm run build:lib`      | Compile la bibliothèque dans `dist/gestio-ui`              |
-| `npm run watch:lib`      | Recompile la bibliothèque à chaque modification            |
-| `npm run serve:showcase` | Lance uniquement le showcase (bibliothèque déjà compilée)  |
-| `npm run build:showcase` | Compile uniquement le showcase                             |
-| `npm test`               | Tests de la bibliothèque, du showcase et du serveur MCP    |
-| `npm run test:lib`       | Tests de la bibliothèque (mode watch)                      |
-| `npm run test:mcp`       | Tests du protocole du serveur MCP (`node --test`)          |
-| `npm run mcp`            | Lance le serveur MCP depuis les sources (stdio)            |
+| Commande                 | Effet                                                                |
+| ------------------------ | -------------------------------------------------------------------- |
+| `npm start`              | Compile la bibliothèque puis lance le showcase (port 4200)           |
+| `npm run build`          | Compile la bibliothèque puis le showcase (production)                |
+| `npm run build:lib`      | Compile la bibliothèque dans `dist/gestio-ui`                        |
+| `npm run watch:lib`      | Recompile la bibliothèque à chaque modification                      |
+| `npm run serve:showcase` | Lance uniquement le showcase (bibliothèque déjà compilée)            |
+| `npm run build:showcase` | Compile uniquement le showcase                                       |
+| `npm test`               | Tests de la bibliothèque, du showcase et du serveur MCP              |
+| `npm run test:lib`       | Tests de la bibliothèque (mode watch)                                |
+| `npm run test:mcp`       | Tests du protocole du serveur MCP (`node --test`)                    |
+| _Déploiement_            | Push sur `main` → GitHub Actions publie le showcase sur GitHub Pages |
+| `npm run mcp`            | Lance le serveur MCP depuis les sources (stdio)                      |
 
 Développement avec rechargement de la bibliothèque, dans deux terminaux :
 

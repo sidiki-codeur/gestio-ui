@@ -38,8 +38,8 @@ import { PageHeader } from '../../shared/page-header';
     <section class="sc-section" aria-labelledby="home-install">
       <h2 id="home-install">Mise en place</h2>
       <p>
-        Dans ce workspace, la bibliothèque est compilée dans <code>dist/gestio-ui</code> et
-        consommée par le showcase via l’alias TypeScript <code>@gestiolabs336/ui</code>.
+        Paquet npm <code>@gestiolabs336/ui</code> (Angular 22). Installez-le avec le CDK, importez
+        le thème, puis chaque composant là où il est utilisé.
       </p>
       <div class="sc-stack">
         <sc-code-block language="bash" [code]="buildCode" />
@@ -107,11 +107,7 @@ export class HomePage {
     'Mises en page',
   ];
 
-  protected readonly buildCode = `# Compiler la bibliothèque (à relancer après chaque modification, ou en mode watch)
-npm run build:lib
-
-# Démarrer le showcase
-npm start`;
+  protected readonly buildCode = `npm install @gestiolabs336/ui @angular/cdk`;
 
   protected readonly stylesCode = `// angular.json de l'application hôte
 "styles": [

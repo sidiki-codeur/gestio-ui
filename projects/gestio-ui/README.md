@@ -3,6 +3,8 @@
 Composants Angular 22 sobres et accessibles pour les tableaux de bord, logiciels de gestion et
 interfaces d’administration.
 
+**Documentation et exemples interactifs : https://sidiki-codeur.github.io/gestio-ui/**
+
 - Composants standalone, signaux, compatibles zoneless et SSR
 - Thème par design tokens CSS `--gestio-*`, modes clair, sombre et système
 - Accessibilité : éléments natifs, ARIA, navigation clavier, focus visible, `prefers-reduced-motion`
