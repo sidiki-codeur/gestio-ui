@@ -71,6 +71,10 @@ test('get_component privilégie la correspondance exacte', async () => {
     GestioGridItem: '# Grille (grid)',
     'gestio-tab': '# Onglets (tabs)',
     'app-shell': "# Coque d'application (app-shell)",
+    menu: '# Menu déroulant (menu)',
+    'gestio-radio': '# Boutons radio (radio)',
+    gestioTooltip: '# Info-bulle (tooltip)',
+    'form-field': '# Champ de formulaire (form-field)',
   };
   const names = Object.keys(cases);
   const responses = await session([
@@ -97,6 +101,23 @@ test('get_component retrouve un composant par id, classe ou sélecteur', async (
   assert.match(select.content[0].text, /GestioSelectOption/);
   assert.match(tabs.content[0].text, /selectedIndex/);
   assert.equal(unknown.isError, true);
+});
+
+test("indique le point d'entrée de chaque composant", async () => {
+  const [, menu, datagrid, grid] = (
+    await session([
+      init,
+      call(2, 'get_component', { name: 'menu' }),
+      call(3, 'get_component', { name: 'datagrid' }),
+      call(4, 'get_component', { name: 'grid' }),
+    ])
+  ).map((r) => r.result.content?.[0].text);
+  assert.match(
+    menu,
+    /Import : import \{ GestioMenuTrigger, GestioMenu, GestioMenuItem, GestioMenuDivider, GESTIO_MENU_IMPORTS \} from '@gestiolabs336\/ui\/menu';/,
+  );
+  assert.match(datagrid, /from '@gestiolabs336\/ui\/datagrid'/);
+  assert.match(grid, /from '@gestiolabs336\/ui\/layout'/);
 });
 
 test('guides, recherche et design tokens', async () => {

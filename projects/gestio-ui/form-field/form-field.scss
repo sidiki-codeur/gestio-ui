@@ -1,0 +1,143 @@
+// Styles non encapsulés : tous les sélecteurs sont préfixés et enveloppés dans
+// :where() pour garder une spécificité nulle (l'application peut les surcharger).
+
+:where(.gestio-form-field) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gestio-space-1);
+  font-family: var(--gestio-font-sans);
+  color: var(--gestio-color-text);
+}
+
+:where(.gestio-form-field__label) {
+  display: inline-flex;
+  gap: 0.125rem;
+  align-items: baseline;
+  margin-block-end: 0.125rem;
+  font-size: var(--gestio-font-size-md);
+  font-weight: var(--gestio-font-weight-medium);
+  line-height: var(--gestio-line-height-tight);
+}
+
+:where(.gestio-form-field__required) {
+  color: var(--gestio-color-danger-text);
+}
+
+:where(.gestio-form-field__hint, .gestio-form-field__error) {
+  margin: 0;
+  font-size: var(--gestio-font-size-sm);
+  line-height: var(--gestio-line-height-normal);
+}
+
+:where(.gestio-form-field__hint) {
+  color: var(--gestio-color-text-muted);
+}
+
+:where(.gestio-form-field__error) {
+  display: flex;
+  gap: var(--gestio-space-1);
+  align-items: flex-start;
+  color: var(--gestio-color-danger-text);
+  font-weight: var(--gestio-font-weight-medium);
+}
+
+:where(.gestio-form-field__error) svg {
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  margin-block-start: 0.125rem;
+}
+
+/* Contrôles natifs */
+:where(input, select, textarea).gestio-field-control:where(
+    :not([type='checkbox'], [type='radio'], [type='range'], [type='color'], [type='file'])
+  ) {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--gestio-control-height-md);
+  margin: 0;
+  padding: var(--gestio-space-2) var(--gestio-space-3);
+  border: var(--gestio-border-width) solid var(--gestio-color-border-strong);
+  border-radius: var(--gestio-radius-md);
+  background-color: var(--gestio-color-surface);
+  box-shadow: var(--gestio-shadow-xs);
+  color: var(--gestio-color-text);
+  font: inherit;
+  font-size: var(--gestio-font-size-md);
+  line-height: var(--gestio-line-height-normal);
+  transition:
+    border-color var(--gestio-duration-fast) var(--gestio-easing-standard),
+    box-shadow var(--gestio-duration-fast) var(--gestio-easing-standard);
+
+  &::placeholder {
+    color: var(--gestio-color-text-subtle);
+    opacity: 1;
+  }
+
+  &:hover:not(:disabled, [readonly]) {
+    border-color: var(--gestio-color-border-hover);
+  }
+
+  &:focus {
+    /* Contour transparent : redevient visible en mode contraste élevé. */
+    outline: 2px solid transparent;
+    outline-offset: 1px;
+    border-color: var(--gestio-color-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--gestio-color-focus-ring) 28%, transparent);
+  }
+
+  &[aria-invalid='true'] {
+    border-color: var(--gestio-color-danger);
+  }
+
+  &[aria-invalid='true']:focus {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--gestio-color-danger) 25%, transparent);
+  }
+
+  &:disabled {
+    border-color: var(--gestio-color-border);
+    background-color: var(--gestio-color-surface-disabled);
+    box-shadow: none;
+    color: var(--gestio-color-text-disabled);
+    cursor: not-allowed;
+  }
+}
+
+:where(textarea).gestio-field-control {
+  min-height: 5rem;
+  resize: vertical;
+}
+
+/* Chevron dessiné avec les tokens (suit le thème). */
+:where(select).gestio-field-control:where(:not([multiple], [size])) {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-inline-end: var(--gestio-space-8);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--gestio-color-text-subtle) 50%),
+    linear-gradient(135deg, var(--gestio-color-text-subtle) 50%, transparent 50%);
+  background-position:
+    calc(100% - 1.125rem) 55%,
+    calc(100% - 0.8125rem) 55%;
+  background-size: 0.3125rem 0.3125rem;
+  background-repeat: no-repeat;
+}
+
+:where(.gestio-form-field.is-sm) :where(input, select).gestio-field-control {
+  min-height: var(--gestio-control-height-sm);
+  padding-block: var(--gestio-space-1);
+  font-size: var(--gestio-font-size-sm);
+}
+
+:where(.gestio-form-field.is-lg) :where(input, select).gestio-field-control {
+  min-height: var(--gestio-control-height-lg);
+  font-size: var(--gestio-font-size-lg);
+}
+
+@media (forced-colors: active) {
+  :where(select).gestio-field-control {
+    appearance: auto;
+    -webkit-appearance: auto;
+    background-image: none;
+  }
+}

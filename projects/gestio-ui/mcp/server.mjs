@@ -99,7 +99,7 @@ function findComponent(name) {
 function formatComponent(c) {
   const lines = [`# ${c.title} (${c.id})`, '', c.summary, ''];
   lines.push(
-    `Import : import { ${c.exports.filter((e) => /^[A-Z]/.test(e) && !/^Gestio\w*(Variant|Size|Type|Value|Appearance|Padding|Position)$/.test(e)).join(', ')} } from '@gestiolabs336/ui';`,
+    `Import : import { ${c.exports.filter((e) => /^[A-Z]/.test(e) && !/^Gestio\w*(Variant|Size|Type|Value|Appearance|Padding|Position|Placement|Shape|Mode|Live|Orientation|Labels)$/.test(e)).join(', ')} } from '${c.entryPoint ?? '@gestiolabs336/ui'}';`,
   );
   if (c.classes?.length) {
     lines.push('', '## Sélecteurs');

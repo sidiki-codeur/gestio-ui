@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { GestioSelect, GestioSelectOption } from '@gestiolabs336/ui';
+import { GestioSelect, GestioSelectOption } from '@gestiolabs336/ui/select';
 import { ApiRow, ApiTable } from '../../shared/api-table';
 import { Example } from '../../shared/example';
 import { PageHeader } from '../../shared/page-header';

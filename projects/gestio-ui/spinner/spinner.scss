@@ -1,0 +1,50 @@
+@use '../core/field' as field;
+
+:host {
+  --_size: 1.5rem;
+  display: inline-flex;
+  vertical-align: middle;
+  color: var(--gestio-color-primary);
+}
+
+:host(.gestio-spinner--sm) {
+  --_size: 1rem;
+}
+
+:host(.gestio-spinner--lg) {
+  --_size: 2.25rem;
+}
+
+.gestio-spinner__circle {
+  box-sizing: border-box;
+  width: var(--_size);
+  height: var(--_size);
+  border: max(2px, calc(var(--_size) / 9)) solid color-mix(in srgb, currentColor 20%, transparent);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: gestio-spinner-spin 700ms linear infinite;
+}
+
+.gestio-spinner__label {
+  @include field.sr-only;
+}
+
+@keyframes gestio-spinner-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mouvement ralenti mais conservé : l'indicateur doit rester perceptible. */
+@media (prefers-reduced-motion: reduce) {
+  .gestio-spinner__circle {
+    animation-duration: 1600ms;
+  }
+}
+
+@media (forced-colors: active) {
+  .gestio-spinner__circle {
+    border-color: GrayText;
+    border-top-color: CanvasText;
+  }
+}

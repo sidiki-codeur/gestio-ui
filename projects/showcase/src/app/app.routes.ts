@@ -42,9 +42,25 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/textarea/textarea-page').then((m) => m.TextareaPage),
       },
       {
+        path: 'champ-de-formulaire',
+        title: 'Champ de formulaire — Gestio UI',
+        loadComponent: () =>
+          import('./pages/form-field/form-field-page').then((m) => m.FormFieldPage),
+      },
+      {
         path: 'case-a-cocher',
         title: 'Case à cocher — Gestio UI',
         loadComponent: () => import('./pages/checkbox/checkbox-page').then((m) => m.CheckboxPage),
+      },
+      {
+        path: 'boutons-radio',
+        title: 'Boutons radio — Gestio UI',
+        loadComponent: () => import('./pages/radio/radio-page').then((m) => m.RadioPage),
+      },
+      {
+        path: 'interrupteur',
+        title: 'Interrupteur — Gestio UI',
+        loadComponent: () => import('./pages/switch/switch-page').then((m) => m.SwitchPage),
       },
       {
         path: 'selecteur',
@@ -62,6 +78,11 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/badge/badge-page').then((m) => m.BadgePage),
       },
       {
+        path: 'alerte',
+        title: 'Alerte — Gestio UI',
+        loadComponent: () => import('./pages/alert/alert-page').then((m) => m.AlertPage),
+      },
+      {
         path: 'tableau',
         title: 'Tableau — Gestio UI',
         loadComponent: () => import('./pages/table/table-page').then((m) => m.TablePage),
@@ -72,14 +93,35 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/datagrid/datagrid-page').then((m) => m.DataGridPage),
       },
       {
+        path: 'pagination',
+        title: 'Pagination — Gestio UI',
+        loadComponent: () =>
+          import('./pages/pagination/pagination-page').then((m) => m.PaginationPage),
+      },
+      {
         path: 'modale',
         title: 'Modale — Gestio UI',
         loadComponent: () => import('./pages/dialog/dialog-page').then((m) => m.DialogPage),
       },
       {
+        path: 'menu',
+        title: 'Menu déroulant — Gestio UI',
+        loadComponent: () => import('./pages/menu/menu-page').then((m) => m.MenuPage),
+      },
+      {
         path: 'notifications',
         title: 'Notifications — Gestio UI',
         loadComponent: () => import('./pages/toast/toast-page').then((m) => m.ToastPage),
+      },
+      {
+        path: 'info-bulle',
+        title: 'Info-bulle — Gestio UI',
+        loadComponent: () => import('./pages/tooltip/tooltip-page').then((m) => m.TooltipPage),
+      },
+      {
+        path: 'chargement',
+        title: 'Skeleton et spinner — Gestio UI',
+        loadComponent: () => import('./pages/loading/loading-page').then((m) => m.LoadingPage),
       },
       {
         path: 'onglets',

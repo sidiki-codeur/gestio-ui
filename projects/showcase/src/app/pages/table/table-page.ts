@@ -1,5 +1,6 @@
 import { Component, computed } from '@angular/core';
-import { GestioBadge, GestioTable, GestioTableContainer } from '@gestiolabs336/ui';
+import { GestioBadge } from '@gestiolabs336/ui/badge';
+import { GestioTable, GestioTableContainer } from '@gestiolabs336/ui/table';
 import { ApiRow, ApiTable } from '../../shared/api-table';
 import { Example } from '../../shared/example';
 import { PageHeader } from '../../shared/page-header';

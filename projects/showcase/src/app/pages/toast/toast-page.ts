@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { GestioButton, GestioToastService } from '@gestiolabs336/ui';
+import { GestioButton } from '@gestiolabs336/ui/button';
+import { GestioToastService } from '@gestiolabs336/ui/toast';
 import { ApiRow, ApiTable } from '../../shared/api-table';
 import { CodeBlock } from '../../shared/code-block';
 import { Example } from '../../shared/example';

@@ -1,11 +1,11 @@
 {
   "library": "@gestiolabs336/ui",
-  "summary": "Bibliothèque de composants Angular 22 (standalone, signaux, OnPush, zoneless) pour tableaux de bord, logiciels de gestion et interfaces d'administration. Tous les imports se font depuis '@gestiolabs336/ui' (installation : npm install @gestiolabs336/ui @angular/cdk).",
+  "summary": "Bibliothèque de composants Angular 22 (standalone, signaux, OnPush, zoneless) pour tableaux de bord, logiciels de gestion et interfaces d'administration. Installation : npm install @gestiolabs336/ui @angular/cdk. Chaque composant a son point d'entrée (ex. '@gestiolabs336/ui/button', voir le champ « Import » de get_component) ; '@gestiolabs336/ui' réexporte tout, mais charge alors toute la bibliothèque dans le bundle initial.",
   "guides": [
     {
       "id": "setup",
       "title": "Installation et mise en place",
-      "content": "1. Installation : npm install @gestiolabs336/ui (et @angular/cdk si absent). Dépendances pairs : @angular/core, @angular/common, @angular/forms et @angular/cdk (^22.2). Installer @angular/cdk si absent : npm install @angular/cdk@^22.2\n\n2. Importer le thème (obligatoire, sinon les composants n'ont ni couleurs ni espacements). Dans angular.json > projects > <app> > architect > build > options > styles, AVANT les styles de l'application :\n\"styles\": [\"node_modules/@gestiolabs336/ui/styles/gestio-ui.css\", \"src/styles.css\"]\nAlternative dans une feuille globale : @import '@gestiolabs336/ui/styles/gestio-ui.css';\n\n3. Importer chaque composant dans le tableau `imports` du composant standalone qui l'utilise :\nimport { GestioButton, GestioInput } from '@gestiolabs336/ui';\n@Component({ imports: [GestioButton, GestioInput], ... })\n\n4. Notifications (si utilisées) : placer <gestio-toaster /> UNE seule fois dans le template du composant racine, et éventuellement provideGestioToast({...}) dans app.config.ts.\n\n5. Modales : aucune configuration globale. Injecter GestioDialogService.\n\nLe thème ne stylise aucun élément HTML de l'application : définir soi-même body { background: var(--gestio-color-background); color: var(--gestio-color-text); font-family: var(--gestio-font-sans); } si souhaité."
+      "content": "1. Installation : npm install @gestiolabs336/ui (et @angular/cdk si absent). Dépendances pairs : @angular/core, @angular/common, @angular/forms et @angular/cdk (^22.2). Installer @angular/cdk si absent : npm install @angular/cdk@^22.2\n\n2. Importer le thème (obligatoire, sinon les composants n'ont ni couleurs ni espacements). Dans angular.json > projects > <app> > architect > build > options > styles, AVANT les styles de l'application :\n\"styles\": [\"node_modules/@gestiolabs336/ui/styles/gestio-ui.css\", \"src/styles.css\"]\nAlternative dans une feuille globale : @import '@gestiolabs336/ui/styles/gestio-ui.css';\n\n3. Importer chaque composant depuis SON point d'entrée, dans le tableau `imports` du composant standalone qui l'utilise :\nimport { GestioButton } from '@gestiolabs336/ui/button';\nimport { GestioInput } from '@gestiolabs336/ui/input';\n@Component({ imports: [GestioButton, GestioInput], ... })\nLe point d'entrée de chaque composant est indiqué par get_component (ligne « Import »). '@gestiolabs336/ui' réexporte tout (compatibilité 0.1), mais charge toute la bibliothèque dès la première route.\n\n4. Notifications (si utilisées) : placer <gestio-toaster /> UNE seule fois dans le template du composant racine, et éventuellement provideGestioToast({...}) dans app.config.ts.\n\n5. Modales : aucune configuration globale. Injecter GestioDialogService.\n\nLe thème ne stylise aucun élément HTML de l'application : définir soi-même body { background: var(--gestio-color-background); color: var(--gestio-color-text); font-family: var(--gestio-font-sans); } si souhaité."
     },
     {
       "id": "theming",
@@ -20,12 +20,12 @@
     {
       "id": "forms",
       "title": "Formulaires (Reactive Forms)",
-      "content": "gestio-input, gestio-textarea, gestio-checkbox et gestio-select implémentent ControlValueAccessor : utiliser formControlName, [formControl] ou [(ngModel)] directement sur le composant. Importer ReactiveFormsModule dans le composant hôte.\n\nTypes de valeurs : gestio-input renvoie string, sauf type=\"number\" qui renvoie number | null ; gestio-textarea renvoie string ; gestio-checkbox renvoie boolean ; gestio-select renvoie la valeur typée de l'option (string ou number) ou null.\n\nLes composants n'affichent PAS automatiquement les erreurs de validation : l'application calcule le message et le passe à l'entrée [error] (string | null). Passer `required` en plus de Validators.required pour l'astérisque et l'attribut natif.\n\nModèle recommandé :\nsubmitted = signal(false);\nerrorFor(control: AbstractControl, messages: Record<string, string>): string | null {\n  if (!control.errors || !(control.touched || this.submitted())) return null;\n  const key = Object.keys(messages).find((k) => control.hasError(k));\n  return key ? messages[key] : null;\n}\n<gestio-input label=\"E-mail\" type=\"email\" formControlName=\"email\" required [error]=\"errorFor(form.controls.email, { required: 'Saisissez une adresse e-mail.', email: 'Adresse invalide.' })\" />\n\nPour désactiver un champ lié à un formulaire, utiliser control.disable() plutôt que [disabled]. Validators.requiredTrue sur une case à cocher produit l'erreur 'required'."
+      "content": "gestio-input, gestio-textarea, gestio-checkbox, gestio-select, gestio-switch et gestio-radio-group implémentent ControlValueAccessor : utiliser formControlName, [formControl] ou [(ngModel)] directement sur le composant (importer ReactiveFormsModule ou FormsModule).\n\nSignal Forms (@angular/forms/signals) : la directive [formField] accepte ces mêmes composants (via leur ControlValueAccessor). Exemple : model = signal({ email: '' }); f = form(this.model, (p) => { required(p.email); email(p.email); }); puis <gestio-input label=\"E-mail\" [formField]=\"f.email\" [error]=\"f.email().touched() ? (f.email().errors()[0]?.message ?? null) : null\" />. Importer FormField depuis @angular/forms/signals.\n\nContrôle natif sans équivalent Gestio (input type=date, time, color…) : l'envelopper dans <gestio-form-field label hint error> et le marquer gestioFieldControl.\n\nTypes de valeurs : gestio-input renvoie string, sauf type=\"number\" qui renvoie number | null ; gestio-textarea renvoie string ; gestio-checkbox et gestio-switch renvoient boolean ; gestio-radio-group renvoie la valeur du radio choisi (tout type) ou null ; gestio-select renvoie la valeur typée de l'option (string ou number) ou null.\n\nLes composants n'affichent PAS automatiquement les erreurs de validation : l'application calcule le message et le passe à l'entrée [error] (string | null). Passer `required` en plus de Validators.required pour l'astérisque et l'attribut natif.\n\nModèle recommandé :\nsubmitted = signal(false);\nerrorFor(control: AbstractControl, messages: Record<string, string>): string | null {\n  if (!control.errors || !(control.touched || this.submitted())) return null;\n  const key = Object.keys(messages).find((k) => control.hasError(k));\n  return key ? messages[key] : null;\n}\n<gestio-input label=\"E-mail\" type=\"email\" formControlName=\"email\" required [error]=\"errorFor(form.controls.email, { required: 'Saisissez une adresse e-mail.', email: 'Adresse invalide.' })\" />\n\nPour désactiver un champ lié à un formulaire, utiliser control.disable() plutôt que [disabled]. Validators.requiredTrue sur une case à cocher produit l'erreur 'required'."
     },
     {
       "id": "accessibility",
       "title": "Règles d'accessibilité",
-      "content": "- Chaque champ a besoin d'un label (entrée `label`) ou, à défaut, de `ariaLabel`. Le placeholder ne remplace jamais le label.\n- Un bouton contenant seulement une icône doit avoir aria-label ; l'icône SVG porte aria-hidden=\"true\".\n- Utiliser <button gestioButton> pour une action et <a gestioButton href> pour une navigation.\n- Le badge ne doit pas porter l'information par la couleur seule : libellé explicite.\n- gestio-tabs : renseigner ariaLabel pour nommer la liste d'onglets.\n- Modales : utiliser <gestio-dialog title=\"…\"> dans le contenu (nom accessible automatique) ou passer ariaLabel dans la configuration. L'attribut cdkFocusInitial choisit l'élément focalisé à l'ouverture.\n- Les notifications ne prennent jamais le focus : ne pas y mettre d'action critique.\n- Les composants respectent prefers-reduced-motion et le mode de contraste forcé."
+      "content": "- Chaque champ a besoin d'un label (entrée `label`) ou, à défaut, de `ariaLabel`. Le placeholder ne remplace jamais le label.\n- Un bouton contenant seulement une icône doit avoir aria-label ; l'icône SVG porte aria-hidden=\"true\".\n- Utiliser <button gestioButton> pour une action et <a gestioButton href> pour une navigation.\n- Le badge ne doit pas porter l'information par la couleur seule : libellé explicite.\n- gestio-tabs : renseigner ariaLabel pour nommer la liste d'onglets.\n- Modales : utiliser <gestio-dialog title=\"…\"> dans le contenu (nom accessible automatique) ou passer ariaLabel dans la configuration. L'attribut cdkFocusInitial choisit l'élément focalisé à l'ouverture.\n- Les notifications ne prennent jamais le focus : ne pas y mettre d'action critique.\n- Les composants respectent prefers-reduced-motion et le mode de contraste forcé.\n- gestio-radio-group : la légende (label) nomme le groupe ; sinon ariaLabel.\n- Info-bulles : réservées à un complément ; jamais la seule source d'une information ni d'une action.\n- Menus : déclencher les actions avec (triggered) ; un déclencheur icône a besoin d'aria-label.\n- Skeleton : aria-hidden ; poser aria-busy=\"true\" sur le conteneur pendant le chargement.\n- Alertes insérées après une action : live=\"polite\" (ou \"assertive\" pour une erreur bloquante)."
     },
     {
       "id": "ssr",
@@ -35,7 +35,7 @@
     {
       "id": "limits",
       "title": "Limites de la version actuelle",
-      "content": "Non disponible (ne pas inventer d'API) : édition en ligne, colonnes redimensionnables ou défilement virtuel dans la datagrid, combobox avec recherche, sélection multiple, groupes d'options, date picker, menu déroulant, infobulle, popover, pagination, avatar, spinner autonome, accordéon, drawer. gestio-select est un <select> natif. Les notifications au-delà de maxVisible retirent les plus anciennes (pas de file d'attente). Pas d'intégration directe Signal Forms. Libellés internes en français, surchargeables par entrées (closeLabel, loadingLabel, showPasswordLabel…). Il n'existe pas de NgModule : importer les composants standalone individuellement."
+      "content": "Non disponible (ne pas inventer d'API) : édition en ligne, colonnes redimensionnables ou défilement virtuel dans la datagrid, pagination côté serveur intégrée à la datagrid (utiliser gestio-pagination avec gestio-table), combobox avec recherche, sélection multiple, groupes d'options, date picker (utiliser <input type=\"date\" gestioFieldControl> dans gestio-form-field), sous-menus et éléments à cocher dans les menus, popover, avatar, accordéon, drawer, stepper, fil d'Ariane. gestio-select est un <select> natif. Les notifications au-delà de maxVisible retirent les plus anciennes (pas de file d'attente). Libellés internes en français, surchargeables par entrées (closeLabel, loadingLabel, labels…). Il n'existe pas de NgModule : importer les composants standalone individuellement."
     }
   ],
   "components": [
@@ -128,7 +128,8 @@
         "Ne pas écrire <gestio-button> : ce sélecteur n'existe pas. Utiliser <button gestioButton>.",
         "type vaut 'button' par défaut : un bouton de formulaire doit avoir type=\"submit\".",
         "Pendant loading, l'écouteur (click) de l'application n'est pas appelé."
-      ]
+      ],
+      "entryPoint": "@gestiolabs336/ui/button"
     },
     {
       "id": "input",
@@ -216,12 +217,12 @@
         },
         {
           "name": "min",
-          "type": "number",
+          "type": "number | string",
           "description": "Attribut natif min."
         },
         {
           "name": "max",
-          "type": "number",
+          "type": "number | string",
           "description": "Attribut natif max."
         },
         {
@@ -276,7 +277,8 @@
         "Pas d'entrée `value` ni d'événement `valueChange` : passer par un FormControl ou ngModel.",
         "Ne pas mettre `id` sur <gestio-input> (dupliquerait l'id) : utiliser inputId.",
         "Les erreurs de validation ne s'affichent que via [error]."
-      ]
+      ],
+      "entryPoint": "@gestiolabs336/ui/input"
     },
     {
       "id": "textarea",
@@ -371,7 +373,8 @@
           "code": "<gestio-textarea label=\"Note interne\" [rows]=\"3\" [maxlength]=\"300\" showCount formControlName=\"notes\" />"
         }
       ],
-      "pitfalls": ["maxlength attend un nombre : [maxlength]=\"300\"."]
+      "pitfalls": ["maxlength attend un nombre : [maxlength]=\"300\"."],
+      "entryPoint": "@gestiolabs336/ui/textarea"
     },
     {
       "id": "checkbox",
@@ -475,7 +478,8 @@
           "code": "<gestio-checkbox label=\"Tout sélectionner\" [checked]=\"all()\" [indeterminate]=\"some()\" (checkedChange)=\"toggleAll($event)\" />"
         }
       ],
-      "pitfalls": ["Validators.requiredTrue produit l'erreur 'required'."]
+      "pitfalls": ["Validators.requiredTrue produit l'erreur 'required'."],
+      "entryPoint": "@gestiolabs336/ui/checkbox"
     },
     {
       "id": "select",
@@ -562,7 +566,8 @@
       "pitfalls": [
         "Ne pas projeter d'<option> : passer les options via [options].",
         "Pas de recherche ni de sélection multiple (select natif)."
-      ]
+      ],
+      "entryPoint": "@gestiolabs336/ui/select"
     },
     {
       "id": "card",
@@ -634,7 +639,8 @@
         "Importer GESTIO_CARD_IMPORTS (ou GestioCardActions/GestioCardFooter), sinon les boutons des zones ne sont pas espacés.",
         "gestioCardActions et gestioCardFooter sont des composants : les poser sur un <div>, jamais sur un autre composant (<gestio-badge gestioCardActions> provoque une erreur).",
         "Pour une carte cliquable, mettre un lien ou un bouton à l'intérieur ; ne pas ajouter (click) sur gestio-card."
-      ]
+      ],
+      "entryPoint": "@gestiolabs336/ui/card"
     },
     {
       "id": "badge",
@@ -687,7 +693,8 @@
           "code": "<gestio-badge variant=\"success\" dot>Payée</gestio-badge>\n<gestio-badge variant=\"warning\">En attente</gestio-badge>\n<gestio-badge variant=\"danger\" appearance=\"outline\">Litige</gestio-badge>"
         }
       ],
-      "pitfalls": ["La couleur ne doit pas être la seule information : libellé explicite."]
+      "pitfalls": ["La couleur ne doit pas être la seule information : libellé explicite."],
+      "entryPoint": "@gestiolabs336/ui/badge"
     },
     {
       "id": "table",
@@ -760,7 +767,8 @@
         "Envelopper dans <gestio-table-container label=\"…\"> pour le défilement horizontal sur mobile.",
         "Garder la sémantique : caption, th scope=\"col\" / scope=\"row\".",
         "columnDividers trace un trait à droite de chaque cellule sauf la dernière de sa ligne : avec rowspan, une ligne dont la dernière cellule n'est pas en bord de tableau peut perdre un séparateur."
-      ]
+      ],
+      "entryPoint": "@gestiolabs336/ui/table"
     },
     {
       "id": "datagrid",
@@ -967,7 +975,8 @@
         "La sélection contient des clés (rowKey), pas les objets ligne. Fournir rowKey si les lignes n'ont pas de propriété id.",
         "Chaque key de colonne doit être unique.",
         "Déclarer columns comme propriété stable (pas un nouveau tableau recréé dans le template)."
-      ]
+      ],
+      "entryPoint": "@gestiolabs336/ui/datagrid"
     },
     {
       "id": "app-shell",
@@ -1051,7 +1060,8 @@
         "La coque contient déjà <main> : ne pas en imbriquer un second dans les pages.",
         "Les styles des liens de la barre latérale sont à la charge de l'application.",
         "Après une navigation, déplacer le focus sur le titre de la nouvelle page (bonne pratique d'accessibilité)."
-      ]
+      ],
+      "entryPoint": "@gestiolabs336/ui/layout"
     },
     {
       "id": "container",
@@ -1092,7 +1102,8 @@
           "code": "<gestio-container size=\"md\">…formulaire…</gestio-container>"
         }
       ],
-      "pitfalls": []
+      "pitfalls": [],
+      "entryPoint": "@gestiolabs336/ui/layout"
     },
     {
       "id": "stack",
@@ -1153,7 +1164,8 @@
       ],
       "pitfalls": [
         "Les points de rupture portent sur la largeur de la pile elle-même, pas sur celle de l'écran."
-      ]
+      ],
+      "entryPoint": "@gestiolabs336/ui/layout"
     },
     {
       "id": "grid",
@@ -1226,7 +1238,8 @@
         "Importer GestioGridItem pour utiliser [gestioGridSpan].",
         "Une étendue (span) supérieure au nombre de colonnes crée des colonnes implicites : utiliser une valeur responsive ou 'full'.",
         "Les points de rupture portent sur la largeur de la grille (container queries), pas sur celle de l'écran."
-      ]
+      ],
+      "entryPoint": "@gestiolabs336/ui/layout"
     },
     {
       "id": "breakpoints",
@@ -1254,7 +1267,8 @@
       ],
       "pitfalls": [
         "Préférer les layouts (CSS) pour la mise en page ; réserver le service aux comportements (taille de page, densité…)."
-      ]
+      ],
+      "entryPoint": "@gestiolabs336/ui/layout"
     },
     {
       "id": "dialog",
@@ -1397,7 +1411,8 @@
         "Importer GESTIO_DIALOG_IMPORTS dans le composant de contenu (GestioDialog + GestioDialogActions).",
         "Échap et clic sur le fond renvoient undefined : traiter ce cas comme une annulation.",
         "Un bouton dans <div gestioDialogActions> à l'intérieur d'un <form> a type='button' par défaut ; mettre type=\"submit\" sur le bouton de validation."
-      ]
+      ],
+      "entryPoint": "@gestiolabs336/ui/dialog"
     },
     {
       "id": "toast",
@@ -1458,7 +1473,8 @@
         "Sans <gestio-toaster /> dans le composant racine, rien ne s'affiche.",
         "Ne placer qu'un seul <gestio-toaster />.",
         "Ne pas mettre d'action critique dans une notification (elle ne prend pas le focus et disparaît)."
-      ]
+      ],
+      "entryPoint": "@gestiolabs336/ui/toast"
     },
     {
       "id": "tabs",
@@ -1535,7 +1551,695 @@
         "Importer à la fois GestioTabs et GestioTab.",
         "La sélection est un index numérique, pas un identifiant.",
         "Les panneaux inactifs restent instanciés (masqués par hidden)."
+      ],
+      "entryPoint": "@gestiolabs336/ui/tabs"
+    },
+    {
+      "id": "form-field",
+      "title": "Champ de formulaire",
+      "kind": "component",
+      "entryPoint": "@gestiolabs336/ui/form-field",
+      "exports": ["GestioFormField", "GestioFieldControl", "GESTIO_FORM_FIELD_IMPORTS"],
+      "classes": [
+        {
+          "class": "GestioFormField",
+          "selector": "gestio-form-field"
+        },
+        {
+          "class": "GestioFieldControl",
+          "selector": "[gestioFieldControl]"
+        }
+      ],
+      "summary": "Enveloppe libellé + aide + erreur + astérisque autour d'un contrôle NATIF (input type=date/time/color, select multiple…) ou d'un contrôle tiers marqué gestioFieldControl. Le contrôle reçoit id, aria-describedby et aria-invalid ; un input/select/textarea natif prend aussi le style des champs Gestio.",
+      "forms": "Aucun ControlValueAccessor propre : formControlName / [formField] se placent sur le contrôle projeté.",
+      "inputs": [
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Libellé (label for, ou aria-labelledby si le contrôle n’est pas étiquetable)."
+        },
+        {
+          "name": "hint",
+          "type": "string",
+          "description": "Texte d’aide (aria-describedby)."
+        },
+        {
+          "name": "error",
+          "type": "string | null",
+          "description": "Message d’erreur ; active aria-invalid sur le contrôle."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "Affiche l’astérisque (la contrainte reste sur le contrôle)."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "'md'",
+          "description": "Hauteur des contrôles natifs."
+        }
+      ],
+      "outputs": [],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "Le contrôle, marqué gestioFieldControl."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Date native",
+          "code": "// imports: [GESTIO_FORM_FIELD_IMPORTS, ReactiveFormsModule]\n<gestio-form-field label=\"Date d'échéance\" hint=\"jj/mm/aaaa\" required [error]=\"dueError()\">\n  <input gestioFieldControl type=\"date\" formControlName=\"due\" required />\n</gestio-form-field>"
+        }
+      ],
+      "pitfalls": [
+        "Inutile autour de gestio-input, gestio-select, gestio-textarea, gestio-checkbox, gestio-switch ou gestio-radio-group : ils ont déjà libellé, aide et erreur.",
+        "Un seul gestioFieldControl par gestio-form-field.",
+        "Un id posé sur le contrôle est conservé ; sinon il est généré."
       ]
+    },
+    {
+      "id": "radio",
+      "title": "Boutons radio",
+      "kind": "component",
+      "entryPoint": "@gestiolabs336/ui/radio",
+      "exports": [
+        "GestioRadioGroup",
+        "GestioRadio",
+        "GESTIO_RADIO_IMPORTS",
+        "GestioRadioOrientation"
+      ],
+      "classes": [
+        {
+          "class": "GestioRadioGroup",
+          "selector": "gestio-radio-group"
+        },
+        {
+          "class": "GestioRadio",
+          "selector": "gestio-radio"
+        }
+      ],
+      "summary": "Choix unique : <fieldset role=\"radiogroup\"> + <legend>, radios natifs (flèches gérées par le navigateur). Valeur de n'importe quel type (comparaison Object.is).",
+      "forms": "ControlValueAccessor sur gestio-radio-group (formControlName, [formField], ngModel) ou [(value)]. Valeur : celle du radio choisi, null sinon.",
+      "inputs": [
+        {
+          "name": "label",
+          "type": "string",
+          "description": "gestio-radio-group : légende."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "gestio-radio-group : nom accessible sans légende visible."
+        },
+        {
+          "name": "hint",
+          "type": "string",
+          "description": "gestio-radio-group : aide."
+        },
+        {
+          "name": "error",
+          "type": "string | null",
+          "description": "gestio-radio-group : message d’erreur (aria-invalid)."
+        },
+        {
+          "name": "value",
+          "type": "model<T | null>",
+          "default": "null",
+          "description": "gestio-radio-group : valeur choisie ; [(value)] hors formulaire. gestio-radio : valeur transmise (requise)."
+        },
+        {
+          "name": "orientation",
+          "type": "'vertical' | 'horizontal'",
+          "default": "'vertical'",
+          "description": "gestio-radio-group : disposition."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-radio-group : tout le groupe ; gestio-radio : ce choix."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-radio-group : astérisque, aria-required, required natif."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "gestio-radio-group : attribut name commun (généré si absent)."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "gestio-radio : texte secondaire."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "valueChange",
+          "type": "T | null",
+          "description": "gestio-radio-group : émis par le model value."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "gestio-radio-group : les gestio-radio ; gestio-radio : ajouté au libellé."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Mode de paiement",
+          "code": "// imports: [GESTIO_RADIO_IMPORTS, ReactiveFormsModule]\n<gestio-radio-group label=\"Mode de paiement\" formControlName=\"payment\" required [error]=\"paymentError()\">\n  <gestio-radio value=\"card\" label=\"Carte bancaire\" />\n  <gestio-radio value=\"transfer\" label=\"Virement\" description=\"Sous 2 jours ouvrés\" />\n  <gestio-radio value=\"check\" label=\"Chèque\" disabled />\n</gestio-radio-group>"
+        },
+        {
+          "title": "Valeur objet",
+          "code": "<gestio-radio-group label=\"Formule\" [(value)]=\"plan\">\n  @for (p of plans; track p.id) {\n    <gestio-radio [value]=\"p\" [label]=\"p.name\" />\n  }\n</gestio-radio-group>"
+        }
+      ],
+      "pitfalls": [
+        "gestio-radio doit être à l’intérieur d’un gestio-radio-group.",
+        "Valeurs objet : comparées par référence (Object.is) ; réutiliser les mêmes instances.",
+        "Le formulaire se lie au groupe, jamais aux gestio-radio."
+      ]
+    },
+    {
+      "id": "switch",
+      "title": "Interrupteur",
+      "kind": "component",
+      "entryPoint": "@gestiolabs336/ui/switch",
+      "exports": ["GestioSwitch", "GestioSwitchLabelPosition"],
+      "classes": [
+        {
+          "class": "GestioSwitch",
+          "selector": "gestio-switch"
+        }
+      ],
+      "summary": "Interrupteur activé / désactivé : <input type=\"checkbox\" role=\"switch\"> natif. Pour les réglages appliqués immédiatement ; dans un formulaire validé par un bouton, préférer gestio-checkbox.",
+      "forms": "ControlValueAccessor (boolean) ou [(checked)].",
+      "inputs": [
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Libellé (le contenu projeté s’y ajoute)."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Nom accessible sans libellé visible."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "Texte secondaire (aria-describedby)."
+        },
+        {
+          "name": "checked",
+          "type": "model<boolean>",
+          "default": "false",
+          "description": "État ; [(checked)] hors formulaire."
+        },
+        {
+          "name": "labelPosition",
+          "type": "'start' | 'end'",
+          "default": "'end'",
+          "description": "start : libellé à gauche, interrupteur à droite (listes de réglages)."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Désactive."
+        },
+        {
+          "name": "switchId",
+          "type": "string",
+          "description": "id de l’input natif."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Attribut name."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "checkedChange",
+          "type": "boolean",
+          "description": "Émis par le model checked."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "Ajouté au libellé."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Réglage immédiat",
+          "code": "<gestio-switch label=\"Relances automatiques\" description=\"E-mail 3 jours avant l'échéance\" labelPosition=\"start\" [checked]=\"settings().reminders\" (checkedChange)=\"saveReminders($event)\" />"
+        }
+      ],
+      "pitfalls": [
+        "Pas d’état indéterminé ni de required : utiliser gestio-checkbox pour accepter des conditions."
+      ]
+    },
+    {
+      "id": "menu",
+      "title": "Menu déroulant",
+      "kind": "component",
+      "entryPoint": "@gestiolabs336/ui/menu",
+      "exports": [
+        "GestioMenuTrigger",
+        "GestioMenu",
+        "GestioMenuItem",
+        "GestioMenuDivider",
+        "GESTIO_MENU_IMPORTS",
+        "GestioMenuPlacement",
+        "GestioMenuItemVariant"
+      ],
+      "classes": [
+        {
+          "class": "GestioMenuTrigger",
+          "selector": "[gestioMenuTriggerFor]"
+        },
+        {
+          "class": "GestioMenu",
+          "selector": "gestio-menu"
+        },
+        {
+          "class": "GestioMenuItem",
+          "selector": "button[gestioMenuItem], a[gestioMenuItem]"
+        },
+        {
+          "class": "GestioMenuDivider",
+          "selector": "gestio-menu-divider"
+        }
+      ],
+      "summary": "Menu d'actions basé sur @angular/cdk/menu (role=menu/menuitem, aria-haspopup/aria-expanded, flèches, Début/Fin, saisie de lettre, Échap rend le focus au déclencheur). Le menu est un <ng-template> rendu en overlay.",
+      "api": "GestioMenuTrigger (exportAs 'gestioMenuTrigger') : open(), close(), isOpen().",
+      "inputs": [
+        {
+          "name": "gestioMenuTriggerFor",
+          "type": "TemplateRef",
+          "description": "Déclencheur : le <ng-template> contenant <gestio-menu>."
+        },
+        {
+          "name": "gestioMenuTriggerData",
+          "type": "unknown",
+          "description": "Déclencheur : contexte passé au template (let-x)."
+        },
+        {
+          "name": "menuPlacement",
+          "type": "'bottom-start' | 'bottom-end' | 'top-start' | 'top-end'",
+          "default": "'bottom-start'",
+          "description": "Déclencheur : position préférée, repli automatique."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "gestio-menu : nom accessible du menu."
+        },
+        {
+          "name": "variant",
+          "type": "'default' | 'danger'",
+          "default": "'default'",
+          "description": "gestioMenuItem : danger pour une action destructive."
+        },
+        {
+          "name": "hint",
+          "type": "string",
+          "description": "gestioMenuItem : texte secondaire à droite (raccourci, compteur)."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestioMenuItem : inactif mais focalisable (aria-disabled)."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "menuOpened",
+          "type": "void",
+          "description": "Déclencheur : menu ouvert."
+        },
+        {
+          "name": "menuClosed",
+          "type": "void",
+          "description": "Déclencheur : menu fermé."
+        },
+        {
+          "name": "triggered",
+          "type": "void",
+          "description": "gestioMenuItem : activé (clic, Entrée, Espace) ; le menu se ferme ensuite."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "gestio-menu : éléments gestioMenuItem et gestio-menu-divider ; gestioMenuItem : libellé."
+        },
+        {
+          "selector": "[gestioMenuItemIcon]",
+          "description": "gestioMenuItem : icône avant le libellé (aria-hidden=\"true\")."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Actions sur une ligne",
+          "code": "// imports: [GESTIO_MENU_IMPORTS, GestioButton]\n<button gestioButton variant=\"ghost\" size=\"sm\" aria-label=\"Actions pour F-2024-001\" [gestioMenuTriggerFor]=\"rowMenu\" [gestioMenuTriggerData]=\"{ $implicit: invoice }\" menuPlacement=\"bottom-end\">⋯</button>\n<ng-template #rowMenu let-invoice>\n  <gestio-menu>\n    <button gestioMenuItem hint=\"E\" (triggered)=\"edit(invoice)\">Modifier</button>\n    <button gestioMenuItem (triggered)=\"duplicate(invoice)\">Dupliquer</button>\n    <gestio-menu-divider />\n    <button gestioMenuItem variant=\"danger\" (triggered)=\"remove(invoice)\">Supprimer</button>\n  </gestio-menu>\n</ng-template>"
+        }
+      ],
+      "pitfalls": [
+        "Utiliser (triggered), pas (click) : triggered couvre aussi le clavier.",
+        "<gestio-menu> doit être la racine du <ng-template> passé à gestioMenuTriggerFor.",
+        "Pas de sous-menus ni d’éléments à cocher dans cette version.",
+        "Un déclencheur avec seulement une icône a besoin d’aria-label."
+      ]
+    },
+    {
+      "id": "alert",
+      "title": "Alerte en ligne",
+      "kind": "component",
+      "entryPoint": "@gestiolabs336/ui/alert",
+      "exports": ["GestioAlert", "GestioAlertVariant", "GestioAlertLive"],
+      "classes": [
+        {
+          "class": "GestioAlert",
+          "selector": "gestio-alert"
+        }
+      ],
+      "summary": "Bannière contextuelle dans la page (info, succès, avertissement, erreur) avec titre, actions et fermeture optionnelle. Reste affichée, contrairement au toast.",
+      "inputs": [
+        {
+          "name": "variant",
+          "type": "'info' | 'success' | 'warning' | 'danger'",
+          "default": "'info'",
+          "description": "Couleur et icône."
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": "Titre en gras."
+        },
+        {
+          "name": "live",
+          "type": "'off' | 'polite' | 'assertive'",
+          "default": "'off'",
+          "description": "off : statique ; polite : role=status ; assertive : role=alert (alerte insérée après une action)."
+        },
+        {
+          "name": "dismissible",
+          "type": "boolean",
+          "default": "false",
+          "description": "Affiche le bouton de fermeture."
+        },
+        {
+          "name": "dismissLabel",
+          "type": "string",
+          "default": "'Fermer le message'",
+          "description": "Nom du bouton de fermeture."
+        },
+        {
+          "name": "variantLabel",
+          "type": "string",
+          "description": "Préfixe lu par les lecteurs d’écran (défaut : Information, Succès, Avertissement, Erreur)."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "dismissed",
+          "type": "void",
+          "description": "Clic sur fermer ; l’application retire l’alerte avec @if."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "Message (texte, liens)."
+        },
+        {
+          "selector": "[gestioAlertActions]",
+          "description": "Boutons d’action sous le message."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Erreur de validation de formulaire",
+          "code": "@if (saveError()) {\n  <gestio-alert variant=\"danger\" title=\"Enregistrement impossible\" live=\"assertive\" dismissible (dismissed)=\"saveError.set(null)\">\n    {{ saveError() }}\n    <div gestioAlertActions><button gestioButton size=\"sm\" variant=\"outline\" (click)=\"retry()\">Réessayer</button></div>\n  </gestio-alert>\n}"
+        }
+      ],
+      "pitfalls": [
+        "dismissed ne masque rien tout seul : envelopper l’alerte dans @if.",
+        "live=\"assertive\" uniquement pour une erreur bloquante insérée dynamiquement."
+      ]
+    },
+    {
+      "id": "tooltip",
+      "title": "Info-bulle",
+      "kind": "directive",
+      "entryPoint": "@gestiolabs336/ui/tooltip",
+      "exports": ["GestioTooltip", "GestioTooltipPlacement"],
+      "classes": [
+        {
+          "class": "GestioTooltip",
+          "selector": "[gestioTooltip]"
+        }
+      ],
+      "summary": "Info-bulle textuelle au survol (délai 400 ms) et au focus clavier, en overlay CDK. Texte relié par aria-describedby. WCAG 1.4.13 : Échap la masque, elle reste affichée tant que le déclencheur ou la bulle sont survolés.",
+      "api": "exportAs 'gestioTooltip' : show(), hide().",
+      "inputs": [
+        {
+          "name": "gestioTooltip",
+          "type": "string (requis)",
+          "description": "Texte ; vide = pas de bulle."
+        },
+        {
+          "name": "gestioTooltipPlacement",
+          "type": "'top' | 'bottom' | 'start' | 'end'",
+          "default": "'top'",
+          "description": "Côté préféré, repli automatique."
+        },
+        {
+          "name": "gestioTooltipDisabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Désactive la bulle et la description."
+        }
+      ],
+      "outputs": [],
+      "slots": [],
+      "examples": [
+        {
+          "title": "Bouton icône",
+          "code": "// imports: [GestioTooltip, GestioButton]\n<button gestioButton variant=\"ghost\" aria-label=\"Exporter\" gestioTooltip=\"Exporter la liste en CSV\">\n  <svg gestioButtonIcon aria-hidden=\"true\">…</svg>\n</button>"
+        }
+      ],
+      "pitfalls": [
+        "La bulle complète le nom accessible, elle ne le remplace pas : un bouton icône garde son aria-label.",
+        "Un <button disabled> ne reçoit pas les événements souris : placer la directive sur un élément parent.",
+        "Pas de contenu interactif ni d’information indispensable (invisible sur écran tactile)."
+      ]
+    },
+    {
+      "id": "pagination",
+      "title": "Pagination",
+      "kind": "component",
+      "entryPoint": "@gestiolabs336/ui/pagination",
+      "exports": [
+        "GestioPagination",
+        "GestioPaginationMode",
+        "GestioPaginationLabels",
+        "GESTIO_PAGINATION_LABELS"
+      ],
+      "classes": [
+        {
+          "class": "GestioPagination",
+          "selector": "gestio-pagination"
+        }
+      ],
+      "summary": "Pagination autonome (listes, cartes, tableaux paginés côté serveur) : numéros de page avec ellipses dans un <nav>, aria-current, sélecteur de taille, plage « 1–10 sur 230 », annonce du changement de page. Utilisée par gestio-datagrid.",
+      "inputs": [
+        {
+          "name": "total",
+          "type": "number (requis)",
+          "description": "Nombre total d’éléments."
+        },
+        {
+          "name": "page",
+          "type": "model<number>",
+          "default": "0",
+          "description": "Page courante, à partir de 0 ; [(page)]."
+        },
+        {
+          "name": "pageSize",
+          "type": "model<number>",
+          "default": "10",
+          "description": "Éléments par page ; le changer ramène à la page 0."
+        },
+        {
+          "name": "pageSizeOptions",
+          "type": "readonly number[]",
+          "default": "[10, 25, 50]",
+          "description": "Choix de taille."
+        },
+        {
+          "name": "showPageSize",
+          "type": "boolean",
+          "default": "true",
+          "description": "Affiche « Lignes par page »."
+        },
+        {
+          "name": "showRange",
+          "type": "boolean",
+          "default": "true",
+          "description": "Affiche la plage."
+        },
+        {
+          "name": "mode",
+          "type": "'pages' | 'compact'",
+          "default": "'pages'",
+          "description": "pages : numéros ; compact : « 3 / 12 »."
+        },
+        {
+          "name": "siblingCount",
+          "type": "number",
+          "default": "1",
+          "description": "Pages affichées autour de la page courante."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioPaginationLabels>",
+          "default": "{}",
+          "description": "Libellés (navigation, rowsPerPage, previousPage, nextPage, page, range, pageStatus)."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Nom du <nav> (défaut 'Pagination') ; obligatoire et unique s'il y a plusieurs paginations dans la page."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "pageChange",
+          "type": "number",
+          "description": "Émis par le model page."
+        },
+        {
+          "name": "pageSizeChange",
+          "type": "number",
+          "description": "Émis par le model pageSize."
+        }
+      ],
+      "slots": [],
+      "examples": [
+        {
+          "title": "Liste paginée côté serveur",
+          "code": "// imports: [GestioPagination]\npage = signal(0);\npageSize = signal(25);\nresult = httpResource<{ items: Client[]; total: number }>(() => `/api/clients?page=${this.page()}&size=${this.pageSize()}`);\n\n<gestio-pagination [total]=\"result.value()?.total ?? 0\" [(page)]=\"page\" [(pageSize)]=\"pageSize\" [pageSizeOptions]=\"[25, 50, 100]\" />"
+        }
+      ],
+      "pitfalls": [
+        "page commence à 0 (affichée à partir de 1).",
+        "Une page hors limites est ramenée à la dernière page à l’affichage, sans modifier le model.",
+        "Plusieurs paginations dans une page : donner à chacune un ariaLabel distinct."
+      ]
+    },
+    {
+      "id": "skeleton",
+      "title": "Skeleton",
+      "kind": "component",
+      "entryPoint": "@gestiolabs336/ui/skeleton",
+      "exports": ["GestioSkeleton", "GestioSkeletonShape"],
+      "classes": [
+        {
+          "class": "GestioSkeleton",
+          "selector": "gestio-skeleton"
+        }
+      ],
+      "summary": "Blocs de substitution animés pendant un chargement (texte multiligne, cercle, rectangle). aria-hidden : signaler le chargement par aria-busy sur le conteneur ou un gestio-spinner.",
+      "inputs": [
+        {
+          "name": "shape",
+          "type": "'text' | 'circle' | 'rect'",
+          "default": "'text'",
+          "description": "Forme."
+        },
+        {
+          "name": "width",
+          "type": "string",
+          "description": "Largeur CSS (défaut 100 %, cercle 2,5 rem)."
+        },
+        {
+          "name": "height",
+          "type": "string",
+          "description": "Hauteur CSS (défaut une ligne, rect 6 rem, cercle = largeur)."
+        },
+        {
+          "name": "lines",
+          "type": "number",
+          "default": "1",
+          "description": "Nombre de lignes (forme text) ; la dernière est plus courte."
+        }
+      ],
+      "outputs": [],
+      "slots": [],
+      "examples": [
+        {
+          "title": "Carte en chargement",
+          "code": "// imports: [GestioSkeleton, GestioCard]\n<gestio-card [attr.aria-busy]=\"loading()\">\n  @if (loading()) {\n    <gestio-skeleton shape=\"circle\" width=\"2.5rem\" />\n    <gestio-skeleton [lines]=\"3\" />\n  } @else { … }\n</gestio-card>"
+        }
+      ],
+      "pitfalls": ["Animation désactivée avec prefers-reduced-motion."]
+    },
+    {
+      "id": "spinner",
+      "title": "Spinner",
+      "kind": "component",
+      "entryPoint": "@gestiolabs336/ui/spinner",
+      "exports": ["GestioSpinner", "GestioSpinnerSize"],
+      "classes": [
+        {
+          "class": "GestioSpinner",
+          "selector": "gestio-spinner"
+        }
+      ],
+      "summary": "Indicateur de chargement circulaire, role=\"status\" avec texte masqué (ou décoratif).",
+      "inputs": [
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "'md'",
+          "description": "Taille (16 / 24 / 36 px)."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "'Chargement en cours'",
+          "description": "Texte annoncé."
+        },
+        {
+          "name": "decorative",
+          "type": "boolean",
+          "default": "false",
+          "description": "Masqué aux technologies d’assistance (le contexte annonce déjà le chargement)."
+        }
+      ],
+      "outputs": [],
+      "slots": [],
+      "examples": [
+        {
+          "title": "Zone en chargement",
+          "code": "<gestio-spinner label=\"Chargement des factures\" />"
+        }
+      ],
+      "pitfalls": ["Pour un bouton, utiliser [loading] de gestioButton plutôt qu’un spinner."]
     }
   ]
 }

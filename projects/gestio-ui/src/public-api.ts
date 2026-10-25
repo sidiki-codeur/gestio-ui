@@ -1,38 +1,31 @@
 /*
  * API publique de Gestio UI.
+ *
+ * Chaque composant est aussi disponible dans son propre point d'entrée
+ * (@gestiolabs336/ui/button, @gestiolabs336/ui/datagrid…), à privilégier : seul le code
+ * réellement utilisé par une route est alors chargé avec elle.
  */
 
-export * from './lib/core/types';
-
-export * from './lib/button/button';
-export * from './lib/input/input';
-export * from './lib/textarea/textarea';
-export * from './lib/checkbox/checkbox';
-export * from './lib/select/select';
-export * from './lib/card/card';
-export * from './lib/card/card-slots';
-export * from './lib/badge/badge';
-export * from './lib/table/table';
-
-export * from './lib/datagrid/datagrid.types';
-export * from './lib/datagrid/datagrid-cell';
-export * from './lib/datagrid/datagrid';
-
-export * from './lib/dialog/dialog-ref';
-export * from './lib/dialog/dialog';
-export * from './lib/dialog/dialog-actions';
-export * from './lib/dialog/dialog.service';
-export * from './lib/dialog/confirm-dialog';
-
-export * from './lib/toast/toast.types';
-export * from './lib/toast/toast.service';
-export * from './lib/toast/toaster';
-
-export * from './lib/layout/responsive';
-export * from './lib/layout/container';
-export * from './lib/layout/stack';
-export * from './lib/layout/grid';
-export * from './lib/layout/app-shell';
-
-export * from './lib/tabs/tabs';
-export * from './lib/tabs/tab';
+export * from '@gestiolabs336/ui/alert';
+export * from '@gestiolabs336/ui/badge';
+export * from '@gestiolabs336/ui/button';
+export * from '@gestiolabs336/ui/card';
+export * from '@gestiolabs336/ui/checkbox';
+export * from '@gestiolabs336/ui/core';
+export * from '@gestiolabs336/ui/datagrid';
+export * from '@gestiolabs336/ui/dialog';
+export * from '@gestiolabs336/ui/form-field';
+export * from '@gestiolabs336/ui/input';
+export * from '@gestiolabs336/ui/layout';
+export * from '@gestiolabs336/ui/menu';
+export * from '@gestiolabs336/ui/pagination';
+export * from '@gestiolabs336/ui/radio';
+export * from '@gestiolabs336/ui/select';
+export * from '@gestiolabs336/ui/skeleton';
+export * from '@gestiolabs336/ui/spinner';
+export * from '@gestiolabs336/ui/switch';
+export * from '@gestiolabs336/ui/table';
+export * from '@gestiolabs336/ui/tabs';
+export * from '@gestiolabs336/ui/textarea';
+export * from '@gestiolabs336/ui/toast';
+export * from '@gestiolabs336/ui/tooltip';

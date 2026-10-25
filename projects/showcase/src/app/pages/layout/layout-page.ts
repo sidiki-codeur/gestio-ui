@@ -1,17 +1,17 @@
 import { Component, inject, signal } from '@angular/core';
+import { GestioBadge } from '@gestiolabs336/ui/badge';
+import { GestioButton } from '@gestiolabs336/ui/button';
+import { GestioCard } from '@gestiolabs336/ui/card';
+import { GestioInput } from '@gestiolabs336/ui/input';
 import {
   GESTIO_BREAKPOINTS,
-  GestioBadge,
   GestioBreakpoints,
-  GestioButton,
-  GestioCard,
   GestioContainer,
   GestioGrid,
   GestioGridItem,
-  GestioInput,
   GestioStack,
-  GestioTextarea,
-} from '@gestiolabs336/ui';
+} from '@gestiolabs336/ui/layout';
+import { GestioTextarea } from '@gestiolabs336/ui/textarea';
 import { ApiRow, ApiTable } from '../../shared/api-table';
 import { CodeBlock } from '../../shared/code-block';
 import { Example } from '../../shared/example';

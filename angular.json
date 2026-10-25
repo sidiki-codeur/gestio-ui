@@ -10,7 +10,7 @@
     "gestio-ui": {
       "projectType": "library",
       "root": "projects/gestio-ui",
-      "sourceRoot": "projects/gestio-ui/src",
+      "sourceRoot": "projects/gestio-ui",
       "prefix": "gestio",
       "architect": {
         "build": {

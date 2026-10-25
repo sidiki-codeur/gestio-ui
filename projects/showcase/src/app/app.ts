@@ -1,7 +1,9 @@
 import { DOCUMENT, NgOptimizedImage } from '@angular/common';
 import { Component, Injector, afterNextRender, inject, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { GestioAppShell, GestioBadge, GestioToaster } from '@gestiolabs336/ui';
+import { GestioBadge } from '@gestiolabs336/ui/badge';
+import { GestioAppShell } from '@gestiolabs336/ui/layout';
+import { GestioToaster } from '@gestiolabs336/ui/toast';
 import { filter } from 'rxjs';
 import { NAVIGATION } from './core/navigation';
 import { ThemeService } from './core/theme.service';

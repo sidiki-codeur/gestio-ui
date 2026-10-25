@@ -1,0 +1,63 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gestio-space-2);
+  width: var(--_width, 100%);
+}
+
+:host(.gestio-skeleton--circle) {
+  width: var(--_width, 2.5rem);
+}
+
+.gestio-skeleton__bone {
+  display: block;
+  height: var(--_height, 0.875em);
+  border-radius: var(--gestio-radius-sm);
+  background: linear-gradient(
+      90deg,
+      transparent 0%,
+      color-mix(in srgb, var(--gestio-color-surface) 65%, transparent) 50%,
+      transparent 100%
+    )
+    var(--gestio-color-surface-active);
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: gestio-skeleton-shimmer 1.4s ease-in-out infinite;
+
+  &.is-last {
+    width: 60%;
+  }
+
+  :host(.gestio-skeleton--rect) & {
+    height: var(--_height, 6rem);
+    border-radius: var(--gestio-radius-lg);
+  }
+
+  :host(.gestio-skeleton--circle) & {
+    height: auto;
+    aspect-ratio: 1;
+    border-radius: 50%;
+  }
+}
+
+@keyframes gestio-skeleton-shimmer {
+  from {
+    background-position: 150% 0;
+  }
+
+  to {
+    background-position: -50% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gestio-skeleton__bone {
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .gestio-skeleton__bone {
+    border: 1px solid GrayText;
+  }
+}

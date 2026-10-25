@@ -1,15 +1,15 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { GestioButton } from '@gestiolabs336/ui/button';
+import { GestioCheckbox } from '@gestiolabs336/ui/checkbox';
 import {
   GESTIO_DIALOG_DATA,
-  GestioButton,
-  GestioCheckbox,
   GESTIO_DIALOG_IMPORTS,
   GestioDialogRef,
   GestioDialogService,
   GestioDialogSize,
-  GestioInput,
-} from '@gestiolabs336/ui';
+} from '@gestiolabs336/ui/dialog';
+import { GestioInput } from '@gestiolabs336/ui/input';
 import { ApiRow, ApiTable } from '../../shared/api-table';
 import { Example } from '../../shared/example';
 import { PageHeader } from '../../shared/page-header';

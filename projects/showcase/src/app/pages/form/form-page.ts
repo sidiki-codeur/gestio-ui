@@ -16,16 +16,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  GestioButton,
-  GestioCard,
-  GestioCheckbox,
-  GestioInput,
-  GestioSelect,
-  GestioSelectOption,
-  GestioTextarea,
-  GestioToastService,
-} from '@gestiolabs336/ui';
+import { GestioButton } from '@gestiolabs336/ui/button';
+import { GestioCard } from '@gestiolabs336/ui/card';
+import { GestioCheckbox } from '@gestiolabs336/ui/checkbox';
+import { GestioInput } from '@gestiolabs336/ui/input';
+import { GestioSelect, GestioSelectOption } from '@gestiolabs336/ui/select';
+import { GestioTextarea } from '@gestiolabs336/ui/textarea';
+import { GestioToastService } from '@gestiolabs336/ui/toast';
 import { CodeBlock } from '../../shared/code-block';
 import { PageHeader } from '../../shared/page-header';
 

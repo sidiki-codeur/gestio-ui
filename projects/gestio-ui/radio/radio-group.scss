@@ -1,0 +1,60 @@
+:host {
+  display: block;
+  font-family: var(--gestio-font-sans);
+  color: var(--gestio-color-text);
+}
+
+.gestio-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gestio-space-2);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.gestio-radio-group__legend {
+  display: inline-flex;
+  gap: 0.125rem;
+  align-items: baseline;
+  /* Une légende ne participe pas au flex : la marge remplace le gap. */
+  margin-block-end: var(--gestio-space-2);
+  padding: 0;
+  font-size: var(--gestio-font-size-md);
+  font-weight: var(--gestio-font-weight-medium);
+  line-height: var(--gestio-line-height-tight);
+}
+
+.gestio-radio-group__required {
+  color: var(--gestio-color-danger-text);
+}
+
+.gestio-radio-group__options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gestio-space-2);
+
+  .is-horizontal & {
+    flex-direction: row;
+    flex-wrap: wrap;
+    column-gap: var(--gestio-space-5);
+  }
+}
+
+.gestio-radio-group__hint,
+.gestio-radio-group__error {
+  margin: 0;
+  font-size: var(--gestio-font-size-sm);
+  line-height: var(--gestio-line-height-normal);
+}
+
+.gestio-radio-group__hint {
+  margin-block-start: calc(-1 * var(--gestio-space-1));
+  color: var(--gestio-color-text-muted);
+}
+
+.gestio-radio-group__error {
+  color: var(--gestio-color-danger-text);
+  font-weight: var(--gestio-font-weight-medium);
+}

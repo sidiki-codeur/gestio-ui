@@ -7,8 +7,10 @@ d’administration, accompagnée d’un catalogue interactif (showcase).
 - Paquet npm : https://www.npmjs.com/package/@gestiolabs336/ui
 
 - Angular 22 (composants standalone, signaux, détection OnPush par défaut, zoneless)
-- `@angular/cdk` 22 pour la modale (overlay, piège et restauration du focus) et les annonces
-  accessibles des notifications
+- `@angular/cdk` 22 pour la modale, le menu et l’info-bulle (overlay, piège et restauration du
+  focus, navigation clavier) et les annonces accessibles des notifications
+- Un point d’entrée par composant (`@gestiolabs336/ui/button`…) : chaque route ne charge que ce
+  qu’elle utilise
 - Thème par design tokens CSS `--gestio-*`, clair et sombre
 - Aucune ressource externe (polices système, icônes SVG inline)
 - Serveur MCP intégré au paquet pour que les assistants IA connaissent l’API exacte
@@ -18,24 +20,28 @@ d’administration, accompagnée d’un catalogue interactif (showcase).
 ```
 projects/
   gestio-ui/                    Bibliothèque (ng-packagr)
-    src/public-api.ts           API publique : tout import passe par « @gestiolabs336/ui »
+    src/public-api.ts           Point d’entrée principal : réexporte tous les sous-modules
     src/styles/gestio-ui.css    Thème : tokens, modes clair / sombre / système, styles d’overlay
-    src/lib/
-      core/                     Utilitaires internes (identifiants, types, styles de champ partagés)
-      button/ input/ textarea/ checkbox/ select/
-      card/ badge/ table/ datagrid/ dialog/ toast/ tabs/
-      layout/                   Container, pile, grille, coque d’application, points de rupture
+    core/                       Utilitaires partagés (identifiants, types, styles de champ)
+    button/ input/ textarea/ checkbox/ radio/ switch/ select/ form-field/
+    card/ badge/ alert/ table/ datagrid/ pagination/ dialog/ toast/ tabs/
+    menu/ tooltip/ skeleton/ spinner/
+    layout/                     Container, pile, grille, coque d’application, points de rupture
+                                Chaque dossier est un point d’entrée « @gestiolabs336/ui/<dossier> »
+                                (ng-package.json + public-api.ts)
     mcp/                        Serveur MCP (server.mjs), catalogue vérifié par les tests, README
   showcase/                     Application de démonstration
     src/app/core/               Thème du showcase, navigation
     src/app/shared/             Exemple, bloc de code copiable, tableau d’API, en-tête de page
     src/app/pages/              Une page par composant + introduction, fondations, formulaire, 404
 dist/
-  gestio-ui/                    Paquet compilé (fesm2022, types, styles/gestio-ui.css)
+  gestio-ui/                    Paquet compilé (un fichier fesm2022 par point d’entrée, types, thème)
 ```
 
-Le showcase importe la bibliothèque via l’alias TypeScript `gestio-ui` → `dist/gestio-ui`
-(`tsconfig.json`). **La bibliothèque doit donc être compilée avant le showcase.**
+Le showcase importe la bibliothèque via les alias TypeScript `@gestiolabs336/ui` et
+`@gestiolabs336/ui/*` → `dist/gestio-ui` (`tsconfig.json`). **La bibliothèque doit donc être
+compilée avant le showcase.** Les tests de la bibliothèque, eux, pointent ces alias sur les
+sources (`projects/gestio-ui/tsconfig.spec.json`).
 
 ## Commandes
 
@@ -97,7 +103,9 @@ Placez l’attribut sur `<html>` : les modales et notifications, rendues dans `<
 ### 4. Composants
 
 ```ts
-import { GestioButton, GestioInput, GestioSelect, GestioSelectOption } from '@gestiolabs336/ui';
+import { GestioButton } from '@gestiolabs336/ui/button';
+import { GestioInput } from '@gestiolabs336/ui/input';
+import { GestioSelect, GestioSelectOption } from '@gestiolabs336/ui/select';
 
 @Component({
   imports: [ReactiveFormsModule, GestioButton, GestioInput, GestioSelect],
@@ -140,6 +148,17 @@ export class ClientForm {
 | Modale          | `GestioDialogService`, `gestio-dialog` + `GESTIO_DIALOG_IMPORTS`                                                |
 | Notifications   | `GestioToastService`, `gestio-toaster`, `provideGestioToast()`                                                  |
 | Onglets         | `gestio-tabs` / `gestio-tab`                                                                                    |
+| Boutons radio   | `gestio-radio-group` + `gestio-radio` (ControlValueAccessor, valeur de tout type)                               |
+| Interrupteur    | `gestio-switch` (`role="switch"`, ControlValueAccessor booléen)                                                 |
+| Champ natif     | `gestio-form-field` + `[gestioFieldControl]` (libellé, aide, erreur autour d’un `input type="date"`…)           |
+| Alerte          | `gestio-alert` (+ `[gestioAlertActions]`)                                                                       |
+| Pagination      | `gestio-pagination` (numéros ou mode compact, taille de page)                                                   |
+| Menu déroulant  | `[gestioMenuTriggerFor]`, `gestio-menu`, `[gestioMenuItem]`, `gestio-menu-divider` (CDK Menu)                   |
+| Info-bulle      | `[gestioTooltip]`                                                                                               |
+| Chargement      | `gestio-skeleton`, `gestio-spinner`                                                                             |
+
+Chaque composant s’importe depuis son point d’entrée (`@gestiolabs336/ui/<dossier>`, voir
+« Structure »). Les champs acceptent Reactive Forms, `ngModel` et Signal Forms (`[formField]`).
 
 Le détail des entrées de chaque composant est présenté dans le showcase.
 
@@ -302,7 +321,9 @@ Familles de tokens : couleurs (`--gestio-color-*`), typographie (`--gestio-font-
 
 ## Ajouter un composant
 
-1. Créer `projects/gestio-ui/src/lib/<nom>/<nom>.ts` (+ `.html`, `.scss`) :
+1. Créer le dossier `projects/gestio-ui/<nom>/` avec `ng-package.json`
+   (`{ "lib": { "entryFile": "public-api.ts" } }`), `public-api.ts` et `<nom>.ts` (+ `.html`,
+   `.scss`) :
    - sélecteur préfixé `gestio-` (ou attribut `gestio…` sur un élément natif) ;
    - `input()`, `output()`, `model()`, `computed()` ; pas de `standalone: true` ni de
      `changeDetection` explicites (valeurs par défaut d’Angular 22) ;
@@ -310,23 +331,32 @@ Familles de tokens : couleurs (`--gestio-color-*`), typographie (`--gestio-font-
      `prefers-reduced-motion` et un rendu correct dans les deux thèmes ;
    - aucun accès direct à `window`, `document` ou `localStorage` (utiliser `DOCUMENT`,
      `isPlatformBrowser`, `afterNextRender`) ;
-   - pour un champ de formulaire : `ControlValueAccessor` et `@use '../core/field'`.
-2. Exporter le composant et ses types dans `src/public-api.ts`.
+   - pour un champ de formulaire : `ControlValueAccessor` et `@use '../core/field'` ;
+   - imports d’un autre composant par son point d’entrée (`@gestiolabs336/ui/button`), jamais en
+     chemin relatif.
+2. Exporter le composant et ses types dans `<nom>/public-api.ts`, et ajouter
+   `export * from '@gestiolabs336/ui/<nom>'` à `src/public-api.ts`.
 3. Ajouter `<nom>.spec.ts` (comportements, clavier, ARIA).
-4. Documenter le composant dans `mcp/catalog.json` (entrées, sorties, exemples, pièges) :
-   le test du catalogue échoue tant que ce n’est pas fait.
+4. Documenter le composant dans `mcp/catalog.json` (`entryPoint`, entrées, sorties, exemples,
+   pièges) et ajouter le point d’entrée à `src/mcp-catalog.spec.ts` : le test du catalogue échoue
+   tant que ce n’est pas fait.
 5. Créer la page `projects/showcase/src/app/pages/<nom>/` et l’ajouter à `app.routes.ts` et
    `core/navigation.ts`. Les extraits de code doivent refléter l’API réelle.
 6. `npm run build && npm test`.
 
-## Limites connues (v0.1)
+## Limites connues (v0.2)
 
 - Sélecteur natif uniquement : pas de recherche, de sélection multiple ni de groupes d’options.
-- Pas de combobox, date picker, menu déroulant ni infobulle.
-- Taille du bundle : la bibliothèque est un seul module ESM ; le code de tous les composants
-  utilisés par l’application se retrouve dans le chunk qui importe `@gestiolabs336/ui` en premier
-  (souvent le chunk initial). Le showcase dépasse ainsi l’avertissement de budget (≈ 515 kB pour
-  500 kB). Correctif prévu : points d’entrée secondaires (`@gestiolabs336/ui/datagrid`…).
+- Pas de combobox ni de date picker dédié (`<input type="date" gestioFieldControl>` dans
+  `gestio-form-field` en attendant), pas de popover.
+- Menu : pas de sous-menus ni d’éléments à cocher. Il est rendu en popover juste après son
+  déclencheur ; ce réglage complète une méthode interne du CDK (vérifiée par un test) et revient
+  au rendu global du CDK si elle disparaît.
+- Taille du bundle : importer depuis `@gestiolabs336/ui` (point d’entrée principal) charge toute
+  la bibliothèque ; importer depuis les points d’entrée par composant. Le showcase est ainsi
+  passé de ≈ 515 kB à ≈ 364 kB de chunk initial.
+- Info-bulle : invisible sur écran tactile ; elle ne s’affiche pas sur un bouton `disabled`
+  (aucun événement souris).
 - `gestioGridSpan` supérieur au nombre de colonnes crée des colonnes implicites.
 - Datagrid : traitements côté client uniquement ; pas de navigation cellule par cellule (motif
   ARIA grid), d’édition en ligne, de colonnes redimensionnables ni de défilement virtuel.
@@ -338,7 +368,8 @@ Familles de tokens : couleurs (`--gestio-color-*`), typographie (`--gestio-font-
   (masqués par `hidden`).
 - Libellés internes en français par défaut (« Fermer », « Afficher le mot de passe »…) ;
   surchargeables par des entrées dédiées, sans système d’i18n intégré.
-- Champs compatibles Reactive Forms et `ngModel` ; l’intégration directe avec Signal Forms n’est
-  pas encore fournie.
+- Signal Forms : les champs passent par leur ControlValueAccessor (`[formField]` les pilote,
+  vérifié par `src/signal-forms.spec.ts`) ; les erreurs du schéma ne sont pas affichées
+  automatiquement, elles se passent à `[error]`.
 - Le rendu SSR n’est pas configuré dans ce workspace : la compatibilité repose sur l’absence
   d’accès globaux non protégés, pas sur un test SSR exécuté.

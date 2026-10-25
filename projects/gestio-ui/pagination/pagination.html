@@ -1,0 +1,75 @@
+@if (showPageSize()) {
+  <div class="gestio-pagination__page-size">
+    <label [for]="id + '-size'">{{ text().rowsPerPage }}</label>
+    <gestio-select
+      size="sm"
+      [selectId]="id + '-size'"
+      [options]="pageSizeChoices()"
+      [ngModel]="pageSize()"
+      (ngModelChange)="onPageSize($event)"
+    />
+  </div>
+}
+
+@if (showRange()) {
+  <p class="gestio-pagination__range">{{ rangeText() }}</p>
+}
+
+<nav class="gestio-pagination__nav" [attr.aria-label]="ariaLabel() ?? text().navigation">
+  <ul class="gestio-pagination__list">
+    <li>
+      <button
+        type="button"
+        class="gestio-pagination__button"
+        [attr.aria-label]="text().previousPage"
+        [disabled]="current() === 0"
+        (click)="goTo(current() - 1)"
+      >
+        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <path d="M10 3.5L5.5 8l4.5 4.5" />
+        </svg>
+      </button>
+    </li>
+
+    @if (mode() === 'compact') {
+      <li class="gestio-pagination__status">{{ current() + 1 }} / {{ pageCount() }}</li>
+    } @else {
+      @for (item of items(); track item.kind === 'page' ? item.index : item.key) {
+        <li>
+          @if (item.kind === 'page') {
+            <button
+              type="button"
+              class="gestio-pagination__button gestio-pagination__page"
+              [class.is-current]="item.index === current()"
+              [attr.aria-label]="pageLabel(item.index)"
+              [attr.aria-current]="item.index === current() ? 'page' : null"
+              (click)="goTo(item.index)"
+            >
+              {{ formatPage(item.index) }}
+            </button>
+          } @else {
+            <span class="gestio-pagination__gap" aria-hidden="true">…</span>
+          }
+        </li>
+      }
+    }
+
+    <li>
+      <button
+        type="button"
+        class="gestio-pagination__button"
+        [attr.aria-label]="text().nextPage"
+        [disabled]="current() >= pageCount() - 1"
+        (click)="goTo(current() + 1)"
+      >
+        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <path d="M6 3.5L10.5 8 6 12.5" />
+        </svg>
+      </button>
+    </li>
+  </ul>
+</nav>
+
+<span class="gestio-pagination__sr-only" aria-live="polite" aria-atomic="true">{{
+  announcement()
+}}</span>

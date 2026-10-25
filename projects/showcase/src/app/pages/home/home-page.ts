@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { GestioBadge, GestioButton, GestioCard } from '@gestiolabs336/ui';
+import { GestioBadge } from '@gestiolabs336/ui/badge';
+import { GestioButton } from '@gestiolabs336/ui/button';
+import { GestioCard } from '@gestiolabs336/ui/card';
 import { CodeBlock } from '../../shared/code-block';
 import { PageHeader } from '../../shared/page-header';
 
@@ -8,7 +10,7 @@ import { PageHeader } from '../../shared/page-header';
   selector: 'sc-home-page',
   imports: [RouterLink, GestioButton, GestioCard, GestioBadge, CodeBlock, PageHeader],
   template: `
-    <sc-page-header heading="Gestio UI" eyebrow="Version 0.1 — première version">
+    <sc-page-header heading="Gestio UI" eyebrow="Version 0.2">
       Une bibliothèque de composants Angular sobre et accessible, pensée pour les tableaux de bord,
       les logiciels de gestion et les interfaces d’administration.
     </sc-page-header>
@@ -49,7 +51,7 @@ import { PageHeader } from '../../shared/page-header';
     </section>
 
     <section class="sc-section" aria-labelledby="home-contenu">
-      <h2 id="home-contenu">Contenu de la version 0.1</h2>
+      <h2 id="home-contenu">Contenu de la version 0.2</h2>
       <div class="sc-row">
         @for (name of components; track name) {
           <gestio-badge variant="primary">{{ name }}</gestio-badge>
@@ -58,10 +60,10 @@ import { PageHeader } from '../../shared/page-header';
       <div class="sc-note sc-note--warning" role="note">
         <strong>Limites</strong>
         <p>
-          Pas encore de combobox avec recherche, de sélection multiple, de date picker ni d’édition
-          en ligne dans la datagrid (traitements côté client uniquement). Les libellés internes
-          (fermer, afficher le mot de passe…) sont en français par défaut et se surchargent par des
-          entrées dédiées.
+          Pas encore de combobox avec recherche, de sélection multiple, de date picker dédié, de
+          sous-menus ni d’édition en ligne dans la datagrid (traitements côté client uniquement).
+          Les libellés internes (fermer, afficher le mot de passe…) sont en français par défaut et
+          se surchargent par des entrées dédiées.
         </p>
       </div>
     </section>
@@ -81,7 +83,7 @@ export class HomePage {
     },
     {
       title: 'Prête pour les formulaires',
-      text: 'Champs compatibles Reactive Forms (ControlValueAccessor), types de valeurs préservés.',
+      text: 'Champs compatibles Reactive Forms, ngModel et Signal Forms ([formField]), types de valeurs préservés.',
       icon: 'M4 3.5h12v13H4zM7 7.5h6M7 10.5h6M7 13.5h3',
     },
     {
@@ -95,14 +97,22 @@ export class HomePage {
     'Bouton',
     'Champ de saisie',
     'Zone de texte',
+    'Champ de formulaire',
     'Case à cocher',
+    'Boutons radio',
+    'Interrupteur',
     'Sélecteur',
     'Carte',
     'Badge',
+    'Alerte',
     'Tableau',
     'Datagrid',
+    'Pagination',
     'Modale',
+    'Menu déroulant',
     'Notifications',
+    'Info-bulle',
+    'Skeleton et spinner',
     'Onglets',
     'Mises en page',
   ];
@@ -115,7 +125,8 @@ export class HomePage {
   "src/styles.css"
 ]`;
 
-  protected readonly importCode = `import { GestioButton, GestioInput } from '@gestiolabs336/ui';
+  protected readonly importCode = `import { GestioButton } from '@gestiolabs336/ui/button';
+import { GestioInput } from '@gestiolabs336/ui/input';
 
 @Component({
   imports: [GestioButton, GestioInput],

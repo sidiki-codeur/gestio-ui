@@ -1,0 +1,120 @@
+@use '../core/field' as field;
+
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gestio-space-2) var(--gestio-space-5);
+  align-items: center;
+  justify-content: flex-end;
+  /* Les règles @container ci-dessous suivent la largeur disponible, pas l'écran. */
+  container-type: inline-size;
+  color: var(--gestio-color-text-muted);
+  font-family: var(--gestio-font-sans);
+  font-size: var(--gestio-font-size-sm);
+}
+
+.gestio-pagination__page-size {
+  display: flex;
+  gap: var(--gestio-space-2);
+  align-items: center;
+
+  gestio-select {
+    width: 4.75rem;
+  }
+}
+
+.gestio-pagination__range {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.gestio-pagination__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gestio-space-1);
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gestio-pagination__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: var(--gestio-control-height-sm);
+  height: var(--gestio-control-height-sm);
+  padding: 0 var(--gestio-space-2);
+  border: var(--gestio-border-width) solid transparent;
+  border-radius: var(--gestio-radius-md);
+  background: transparent;
+  color: var(--gestio-color-text);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background-color var(--gestio-duration-fast) var(--gestio-easing-standard);
+
+  &:hover:not(:disabled, .is-current) {
+    background: var(--gestio-color-surface-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: 1px;
+  }
+
+  &:disabled {
+    color: var(--gestio-color-text-disabled);
+    cursor: not-allowed;
+  }
+
+  &.is-current {
+    border-color: var(--gestio-color-primary-border);
+    background: var(--gestio-color-primary-subtle);
+    color: var(--gestio-color-primary-text);
+    font-weight: var(--gestio-font-weight-semibold);
+    cursor: default;
+  }
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
+
+.gestio-pagination__status {
+  min-width: 3.5rem;
+  color: var(--gestio-color-text);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.gestio-pagination__gap {
+  display: inline-block;
+  min-width: 1.5rem;
+  text-align: center;
+}
+
+.gestio-pagination__sr-only {
+  @include field.sr-only;
+}
+
+@container (max-width: 30rem) {
+  .gestio-pagination__range {
+    order: -1;
+    width: 100%;
+    text-align: end;
+  }
+}
+
+@media (forced-colors: active) {
+  .gestio-pagination__button.is-current {
+    border-color: Highlight;
+  }
+}

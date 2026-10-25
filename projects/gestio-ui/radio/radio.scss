@@ -1,0 +1,107 @@
+:host {
+  display: block;
+  font-family: var(--gestio-font-sans);
+  color: var(--gestio-color-text);
+}
+
+.gestio-radio {
+  --_size: 1.125rem;
+  display: grid;
+  grid-template-columns: var(--_size) 1fr;
+  column-gap: var(--gestio-space-2);
+  row-gap: 0.125rem;
+}
+
+.gestio-radio__label {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  align-items: start;
+  cursor: pointer;
+  font-size: var(--gestio-font-size-md);
+  line-height: var(--gestio-line-height-normal);
+
+  .is-disabled & {
+    cursor: not-allowed;
+    color: var(--gestio-color-text-disabled);
+  }
+}
+
+.gestio-radio__input {
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  display: grid;
+  place-content: center;
+  width: var(--_size);
+  height: var(--_size);
+  margin: 0;
+  /* Aligne le cercle sur la première ligne de texte. */
+  margin-block-start: calc((1.5em - var(--_size)) / 2);
+  /* text-subtle : contraste ≥ 3:1 avec le fond (WCAG 1.4.11). */
+  border: 1.5px solid var(--gestio-color-text-subtle);
+  border-radius: 50%;
+  background: var(--gestio-color-surface);
+  cursor: inherit;
+  transition: border-color var(--gestio-duration-fast) var(--gestio-easing-standard);
+
+  &::before {
+    content: '';
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--gestio-color-primary);
+    transform: scale(0);
+    transition: transform var(--gestio-duration-fast) var(--gestio-easing-standard);
+  }
+
+  &:hover:not(:disabled) {
+    border-color: var(--gestio-color-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  &:checked {
+    border-color: var(--gestio-color-primary);
+    border-width: 2px;
+
+    &::before {
+      transform: scale(1);
+    }
+  }
+
+  &:disabled {
+    background: var(--gestio-color-surface-disabled);
+    border-color: var(--gestio-color-border-strong);
+
+    &::before {
+      background: var(--gestio-color-text-disabled);
+    }
+  }
+}
+
+.gestio-radio__text {
+  min-width: 0;
+}
+
+.gestio-radio__description {
+  grid-column: 2;
+  margin: 0;
+  font-size: var(--gestio-font-size-sm);
+  line-height: var(--gestio-line-height-normal);
+  color: var(--gestio-color-text-muted);
+}
+
+@media (forced-colors: active) {
+  .gestio-radio__input {
+    appearance: auto;
+    -webkit-appearance: auto;
+
+    &::before {
+      display: none;
+    }
+  }
+}

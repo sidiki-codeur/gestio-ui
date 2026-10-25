@@ -28,8 +28,12 @@ Thème sombre : `<html data-gestio-theme="dark">` (ou `"system"` pour suivre le 
 
 ## Utilisation
 
+Chaque composant a son propre point d’entrée : importez-le depuis là où il est utilisé, seul son
+code est alors chargé avec la route concernée.
+
 ```ts
-import { GestioButton, GestioInput } from '@gestiolabs336/ui';
+import { GestioButton } from '@gestiolabs336/ui/button';
+import { GestioInput } from '@gestiolabs336/ui/input';
 
 @Component({
   imports: [ReactiveFormsModule, GestioButton, GestioInput],
@@ -41,16 +45,26 @@ import { GestioButton, GestioInput } from '@gestiolabs336/ui';
 export class ContactForm {}
 ```
 
+`@gestiolabs336/ui` réexporte tout (compatibilité 0.1), mais charge alors l’ensemble de la
+bibliothèque dès la première route.
+
+Les champs fonctionnent avec Reactive Forms, `ngModel` et Signal Forms (`[formField]`).
+
 ## Composants
 
-| Catégorie    | Composants                                                                                 |
-| ------------ | ------------------------------------------------------------------------------------------ |
-| Actions      | `button[gestioButton]`, `a[gestioButton]`                                                  |
-| Formulaires  | `gestio-input`, `gestio-textarea`, `gestio-checkbox`, `gestio-select` (Reactive Forms)     |
-| Affichage    | `gestio-card`, `gestio-badge`, `gestio-tabs`                                               |
-| Données      | `table[gestioTable]`, `gestio-datagrid` (tri, recherche, pagination, sélection)            |
-| Mise en page | `gestio-app-shell`, `gestio-container`, `gestio-stack`, `gestio-grid`, `GestioBreakpoints` |
-| Retours      | `GestioDialogService` (modales), `GestioToastService` + `gestio-toaster`                   |
+| Point d’entrée                       | Composants                                                                                 |
+| ------------------------------------ | ------------------------------------------------------------------------------------------ |
+| `/button`                            | `button[gestioButton]`, `a[gestioButton]`                                                  |
+| `/input`, `/textarea`, `/select`     | `gestio-input`, `gestio-textarea`, `gestio-select`                                         |
+| `/checkbox`, `/radio`, `/switch`     | `gestio-checkbox`, `gestio-radio-group` + `gestio-radio`, `gestio-switch`                  |
+| `/form-field`                        | `gestio-form-field` + `[gestioFieldControl]` (contrôles natifs : date, heure…)             |
+| `/card`, `/badge`, `/tabs`           | `gestio-card`, `gestio-badge`, `gestio-tabs`                                               |
+| `/table`, `/datagrid`, `/pagination` | `table[gestioTable]`, `gestio-datagrid`, `gestio-pagination`                               |
+| `/menu`                              | `[gestioMenuTriggerFor]`, `gestio-menu`, `[gestioMenuItem]`                                |
+| `/tooltip`                           | `[gestioTooltip]`                                                                          |
+| `/alert`, `/skeleton`, `/spinner`    | `gestio-alert`, `gestio-skeleton`, `gestio-spinner`                                        |
+| `/dialog`, `/toast`                  | `GestioDialogService`, `GestioToastService` + `gestio-toaster`                             |
+| `/layout`                            | `gestio-app-shell`, `gestio-container`, `gestio-stack`, `gestio-grid`, `GestioBreakpoints` |
 
 ## Personnalisation
 
@@ -81,9 +95,9 @@ Outils : `get_setup_guide`, `list_components`, `get_component`, `get_guide`, `se
 
 ## Limites de la version 0.x
 
-L’API peut encore évoluer. Pas encore de combobox, date picker, menu déroulant ni info-bulle ; la
-datagrid travaille côté client. La bibliothèque est livrée en un seul module : tous les composants
-utilisés se retrouvent dans le même chunk de l’application.
+L’API peut encore évoluer. Pas encore de combobox, date picker dédié (utilisez
+`<input type="date">` dans `gestio-form-field`), sous-menus ni popover ; la datagrid travaille côté
+client (pour une pagination serveur, combinez `table[gestioTable]` et `gestio-pagination`).
 
 ## Licence
 

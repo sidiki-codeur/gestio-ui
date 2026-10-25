@@ -1,0 +1,27 @@
+:host {
+  display: block;
+  box-sizing: border-box;
+  max-width: min(18rem, calc(100vw - 1rem));
+  padding: var(--gestio-space-1) var(--gestio-space-2);
+  border-radius: var(--gestio-radius-md);
+  background: var(--gestio-color-text);
+  box-shadow: var(--gestio-shadow-md);
+  color: var(--gestio-color-text-inverse);
+  font-family: var(--gestio-font-sans);
+  font-size: var(--gestio-font-size-sm);
+  line-height: var(--gestio-line-height-normal);
+  overflow-wrap: anywhere;
+  animation: gestio-tooltip-in var(--gestio-duration-fast) var(--gestio-easing-standard);
+}
+
+@keyframes gestio-tooltip-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (forced-colors: active) {
+  :host {
+    border: 1px solid CanvasText;
+  }
+}

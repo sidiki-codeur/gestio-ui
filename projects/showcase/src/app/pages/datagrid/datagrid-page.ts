@@ -1,14 +1,14 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { GestioBadge } from '@gestiolabs336/ui/badge';
+import { GestioButton } from '@gestiolabs336/ui/button';
+import { GestioCheckbox } from '@gestiolabs336/ui/checkbox';
 import {
-  GestioBadge,
-  GestioButton,
-  GestioCheckbox,
   GestioDataGrid,
   GestioDataGridCell,
   GestioDataGridColumn,
   GestioSort,
-  GestioToastService,
-} from '@gestiolabs336/ui';
+} from '@gestiolabs336/ui/datagrid';
+import { GestioToastService } from '@gestiolabs336/ui/toast';
 import { ApiRow, ApiTable } from '../../shared/api-table';
 import { Example } from '../../shared/example';
 import { PageHeader } from '../../shared/page-header';
