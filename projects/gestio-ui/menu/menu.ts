@@ -1,6 +1,7 @@
 import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
 import { ConnectedPosition, FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
 import { Component, Directive, ElementRef, effect, inject, input } from '@angular/core';
+import { GestioRipple } from '@gestiolabs336/ui/ripple';
 
 export type GestioMenuPlacement = 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end';
 export type GestioMenuItemVariant = 'default' | 'danger';
@@ -143,6 +144,7 @@ export class GestioMenu {
   `,
   styleUrl: './menu-item.scss',
   hostDirectives: [
+    GestioRipple,
     {
       directive: CdkMenuItem,
       inputs: ['cdkMenuItemDisabled: disabled'],

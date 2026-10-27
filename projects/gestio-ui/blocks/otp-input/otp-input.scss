@@ -29,7 +29,7 @@
   margin: 0;
   padding: 0;
   border: var(--gestio-border-width) solid var(--gestio-color-border-strong);
-  border-radius: var(--gestio-radius-md);
+  border-radius: var(--gestio-field-radius, var(--gestio-radius-md));
   background: var(--gestio-color-surface);
   box-shadow: var(--gestio-shadow-xs);
   color: var(--gestio-color-text);

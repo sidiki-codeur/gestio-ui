@@ -18,7 +18,7 @@
   margin: 0;
   padding: 0 var(--gestio-space-4);
   border: var(--gestio-border-width) solid var(--_border);
-  border-radius: var(--gestio-radius-md);
+  border-radius: var(--gestio-button-radius, var(--gestio-radius-md));
   background: var(--_bg);
   box-shadow: var(--_shadow);
   color: var(--_fg);
@@ -47,7 +47,7 @@
 
 :host(:active:not([disabled]):not([aria-disabled='true'])) {
   background: var(--_bg-active);
-  transform: translateY(1px);
+  transform: translateY(var(--gestio-button-press-offset, 1px));
 }
 
 :host(:focus-visible) {
@@ -71,14 +71,14 @@
   min-height: var(--gestio-control-height-sm);
   padding-inline: var(--gestio-space-3);
   font-size: var(--gestio-font-size-sm);
-  border-radius: var(--gestio-radius-sm);
+  border-radius: var(--gestio-button-radius, var(--gestio-radius-sm));
 }
 
 :host(.gestio-button--lg) {
   min-height: var(--gestio-control-height-lg);
   padding-inline: var(--gestio-space-5);
   font-size: var(--gestio-font-size-lg);
-  border-radius: var(--gestio-radius-lg);
+  border-radius: var(--gestio-button-radius, var(--gestio-radius-lg));
 }
 
 :host(.gestio-button--full-width) {

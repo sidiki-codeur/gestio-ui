@@ -101,7 +101,31 @@ encapsulés (pas de `::ng-deep`).
 
 Placez l’attribut sur `<html>` : les modales et notifications, rendues dans `<body>`, en héritent.
 
-### 4. Composants
+### 4. Style Material 3 (optionnel)
+
+Chargez `styles/gestio-material.css` **après** `gestio-ui.css`, puis posez `data-gestio-design="material"` sur `<html>`. Il fonctionne avec les thèmes clair, sombre et système.
+
+```json
+"styles": [
+  "node_modules/@gestiolabs336/ui/styles/gestio-ui.css",
+  "node_modules/@gestiolabs336/ui/styles/gestio-material.css",
+  "src/styles.css"
+]
+```
+
+```html
+<html data-gestio-design="material" data-gestio-theme="system"></html>
+```
+
+La feuille ne redéfinit que des tokens : couleurs de Material 3 (schéma de référence #6750A4), survol et pression en surimpression, formes (boutons en pilule, modales arrondies à 28 px), élévations, police Roboto et animations. Aucune dépendance à Angular Material. Roboto n’est pas fournie : ajoutez-la à l’application (Google Fonts ou `@fontsource/roboto`).
+
+Pour changer la couleur source, surchargez la famille `--gestio-color-primary-*` dans un sélecteur `[data-gestio-design="material"]` chargé ensuite.
+
+Les boutons, boutons sociaux et éléments de menu affichent alors une onde de pression (directive `gestioRipple`, point d’entrée `@gestiolabs336/ui/ripple`, applicable à tout élément positionné).
+
+Tokens de composants (avec repli sur l’échelle de rayons) : `--gestio-button-radius`, `--gestio-button-press-offset`, `--gestio-field-radius`, `--gestio-dialog-radius`.
+
+### 5. Composants
 
 ```ts
 import { GestioButton } from '@gestiolabs336/ui/button';

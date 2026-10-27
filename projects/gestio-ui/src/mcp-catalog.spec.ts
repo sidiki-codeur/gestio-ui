@@ -14,6 +14,7 @@ import * as layout from '@gestiolabs336/ui/layout';
 import * as menu from '@gestiolabs336/ui/menu';
 import * as pagination from '@gestiolabs336/ui/pagination';
 import * as radio from '@gestiolabs336/ui/radio';
+import * as ripple from '@gestiolabs336/ui/ripple';
 import * as select from '@gestiolabs336/ui/select';
 import * as skeleton from '@gestiolabs336/ui/skeleton';
 import * as spinner from '@gestiolabs336/ui/spinner';
@@ -78,6 +79,7 @@ const ENTRY_POINTS: Record<string, Record<string, unknown>> = {
   '@gestiolabs336/ui/menu': menu,
   '@gestiolabs336/ui/pagination': pagination,
   '@gestiolabs336/ui/radio': radio,
+  '@gestiolabs336/ui/ripple': ripple,
   '@gestiolabs336/ui/select': select,
   '@gestiolabs336/ui/skeleton': skeleton,
   '@gestiolabs336/ui/spinner': spinner,

@@ -5,6 +5,7 @@ import { GestioBadge } from '@gestiolabs336/ui/badge';
 import { GestioAppShell } from '@gestiolabs336/ui/layout';
 import { GestioToaster } from '@gestiolabs336/ui/toast';
 import { filter } from 'rxjs';
+import { DesignService } from './core/design.service';
 import { NAVIGATION } from './core/navigation';
 import { ThemeService } from './core/theme.service';
 
@@ -26,6 +27,7 @@ export class App {
   private readonly document = inject(DOCUMENT);
   private readonly injector = inject(Injector);
   protected readonly theme = inject(ThemeService);
+  protected readonly design = inject(DesignService);
   protected readonly navigation = NAVIGATION;
   /** Tiroir de navigation (petits écrans), géré par gestio-app-shell. */
   protected readonly menuOpen = signal(false);

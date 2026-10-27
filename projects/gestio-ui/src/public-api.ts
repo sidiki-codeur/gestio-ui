@@ -20,6 +20,7 @@ export * from '@gestiolabs336/ui/layout';
 export * from '@gestiolabs336/ui/menu';
 export * from '@gestiolabs336/ui/pagination';
 export * from '@gestiolabs336/ui/radio';
+export * from '@gestiolabs336/ui/ripple';
 export * from '@gestiolabs336/ui/select';
 export * from '@gestiolabs336/ui/skeleton';
 export * from '@gestiolabs336/ui/spinner';

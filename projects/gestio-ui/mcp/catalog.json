@@ -10,7 +10,7 @@
     {
       "id": "theming",
       "title": "Thèmes et personnalisation",
-      "content": "Thème clair par défaut. Thème sombre : <html data-gestio-theme=\"dark\">. Suivre le système : <html data-gestio-theme=\"system\">. Toujours poser l'attribut sur <html> pour que les modales et notifications (rendues dans <body>) en héritent.\n\nBascule en TypeScript (compatible SSR) :\nprivate readonly document = inject(DOCUMENT);\nsetDark(dark: boolean) { this.document.documentElement.setAttribute('data-gestio-theme', dark ? 'dark' : 'light'); }\n\nPersonnalisation : surcharger les variables --gestio-* dans une feuille chargée APRÈS gestio-ui.css :\n:root { --gestio-color-primary: #0f766e; --gestio-color-primary-hover: #115e59; --gestio-color-primary-active: #134e4a; --gestio-color-primary-subtle: #f0fdfa; --gestio-color-primary-subtle-hover: #ccfbf1; --gestio-color-primary-text: #115e59; --gestio-color-primary-border: #99f6e4; --gestio-color-focus-ring: #14b8a6; }\n[data-gestio-theme='dark'] { --gestio-color-primary: #2dd4bf; }\nChanger la couleur principale implique de surcharger toute la famille --gestio-color-primary-* et de vérifier le contraste WCAG AA. Utiliser l'outil list_design_tokens pour la liste exacte. Dans les styles de l'application, réutiliser les tokens (var(--gestio-space-4), var(--gestio-radius-md)…) plutôt que des valeurs en dur."
+      "content": "Thème clair par défaut. Thème sombre : <html data-gestio-theme=\"dark\">. Suivre le système : <html data-gestio-theme=\"system\">. Toujours poser l'attribut sur <html> pour que les modales et notifications (rendues dans <body>) en héritent.\n\nBascule en TypeScript (compatible SSR) :\nprivate readonly document = inject(DOCUMENT);\nsetDark(dark: boolean) { this.document.documentElement.setAttribute('data-gestio-theme', dark ? 'dark' : 'light'); }\n\nPersonnalisation : surcharger les variables --gestio-* dans une feuille chargée APRÈS gestio-ui.css :\n:root { --gestio-color-primary: #0f766e; --gestio-color-primary-hover: #115e59; --gestio-color-primary-active: #134e4a; --gestio-color-primary-subtle: #f0fdfa; --gestio-color-primary-subtle-hover: #ccfbf1; --gestio-color-primary-text: #115e59; --gestio-color-primary-border: #99f6e4; --gestio-color-focus-ring: #14b8a6; }\n[data-gestio-theme='dark'] { --gestio-color-primary: #2dd4bf; }\nChanger la couleur principale implique de surcharger toute la famille --gestio-color-primary-* et de vérifier le contraste WCAG AA. Utiliser l'outil list_design_tokens pour la liste exacte. Dans les styles de l'application, réutiliser les tokens (var(--gestio-space-4), var(--gestio-radius-md)…) plutôt que des valeurs en dur.\n\nStyle Material 3 (optionnel) : charger node_modules/@gestiolabs336/ui/styles/gestio-material.css APRÈS gestio-ui.css, puis poser data-gestio-design=\"material\" sur <html> (combinable avec data-gestio-theme=\"dark\" | \"system\"). Il redéfinit uniquement des tokens : rôles de couleur M3 (#6750A4), couches d'état 8 %/12 %, formes (boutons pilule, champs 4 px, modales 28 px), élévations, police Roboto (à charger par l'application), animations M3, onde de pression (directive gestioRipple, déjà sur gestioButton, gestioSocialButton, gestioMenuItem ; activée par --gestio-ripple: on). Aucune dépendance à Angular Material. Tokens de composants surchargeables : --gestio-button-radius, --gestio-button-press-offset, --gestio-field-radius, --gestio-dialog-radius. Changer la couleur : surcharger --gestio-color-primary-* dans [data-gestio-design=\"material\"] (et [data-gestio-design=\"material\"][data-gestio-theme=\"dark\"])."
     },
     {
       "id": "responsive",
@@ -2047,6 +2047,46 @@
         "Un <button disabled> ne reçoit pas les événements souris : placer la directive sur un élément parent.",
         "Pas de contenu interactif ni d’information indispensable (invisible sur écran tactile)."
       ]
+    },
+    {
+      "id": "ripple",
+      "title": "Onde de pression (ripple)",
+      "kind": "directive",
+      "exports": ["GestioRipple"],
+      "classes": [
+        {
+          "class": "GestioRipple",
+          "selector": "[gestioRipple]"
+        }
+      ],
+      "summary": "Onde de pression Material 3 au clic. Active uniquement si --gestio-ripple vaut on (style Material : gestio-material.css + data-gestio-design=\"material\"). Déjà intégrée à gestioButton, gestioSocialButton et gestioMenuItem.",
+      "inputs": [
+        {
+          "name": "gestioRippleDisabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Désactive l'onde, même en style Material."
+        }
+      ],
+      "outputs": [],
+      "slots": [],
+      "examples": [
+        {
+          "title": "Tuile cliquable",
+          "code": "// imports: [GestioRipple]\n<div class=\"tuile\" gestioRipple (click)=\"ouvrir()\">…</div>\n/* .tuile { position: relative; } */"
+        },
+        {
+          "title": "Onde par programme",
+          "code": "<button gestioButton #b=\"gestioRipple\" (keydown.enter)=\"b.launch()\">…</button>"
+        }
+      ],
+      "pitfalls": [
+        "Sans style Material (ou avec --gestio-ripple différent de on), la directive ne fait rien.",
+        "L'élément hôte doit être positionné (position: relative) : l'onde est en position absolue.",
+        "Ignorée si l'hôte porte disabled ou aria-disabled=\"true\", et si prefers-reduced-motion: reduce.",
+        "Opacité réglable avec --gestio-ripple-opacity (0.12 par défaut)."
+      ],
+      "entryPoint": "@gestiolabs336/ui/ripple"
     },
     {
       "id": "pagination",

@@ -7,6 +7,7 @@ import {
   inject,
   input,
 } from '@angular/core';
+import { GestioRipple } from '@gestiolabs336/ui/ripple';
 
 /** Fournisseurs d'identité pris en charge. */
 export type GestioSocialProvider = 'google' | 'github' | 'microsoft' | 'apple';
@@ -47,6 +48,7 @@ export const GESTIO_SOCIAL_BUTTON_LABELS: GestioSocialButtonLabels = {
   exportAs: 'gestioSocialButton',
   templateUrl: './social-button.html',
   styleUrl: './social-button.scss',
+  hostDirectives: [GestioRipple],
   host: {
     class: 'gestio-social-button',
     '[class]': 'modifierClasses()',

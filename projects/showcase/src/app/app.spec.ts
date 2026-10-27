@@ -26,7 +26,7 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const toggle = (fixture.nativeElement as HTMLElement).querySelector(
-      '.sc-theme-toggle',
+      '.sc-theme-toggle:not(.sc-design-toggle)',
     ) as HTMLButtonElement;
     const initial = document.documentElement.getAttribute('data-gestio-theme') === 'dark';
 
@@ -36,6 +36,25 @@ describe('App', () => {
       initial ? 'light' : 'dark',
     );
     expect(toggle.getAttribute('aria-pressed')).toBe(String(!initial));
+  });
+
+  it('bascule le style Material sur <html>', async () => {
+    const fixture = TestBed.createComponent(App);
+    await fixture.whenStable();
+    const toggle = (fixture.nativeElement as HTMLElement).querySelector(
+      '.sc-design-toggle',
+    ) as HTMLButtonElement;
+    const root = document.documentElement;
+    const initial = root.getAttribute('data-gestio-design') === 'material';
+
+    toggle.click();
+    await fixture.whenStable();
+    expect(root.getAttribute('data-gestio-design')).toBe(initial ? null : 'material');
+    expect(toggle.getAttribute('aria-pressed')).toBe(String(!initial));
+
+    toggle.click();
+    await fixture.whenStable();
+    expect(root.getAttribute('data-gestio-design')).toBe(initial ? 'material' : null);
   });
 
   it('utilise gestio-app-shell : repères, menu et tiroir', async () => {

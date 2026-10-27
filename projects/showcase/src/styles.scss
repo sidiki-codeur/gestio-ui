@@ -95,6 +95,11 @@ h3 {
   cursor: pointer;
   transition: background-color var(--gestio-duration-fast) var(--gestio-easing-standard);
 
+  /* Deux bascules côte à côte : seule la première est poussée à droite. */
+  & + & {
+    margin-inline-start: var(--gestio-space-2);
+  }
+
   svg {
     width: 1.125rem;
     height: 1.125rem;

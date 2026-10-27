@@ -1,0 +1,190 @@
+/*
+ * Gestio UI — design Material 3.
+ *
+ * Feuille optionnelle, à charger APRÈS gestio-ui.css. Elle s'active avec
+ * data-gestio-design="material" (sur <html>, comme data-gestio-theme) et
+ * se combine avec les thèmes clair, sombre et système.
+ *
+ * Elle ne fait que redéfinir des tokens --gestio-* : rôles de couleur M3
+ * (schéma de référence #6750A4), couches d'état (survol 8 %, pression 12 %),
+ * échelle de formes, élévations, typographie Roboto, animations et onde
+ * de pression (ripple) sur les boutons et les éléments de menu.
+ * Les composants restent les mêmes ; aucune dépendance à Angular Material.
+ *
+ * Police : Roboto n'est pas chargée par la bibliothèque. L'ajouter à
+ * l'application (Google Fonts ou @fontsource/roboto), sinon la pile
+ * système prend le relais.
+ *
+ * Les couleurs succès, avertissement et information (absentes de M3)
+ * restent celles du thème Gestio.
+ */
+
+[data-gestio-design='material'] {
+  /* Typographie */
+  --gestio-font-sans:
+    Roboto, 'Roboto Flex', system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+
+  /* Formes (échelle M3 : extra-small 4, small 8, medium 12, large 16, extra-large 28) */
+  --gestio-radius-sm: 4px;
+  --gestio-radius-md: 8px;
+  --gestio-radius-lg: 12px;
+  --gestio-radius-xl: 16px;
+
+  /* Tokens de composants */
+  --gestio-button-radius: var(--gestio-radius-full);
+  --gestio-button-press-offset: 0;
+  --gestio-field-radius: 4px;
+  --gestio-dialog-radius: 28px;
+
+  /* Onde de pression (directive gestioRipple) */
+  --gestio-ripple: on;
+
+  /* Animations M3 (courbes standard et emphasized decelerate) */
+  --gestio-duration-fast: 150ms;
+  --gestio-duration-normal: 200ms;
+  --gestio-duration-slow: 300ms;
+  --gestio-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --gestio-easing-emphasized: cubic-bezier(0.05, 0.7, 0.1, 1);
+
+  /* Couleurs — thème clair */
+  --gestio-color-primary: #6750a4;
+  --gestio-color-primary-hover: color-mix(in srgb, #ffffff 8%, #6750a4);
+  --gestio-color-primary-active: color-mix(in srgb, #ffffff 12%, #6750a4);
+  --gestio-color-on-primary: #ffffff;
+  --gestio-color-primary-subtle: #eaddff;
+  --gestio-color-primary-subtle-hover: color-mix(in srgb, #4f378b 8%, #eaddff);
+  --gestio-color-primary-text: #4f378b;
+  --gestio-color-primary-border: #d0bcff;
+  --gestio-color-danger: #b3261e;
+  --gestio-color-danger-hover: color-mix(in srgb, #ffffff 8%, #b3261e);
+  --gestio-color-danger-active: color-mix(in srgb, #ffffff 12%, #b3261e);
+  --gestio-color-on-danger: #ffffff;
+  --gestio-color-danger-subtle: #f9dedc;
+  --gestio-color-danger-text: #8c1d18;
+  --gestio-color-danger-border: #f2b8b5;
+  --gestio-color-neutral: #625b71;
+  --gestio-color-on-neutral: #ffffff;
+  --gestio-color-neutral-subtle: #e8def8;
+  --gestio-color-neutral-subtle-hover: color-mix(in srgb, #4a4458 8%, #e8def8);
+  --gestio-color-neutral-text: #4a4458;
+  --gestio-color-neutral-border: #cac4d0;
+  --gestio-color-background: #fef7ff;
+  --gestio-color-surface: #ffffff;
+  --gestio-color-surface-muted: #f3edf7;
+  --gestio-color-surface-hover: color-mix(in srgb, #1d1b20 8%, #ffffff);
+  --gestio-color-surface-active: color-mix(in srgb, #1d1b20 12%, #ffffff);
+  --gestio-color-surface-disabled: color-mix(in srgb, #1d1b20 6%, #fef7ff);
+  --gestio-color-backdrop: rgb(0 0 0 / 0.32);
+  --gestio-color-text: #1d1b20;
+  --gestio-color-text-muted: #49454f;
+  --gestio-color-text-subtle: #49454f;
+  --gestio-color-text-disabled: color-mix(in srgb, #1d1b20 38%, #fef7ff);
+  --gestio-color-text-inverse: #f5eff7;
+  --gestio-color-border: #cac4d0;
+  --gestio-color-border-strong: #79747e;
+  --gestio-color-border-hover: #1d1b20;
+  --gestio-color-focus-ring: #6750a4;
+  --gestio-shadow-xs: none;
+  --gestio-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3), 0 1px 3px 1px rgb(0 0 0 / 0.15);
+  --gestio-shadow-md: 0 1px 2px rgb(0 0 0 / 0.3), 0 2px 6px 2px rgb(0 0 0 / 0.15);
+  --gestio-shadow-lg: 0 4px 4px rgb(0 0 0 / 0.3), 0 8px 12px 6px rgb(0 0 0 / 0.15);
+}
+
+[data-gestio-design='material'][data-gestio-theme='dark'] {
+  --gestio-color-primary: #d0bcff;
+  --gestio-color-primary-hover: color-mix(in srgb, #381e72 8%, #d0bcff);
+  --gestio-color-primary-active: color-mix(in srgb, #381e72 12%, #d0bcff);
+  --gestio-color-on-primary: #381e72;
+  --gestio-color-primary-subtle: #4f378b;
+  --gestio-color-primary-subtle-hover: color-mix(in srgb, #eaddff 8%, #4f378b);
+  --gestio-color-primary-text: #eaddff;
+  --gestio-color-primary-border: #634b9e;
+  --gestio-color-danger: #f2b8b5;
+  --gestio-color-danger-hover: color-mix(in srgb, #601410 8%, #f2b8b5);
+  --gestio-color-danger-active: color-mix(in srgb, #601410 12%, #f2b8b5);
+  --gestio-color-on-danger: #601410;
+  --gestio-color-danger-subtle: #8c1d18;
+  --gestio-color-danger-text: #f9dedc;
+  --gestio-color-danger-border: #b3261e;
+  --gestio-color-neutral: #ccc2dc;
+  --gestio-color-on-neutral: #332d41;
+  --gestio-color-neutral-subtle: #4a4458;
+  --gestio-color-neutral-subtle-hover: color-mix(in srgb, #e8def8 8%, #4a4458);
+  --gestio-color-neutral-text: #e8def8;
+  --gestio-color-neutral-border: #49454f;
+  --gestio-color-background: #141218;
+  --gestio-color-surface: #1d1b20;
+  --gestio-color-surface-muted: #211f26;
+  --gestio-color-surface-hover: color-mix(in srgb, #e6e0e9 8%, #1d1b20);
+  --gestio-color-surface-active: color-mix(in srgb, #e6e0e9 12%, #1d1b20);
+  --gestio-color-surface-disabled: color-mix(in srgb, #e6e0e9 6%, #141218);
+  --gestio-color-backdrop: rgb(0 0 0 / 0.6);
+  --gestio-color-text: #e6e0e9;
+  --gestio-color-text-muted: #cac4d0;
+  --gestio-color-text-subtle: #cac4d0;
+  --gestio-color-text-disabled: color-mix(in srgb, #e6e0e9 38%, #141218);
+  --gestio-color-text-inverse: #322f35;
+  --gestio-color-border: #49454f;
+  --gestio-color-border-strong: #938f99;
+  --gestio-color-border-hover: #e6e0e9;
+  --gestio-color-focus-ring: #d0bcff;
+  --gestio-shadow-xs: none;
+  --gestio-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3), 0 1px 3px 1px rgb(0 0 0 / 0.15);
+  --gestio-shadow-md: 0 1px 2px rgb(0 0 0 / 0.3), 0 2px 6px 2px rgb(0 0 0 / 0.15);
+  --gestio-shadow-lg: 0 4px 4px rgb(0 0 0 / 0.3), 0 8px 12px 6px rgb(0 0 0 / 0.15);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-gestio-design='material'][data-gestio-theme='system'] {
+    --gestio-color-primary: #d0bcff;
+    --gestio-color-primary-hover: color-mix(in srgb, #381e72 8%, #d0bcff);
+    --gestio-color-primary-active: color-mix(in srgb, #381e72 12%, #d0bcff);
+    --gestio-color-on-primary: #381e72;
+    --gestio-color-primary-subtle: #4f378b;
+    --gestio-color-primary-subtle-hover: color-mix(in srgb, #eaddff 8%, #4f378b);
+    --gestio-color-primary-text: #eaddff;
+    --gestio-color-primary-border: #634b9e;
+    --gestio-color-danger: #f2b8b5;
+    --gestio-color-danger-hover: color-mix(in srgb, #601410 8%, #f2b8b5);
+    --gestio-color-danger-active: color-mix(in srgb, #601410 12%, #f2b8b5);
+    --gestio-color-on-danger: #601410;
+    --gestio-color-danger-subtle: #8c1d18;
+    --gestio-color-danger-text: #f9dedc;
+    --gestio-color-danger-border: #b3261e;
+    --gestio-color-neutral: #ccc2dc;
+    --gestio-color-on-neutral: #332d41;
+    --gestio-color-neutral-subtle: #4a4458;
+    --gestio-color-neutral-subtle-hover: color-mix(in srgb, #e8def8 8%, #4a4458);
+    --gestio-color-neutral-text: #e8def8;
+    --gestio-color-neutral-border: #49454f;
+    --gestio-color-background: #141218;
+    --gestio-color-surface: #1d1b20;
+    --gestio-color-surface-muted: #211f26;
+    --gestio-color-surface-hover: color-mix(in srgb, #e6e0e9 8%, #1d1b20);
+    --gestio-color-surface-active: color-mix(in srgb, #e6e0e9 12%, #1d1b20);
+    --gestio-color-surface-disabled: color-mix(in srgb, #e6e0e9 6%, #141218);
+    --gestio-color-backdrop: rgb(0 0 0 / 0.6);
+    --gestio-color-text: #e6e0e9;
+    --gestio-color-text-muted: #cac4d0;
+    --gestio-color-text-subtle: #cac4d0;
+    --gestio-color-text-disabled: color-mix(in srgb, #e6e0e9 38%, #141218);
+    --gestio-color-text-inverse: #322f35;
+    --gestio-color-border: #49454f;
+    --gestio-color-border-strong: #938f99;
+    --gestio-color-border-hover: #e6e0e9;
+    --gestio-color-focus-ring: #d0bcff;
+    --gestio-shadow-xs: none;
+    --gestio-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3), 0 1px 3px 1px rgb(0 0 0 / 0.15);
+    --gestio-shadow-md: 0 1px 2px rgb(0 0 0 / 0.3), 0 2px 6px 2px rgb(0 0 0 / 0.15);
+    --gestio-shadow-lg: 0 4px 4px rgb(0 0 0 / 0.3), 0 8px 12px 6px rgb(0 0 0 / 0.15);
+  }
+}
+
+/* Animations réduites : prioritaire sur les durées Material ci-dessus. */
+@media (prefers-reduced-motion: reduce) {
+  [data-gestio-design='material'] {
+    --gestio-duration-fast: 1ms;
+    --gestio-duration-normal: 1ms;
+    --gestio-duration-slow: 1ms;
+  }
+}

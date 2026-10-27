@@ -4,7 +4,21 @@
       <img class="sc-brand__mark" ngSrc="logo.svg" alt="" width="30" height="30" priority />
       <span class="sc-brand__name">Gestio UI</span>
     </a>
-    <gestio-badge variant="primary" size="sm" class="sc-header__version">v0.2</gestio-badge>
+    <gestio-badge variant="primary" size="sm" class="sc-header__version">v0.4</gestio-badge>
+
+    <button
+      type="button"
+      class="sc-theme-toggle sc-design-toggle"
+      [attr.aria-pressed]="design.design() === 'material'"
+      (click)="design.toggle()"
+    >
+      <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+        <circle cx="6" cy="6" r="3" />
+        <rect x="11" y="3" width="6" height="6" rx="1.5" />
+        <path d="M3 17l3-5 3 5zM11 11h6v6h-6z" />
+      </svg>
+      <span class="sc-theme-toggle__label">Style Material</span>
+    </button>
 
     <button
       type="button"

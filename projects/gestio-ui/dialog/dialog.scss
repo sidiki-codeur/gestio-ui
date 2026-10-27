@@ -9,7 +9,7 @@
   overflow: hidden;
   background: var(--gestio-color-surface);
   border: var(--gestio-border-width) solid var(--gestio-color-border);
-  border-radius: var(--gestio-radius-xl);
+  border-radius: var(--gestio-dialog-radius, var(--gestio-radius-xl));
   box-shadow: var(--gestio-shadow-lg);
   color: var(--gestio-color-text);
   font-family: var(--gestio-font-sans);

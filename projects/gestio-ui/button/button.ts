@@ -8,6 +8,7 @@ import {
   input,
 } from '@angular/core';
 import { GestioSize } from '@gestiolabs336/ui/core';
+import { GestioRipple } from '@gestiolabs336/ui/ripple';
 
 export type GestioButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
 export type GestioButtonSize = GestioSize;
@@ -30,6 +31,7 @@ export type GestioButtonType = 'button' | 'submit' | 'reset';
   exportAs: 'gestioButton',
   templateUrl: './button.html',
   styleUrl: './button.scss',
+  hostDirectives: [GestioRipple],
   host: {
     class: 'gestio-button',
     '[class]': 'modifierClasses()',

@@ -56,7 +56,11 @@
                 "input": "projects/showcase/public"
               }
             ],
-            "styles": ["dist/gestio-ui/styles/gestio-ui.css", "projects/showcase/src/styles.scss"]
+            "styles": [
+              "dist/gestio-ui/styles/gestio-ui.css",
+              "dist/gestio-ui/styles/gestio-material.css",
+              "projects/showcase/src/styles.scss"
+            ]
           },
           "configurations": {
             "production": {

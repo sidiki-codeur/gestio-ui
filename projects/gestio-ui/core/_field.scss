@@ -52,7 +52,7 @@
     padding-inline: var(--gestio-space-3);
     background: var(--gestio-color-surface);
     border: var(--gestio-border-width) solid var(--gestio-color-border-strong);
-    border-radius: var(--gestio-radius-md);
+    border-radius: var(--gestio-field-radius, var(--gestio-radius-md));
     box-shadow: var(--gestio-shadow-xs);
     transition:
       border-color var(--gestio-duration-fast) var(--gestio-easing-standard),
