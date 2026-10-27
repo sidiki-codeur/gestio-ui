@@ -1,0 +1,85 @@
+<div class="gestio-product-card__media">
+  @if (image(); as src) {
+    <img
+      class="gestio-product-card__image"
+      [ngSrc]="src"
+      [alt]="imageAlt()"
+      [priority]="imagePriority()"
+      [sizes]="imageSizes()"
+      fill
+    />
+  }
+  @if (badge()) {
+    <gestio-badge
+      class="gestio-product-card__badge"
+      appearance="solid"
+      [variant]="badgeVariant()"
+      >{{ badge() }}</gestio-badge
+    >
+  }
+  <div class="gestio-product-card__actions"><ng-content select="[gestioProductCardActions]" /></div>
+</div>
+
+<div class="gestio-product-card__body">
+  <p
+    class="gestio-product-card__name"
+    role="heading"
+    [attr.aria-level]="headingLevel()"
+    [id]="nameId"
+  >
+    @if (href(); as link) {
+      <a class="gestio-product-card__link" [href]="link">{{ name() }}</a>
+    } @else {
+      {{ name() }}
+    }
+  </p>
+
+  @if (description()) {
+    <p class="gestio-product-card__description">{{ description() }}</p>
+  }
+
+  @if (rating() !== null) {
+    <gestio-rating
+      class="gestio-product-card__rating"
+      readonly
+      size="sm"
+      [value]="rating()"
+      [count]="reviewCount()"
+      [locale]="locale()"
+    />
+  }
+
+  <ng-content />
+
+  <p class="gestio-product-card__price">
+    <span class="gestio-product-card__sr-only">{{ text().currentPrice }}</span>
+    <span class="gestio-product-card__current" [class.is-sale]="!!formattedCompareAt()">{{
+      formattedPrice()
+    }}</span>
+    @if (formattedCompareAt(); as compareAt) {
+      <span class="gestio-product-card__sr-only">{{ text().previousPrice }}</span>
+      <del class="gestio-product-card__previous">{{ compareAt }}</del>
+    }
+  </p>
+
+  @if (showStock()) {
+    <p class="gestio-product-card__stock" [class.is-out]="!inStock()">
+      <span class="gestio-product-card__stock-dot" aria-hidden="true"></span>
+      {{ inStock() ? text().inStock : text().outOfStock }}
+    </p>
+  }
+
+  @if (!hideAddToCart()) {
+    <button
+      gestioButton
+      class="gestio-product-card__add"
+      fullWidth
+      [disabled]="!inStock()"
+      [loading]="adding()"
+      [attr.aria-describedby]="nameId"
+      (click)="addToCart.emit()"
+    >
+      {{ inStock() ? text().addToCart : text().outOfStock }}
+    </button>
+  }
+</div>

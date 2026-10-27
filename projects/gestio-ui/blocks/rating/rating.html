@@ -1,0 +1,64 @@
+<ng-template #star let-fill="fill">
+  <span class="gestio-rating__star" aria-hidden="true">
+    <svg
+      class="gestio-rating__icon gestio-rating__icon--empty"
+      viewBox="0 0 24 24"
+      focusable="false"
+    >
+      <path [attr.d]="starPath" />
+    </svg>
+    <span class="gestio-rating__fill" [style.width.%]="fill">
+      <svg
+        class="gestio-rating__icon gestio-rating__icon--full"
+        viewBox="0 0 24 24"
+        focusable="false"
+      >
+        <path [attr.d]="starPath" />
+      </svg>
+    </span>
+  </span>
+</ng-template>
+
+@if (readonly()) {
+  <span class="gestio-rating__display">
+    <span class="gestio-rating__stars" role="img" [attr.aria-label]="summary()">
+      @for (s of stars(); track s.n) {
+        <ng-container [ngTemplateOutlet]="star" [ngTemplateOutletContext]="{ fill: s.fill }" />
+      }
+    </span>
+    @if (showValue() && value() !== null) {
+      <span class="gestio-rating__value" aria-hidden="true">{{ formattedValue() }}</span>
+    }
+    @if (countText(); as countLabel) {
+      <span class="gestio-rating__count">({{ countLabel }})</span>
+    }
+  </span>
+} @else {
+  <fieldset
+    class="gestio-rating__group"
+    [disabled]="isDisabled()"
+    [attr.aria-label]="label() ? null : (ariaLabel() ?? null)"
+    (pointerleave)="preview(null)"
+  >
+    @if (label()) {
+      <legend class="gestio-rating__legend">{{ label() }}</legend>
+    }
+    <span class="gestio-rating__stars">
+      @for (s of stars(); track s.n) {
+        <label class="gestio-rating__option" (pointerenter)="preview(s.n)">
+          <input
+            type="radio"
+            class="gestio-rating__input"
+            [name]="groupName()"
+            [value]="s.n"
+            [checked]="value() === s.n"
+            [attr.aria-label]="s.label"
+            (change)="select(s.n)"
+            (blur)="onTouched()"
+          />
+          <ng-container [ngTemplateOutlet]="star" [ngTemplateOutletContext]="{ fill: s.fill }" />
+        </label>
+      }
+    </span>
+  </fieldset>
+}

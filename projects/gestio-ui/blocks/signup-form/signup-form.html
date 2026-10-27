@@ -1,0 +1,105 @@
+<div class="gestio-auth">
+  <div class="gestio-auth__header">
+    @switch (headingLevel()) {
+      @case (2) {
+        <h2 class="gestio-auth__heading" [id]="headingId">{{ heading() }}</h2>
+      }
+      @case (3) {
+        <h3 class="gestio-auth__heading" [id]="headingId">{{ heading() }}</h3>
+      }
+      @default {
+        <h1 class="gestio-auth__heading" [id]="headingId">{{ heading() }}</h1>
+      }
+    }
+    @if (subheading()) {
+      <p class="gestio-auth__subheading">{{ subheading() }}</p>
+    }
+  </div>
+
+  @if (error()) {
+    <div #errorRegion class="gestio-auth__error" tabindex="-1">
+      <gestio-alert variant="danger" live="assertive">{{ error() }}</gestio-alert>
+    </div>
+  }
+
+  <div class="gestio-auth__social"><ng-content select="[gestioAuthSocial]" /></div>
+  <p class="gestio-auth__separator">{{ text().separator }}</p>
+
+  <form
+    class="gestio-auth__form"
+    novalidate
+    [attr.aria-labelledby]="headingId"
+    (submit)="onSubmit($event)"
+  >
+    <gestio-input
+      autocomplete="name"
+      required
+      [label]="text().name"
+      [error]="nameError()"
+      [formField]="signupForm.name"
+    />
+    <gestio-input
+      type="email"
+      autocomplete="email"
+      required
+      [label]="text().email"
+      [error]="emailError()"
+      [formField]="signupForm.email"
+    />
+    <div class="gestio-signup-form__password">
+      <gestio-input
+        type="password"
+        autocomplete="new-password"
+        required
+        [label]="text().password"
+        [hint]="passwordHint()"
+        [error]="passwordError()"
+        [formField]="signupForm.password"
+      />
+      <div
+        class="gestio-signup-form__strength"
+        [class.is-hidden]="!strength()"
+        [attr.data-level]="strength()"
+      >
+        <span class="gestio-signup-form__meter" aria-hidden="true">
+          @for (segment of [1, 2, 3, 4]; track segment) {
+            <span class="gestio-signup-form__segment" [class.is-on]="segment <= strength()"></span>
+          }
+        </span>
+        <p class="gestio-signup-form__strength-text" [id]="strengthId" aria-live="polite">
+          {{ strengthText() }}
+        </p>
+      </div>
+    </div>
+    <gestio-input
+      type="password"
+      autocomplete="new-password"
+      required
+      [label]="text().confirmPassword"
+      [error]="confirmError()"
+      [formField]="signupForm.confirmPassword"
+    />
+
+    @if (showTerms()) {
+      <div class="gestio-signup-form__terms">
+        <gestio-checkbox
+          [label]="text().terms"
+          [error]="termsError()"
+          [formField]="signupForm.acceptTerms"
+        />
+        @if (termsHref(); as href) {
+          <a class="gestio-auth__link" [href]="href" target="_blank" rel="noopener noreferrer">
+            {{ text().termsLink }}
+            <span class="gestio-auth__sr-only">{{ text().newTab }}</span>
+          </a>
+        }
+      </div>
+    }
+
+    <button gestioButton type="submit" size="lg" fullWidth [loading]="loading()">
+      {{ text().submit }}
+    </button>
+  </form>
+
+  <div class="gestio-auth__footer"><ng-content select="[gestioAuthFooter]" /></div>
+</div>

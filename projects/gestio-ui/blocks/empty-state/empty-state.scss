@@ -1,0 +1,129 @@
+:host {
+  --_media-size: 3rem;
+  --_icon-size: 1.5rem;
+  --_media-bg: var(--gestio-color-neutral-subtle);
+  --_media-fg: var(--gestio-color-text-muted);
+  --_padding: var(--gestio-space-8);
+  --_heading-size: var(--gestio-font-size-lg);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  min-width: 0;
+  padding: var(--_padding) var(--gestio-space-4);
+  color: var(--gestio-color-text);
+  font-family: var(--gestio-font-sans);
+  text-align: center;
+}
+
+:host(.gestio-empty-state--bordered) {
+  border: var(--gestio-border-width) dashed var(--gestio-color-border-strong);
+  border-radius: var(--gestio-radius-xl);
+  background: var(--gestio-color-surface);
+}
+
+/* Variantes */
+:host(.gestio-empty-state--search) {
+  --_media-bg: var(--gestio-color-primary-subtle);
+  --_media-fg: var(--gestio-color-primary-text);
+}
+
+:host(.gestio-empty-state--error) {
+  --_media-bg: var(--gestio-color-danger-subtle);
+  --_media-fg: var(--gestio-color-danger-text);
+}
+
+:host(.gestio-empty-state--success) {
+  --_media-bg: var(--gestio-color-success-subtle);
+  --_media-fg: var(--gestio-color-success-text);
+}
+
+/* Tailles */
+:host(.gestio-empty-state--sm) {
+  --_media-size: 2.25rem;
+  --_icon-size: 1.125rem;
+  --_padding: var(--gestio-space-5);
+  --_heading-size: var(--gestio-font-size-md);
+}
+
+:host(.gestio-empty-state--lg) {
+  --_media-size: 4rem;
+  --_icon-size: 2rem;
+  --_padding: var(--gestio-space-12);
+  --_heading-size: var(--gestio-font-size-xl);
+}
+
+.gestio-empty-state__media {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-block-end: var(--gestio-space-4);
+  color: var(--_media-fg);
+
+  &:empty {
+    display: none;
+  }
+}
+
+/* Pastille de l'icône par défaut ; une icône projetée garde sa propre mise en forme. */
+.gestio-empty-state__icon {
+  box-sizing: border-box;
+  width: var(--_media-size);
+  height: var(--_media-size);
+  padding: calc((var(--_media-size) - var(--_icon-size)) / 2);
+  border-radius: var(--gestio-radius-full);
+  background: var(--_media-bg);
+}
+
+.gestio-empty-state__heading {
+  margin: 0;
+  max-width: 36rem;
+  color: var(--gestio-color-text);
+  font-size: var(--_heading-size);
+  font-weight: var(--gestio-font-weight-semibold);
+  line-height: var(--gestio-line-height-tight);
+}
+
+.gestio-empty-state__description {
+  margin: var(--gestio-space-2) 0 0;
+  max-width: 36rem;
+  color: var(--gestio-color-text-muted);
+  font-size: var(--gestio-font-size-md);
+  line-height: var(--gestio-line-height-normal);
+
+  :host(.gestio-empty-state--sm) & {
+    font-size: var(--gestio-font-size-sm);
+  }
+}
+
+.gestio-empty-state__body {
+  max-width: 36rem;
+  margin-block-start: var(--gestio-space-2);
+  color: var(--gestio-color-text-muted);
+  font-size: var(--gestio-font-size-md);
+  line-height: var(--gestio-line-height-normal);
+
+  &:empty {
+    display: none;
+  }
+}
+
+.gestio-empty-state__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gestio-space-2);
+  align-items: center;
+  justify-content: center;
+  margin-block-start: var(--gestio-space-5);
+
+  &:empty {
+    display: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .gestio-empty-state__icon {
+    border: 1px solid CanvasText;
+  }
+}

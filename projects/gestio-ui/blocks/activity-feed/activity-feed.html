@@ -1,0 +1,73 @@
+<ng-template #entryTemplate let-entry>
+  <li class="gestio-activity-feed__item">
+    <span
+      class="gestio-activity-feed__marker"
+      [class]="'gestio-activity-feed__marker--' + (entry.item.variant ?? 'neutral')"
+      aria-hidden="true"
+    ></span>
+    <div class="gestio-activity-feed__body">
+      @if (customTemplate(); as custom) {
+        <ng-container *ngTemplateOutlet="custom.template; context: context(entry)" />
+      } @else {
+        <p class="gestio-activity-feed__sentence">
+          <span class="gestio-activity-feed__actor">{{ entry.item.actor }}</span>
+          {{ entry.item.action }}
+          @if (entry.item.target) {
+            <span class="gestio-activity-feed__target">{{ entry.item.target }}</span>
+          }
+        </p>
+        @if (entry.item.description) {
+          <p class="gestio-activity-feed__description">{{ entry.item.description }}</p>
+        }
+      }
+      @if (entry.iso) {
+        <time
+          class="gestio-activity-feed__time"
+          [attr.datetime]="entry.iso"
+          [attr.title]="entry.absolute"
+        >
+          {{ entry.relative }}
+        </time>
+      }
+    </div>
+  </li>
+</ng-template>
+
+@if (entries().length) {
+  @if (groupByDay()) {
+    <ol class="gestio-activity-feed__groups" [attr.aria-label]="ariaLabel() ?? text().feed">
+      @for (group of groups(); track group.id) {
+        <li class="gestio-activity-feed__group">
+          <p class="gestio-activity-feed__day" [id]="group.id">{{ group.heading }}</p>
+          <ol class="gestio-activity-feed__list" [attr.aria-labelledby]="group.id">
+            @for (entry of group.entries; track entry.item.id) {
+              <ng-container *ngTemplateOutlet="entryTemplate; context: { $implicit: entry }" />
+            }
+          </ol>
+        </li>
+      }
+    </ol>
+  } @else {
+    <ol class="gestio-activity-feed__list" [attr.aria-label]="ariaLabel() ?? text().feed">
+      @for (entry of entries(); track entry.item.id) {
+        <ng-container *ngTemplateOutlet="entryTemplate; context: { $implicit: entry }" />
+      }
+    </ol>
+  }
+} @else {
+  <p class="gestio-activity-feed__empty">{{ text().empty }}</p>
+}
+
+@if (hasMore()) {
+  <div class="gestio-activity-feed__more">
+    <button
+      gestioButton
+      variant="outline"
+      size="sm"
+      [loading]="loading()"
+      (click)="loadMore.emit()"
+    >
+      {{ text().loadMore }}
+    </button>
+  </div>
+}

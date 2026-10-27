@@ -27,6 +27,7 @@ projects/
     card/ badge/ alert/ table/ datagrid/ pagination/ dialog/ toast/ tabs/
     menu/ tooltip/ skeleton/ spinner/
     layout/                     Container, pile, grille, coque d’application, points de rupture
+    blocks/<bloc>/              Blocs (carrousel, calendrier, formulaires d’auth…) : « @gestiolabs336/ui/blocks/<bloc> »
                                 Chaque dossier est un point d’entrée « @gestiolabs336/ui/<dossier> »
                                 (ng-package.json + public-api.ts)
     mcp/                        Serveur MCP (server.mjs), catalogue vérifié par les tests, README

@@ -2240,6 +2240,2012 @@
         }
       ],
       "pitfalls": ["Pour un bouton, utiliser [loading] de gestioButton plutôt qu’un spinner."]
+    },
+    {
+      "id": "empty-state",
+      "title": "État vide",
+      "kind": "block",
+      "exports": [
+        "GestioEmptyState",
+        "GestioEmptyStateActions",
+        "GESTIO_EMPTY_STATE_IMPORTS",
+        "GestioEmptyStateVariant",
+        "GestioEmptyStateSize",
+        "GestioEmptyStateHeadingLevel"
+      ],
+      "classes": [
+        {
+          "class": "GestioEmptyState",
+          "selector": "gestio-empty-state"
+        },
+        {
+          "class": "GestioEmptyStateActions",
+          "selector": "[gestioEmptyStateActions]"
+        }
+      ],
+      "summary": "État vide centré (liste vide, recherche sans résultat, erreur, succès) : icône, titre de niveau réglable, description et actions.",
+      "inputs": [
+        {
+          "name": "heading",
+          "type": "string (requis)",
+          "description": "Titre."
+        },
+        {
+          "name": "headingLevel",
+          "type": "2 | 3 | 4 | 5 | 6",
+          "default": "2",
+          "description": "Niveau du titre selon la hiérarchie de la page (borné à 2–6)."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "Texte sous le titre ; du contenu riche peut être projeté."
+        },
+        {
+          "name": "variant",
+          "type": "'empty' | 'search' | 'error' | 'success'",
+          "default": "'empty'",
+          "description": "Icône par défaut et sa couleur."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "'md'",
+          "description": "Taille de l'icône, du titre et des espacements."
+        },
+        {
+          "name": "bordered",
+          "type": "boolean",
+          "default": "false",
+          "description": "Bordure en pointillés (zone à remplir)."
+        }
+      ],
+      "outputs": [],
+      "slots": [
+        {
+          "selector": "[gestioEmptyStateIcon]",
+          "description": "Remplace l'icône par défaut (illustration, image, svg)."
+        },
+        {
+          "selector": "(défaut)",
+          "description": "Contenu riche sous la description."
+        },
+        {
+          "selector": "[gestioEmptyStateActions]",
+          "description": "Actions centrées (composant GestioEmptyStateActions)."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Liste vide avec action",
+          "code": "// imports: [GESTIO_EMPTY_STATE_IMPORTS, GestioButton]\n<gestio-empty-state\n  heading=\"Aucune facture\"\n  description=\"Les factures émises apparaîtront ici.\"\n  bordered\n>\n  <div gestioEmptyStateActions>\n    <button gestioButton>Créer une facture</button>\n  </div>\n</gestio-empty-state>"
+        },
+        {
+          "title": "Recherche sans résultat",
+          "code": "<gestio-empty-state\n  variant=\"search\"\n  size=\"sm\"\n  headingLevel=\"3\"\n  heading=\"Aucun client trouvé\"\n  description=\"Vérifiez l'orthographe ou retirez des filtres.\"\n>\n  <div gestioEmptyStateActions>\n    <button gestioButton variant=\"outline\" (click)=\"clearFilters()\">Effacer les filtres</button>\n  </div>\n</gestio-empty-state>"
+        }
+      ],
+      "pitfalls": [
+        "Importer GESTIO_EMPTY_STATE_IMPORTS (ou GestioEmptyStateActions), sinon les boutons ne sont ni centrés ni espacés.",
+        "gestioEmptyStateActions est un composant : le poser sur un <div>, jamais sur un autre composant.",
+        "Choisir headingLevel selon la hiérarchie de la page : h2 par défaut, h3 dans une carte ou une section.",
+        "Aucune région live : quand l'état vide remplace des résultats de recherche, annoncer le nombre de résultats ailleurs (aria-live).",
+        "Une icône projetée via [gestioEmptyStateIcon] doit porter alt=\"\" ou aria-hidden si elle est décorative."
+      ],
+      "entryPoint": "@gestiolabs336/ui/blocks/empty-state"
+    },
+    {
+      "id": "page-header",
+      "title": "En-tête de page",
+      "kind": "block",
+      "exports": [
+        "GestioPageHeader",
+        "GestioPageHeaderActions",
+        "GESTIO_PAGE_HEADER_IMPORTS",
+        "GESTIO_PAGE_HEADER_LABELS",
+        "GestioPageHeaderLabels",
+        "GestioBreadcrumbItem",
+        "GestioBreadcrumbClick"
+      ],
+      "classes": [
+        {
+          "class": "GestioPageHeader",
+          "selector": "gestio-page-header"
+        },
+        {
+          "class": "GestioPageHeaderActions",
+          "selector": "[gestioPageHeaderActions]"
+        }
+      ],
+      "summary": "En-tête de page d'application : fil d'Ariane accessible, lien ou bouton de retour, titre h1, sous-titre, statut, actions (sous le titre sur petit écran) et zone basse pour onglets ou filtres.",
+      "inputs": [
+        {
+          "name": "heading",
+          "type": "string (requis)",
+          "description": "Titre de la page, rendu dans un <h1>."
+        },
+        {
+          "name": "subheading",
+          "type": "string",
+          "description": "Texte secondaire sous le titre."
+        },
+        {
+          "name": "breadcrumbs",
+          "type": "readonly GestioBreadcrumbItem[] ({ label, href? })",
+          "default": "[]",
+          "description": "Fil d'Ariane ; le dernier élément est la page courante (aria-current=\"page\", jamais un lien)."
+        },
+        {
+          "name": "backHref",
+          "type": "string",
+          "description": "Adresse du lien de retour."
+        },
+        {
+          "name": "showBack",
+          "type": "boolean",
+          "default": "false",
+          "description": "Bouton de retour sans adresse ; écouter (back)."
+        },
+        {
+          "name": "backLabel",
+          "type": "string",
+          "description": "Texte du retour (par défaut labels.back, « Retour »)."
+        },
+        {
+          "name": "divider",
+          "type": "boolean",
+          "default": "false",
+          "description": "Trait de séparation sous l'en-tête."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioPageHeaderLabels>",
+          "default": "{}",
+          "description": "Libellés : breadcrumb (nom de la navigation), back."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "back",
+          "type": "void",
+          "description": "Clic sur le bouton de retour (showBack sans backHref)."
+        },
+        {
+          "name": "breadcrumbClick",
+          "type": "GestioBreadcrumbClick ({ item, index, event })",
+          "description": "Clic sur un lien du fil d'Ariane ; appeler event.preventDefault() puis naviguer avec le routeur."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "[gestioPageHeaderStatus]",
+          "description": "Badge ou statut à côté du titre."
+        },
+        {
+          "selector": "[gestioPageHeaderActions]",
+          "description": "Actions à droite, sous le titre sur petit écran (composant GestioPageHeaderActions)."
+        },
+        {
+          "selector": "(défaut)",
+          "description": "Contenu sous le sous-titre (métadonnées)."
+        },
+        {
+          "selector": "[gestioPageHeaderFooter]",
+          "description": "Zone basse : onglets, filtres."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Fiche client",
+          "code": "// imports: [GESTIO_PAGE_HEADER_IMPORTS, GestioBadge, GestioButton]\n<gestio-page-header\n  heading=\"Atelier Moreau SARL\"\n  subheading=\"Client depuis mars 2021\"\n  [breadcrumbs]=\"[{ label: 'Clients', href: '/clients' }, { label: 'Atelier Moreau SARL' }]\"\n  divider\n>\n  <gestio-badge gestioPageHeaderStatus variant=\"success\">Actif</gestio-badge>\n  <div gestioPageHeaderActions>\n    <button gestioButton variant=\"outline\">Modifier</button>\n    <button gestioButton>Nouvelle facture</button>\n  </div>\n</gestio-page-header>"
+        },
+        {
+          "title": "Navigation par le routeur",
+          "code": "// TS : protected readonly router = inject(Router);\n//      onCrumb(c: GestioBreadcrumbClick) { c.event.preventDefault(); this.router.navigateByUrl(c.item.href ?? '/'); }\n<gestio-page-header\n  heading=\"Facture F-2026-0142\"\n  showBack\n  backLabel=\"Retour aux factures\"\n  (back)=\"router.navigate(['/factures'])\"\n  [breadcrumbs]=\"crumbs\"\n  (breadcrumbClick)=\"onCrumb($event)\"\n/>"
+        }
+      ],
+      "pitfalls": [
+        "Le titre est toujours un <h1> : un seul gestio-page-header par page.",
+        "Les liens du fil d'Ariane sont des href natifs (rechargement complet) : dans une application avec routeur, intercepter (breadcrumbClick) avec event.preventDefault().",
+        "Le dernier élément de breadcrumbs est la page courante : son href est ignoré.",
+        "Importer GESTIO_PAGE_HEADER_IMPORTS (ou GestioPageHeaderActions) pour l'espacement des actions ; gestioPageHeaderActions se pose sur un <div>, pas sur un autre composant.",
+        "Le bouton de retour n'apparaît qu'avec backHref ou showBack."
+      ],
+      "entryPoint": "@gestiolabs336/ui/blocks/page-header"
+    },
+    {
+      "id": "stat-card",
+      "title": "Carte statistique",
+      "kind": "block",
+      "entryPoint": "@gestiolabs336/ui/blocks/stat-card",
+      "exports": [
+        "GestioStatCard",
+        "GestioStatCardTone",
+        "GestioStatCardLabels",
+        "GESTIO_STAT_CARD_LABELS"
+      ],
+      "classes": [
+        {
+          "class": "GestioStatCard",
+          "selector": "gestio-stat-card"
+        }
+      ],
+      "summary": "Indicateur clé (KPI) de tableau de bord : libellé, valeur formatée (Intl), variation en % avec flèche et texte pour lecteurs d'écran, comparaison, mini-courbe SVG décrite en texte, état de chargement (skeleton). Groupe nommé par le libellé.",
+      "inputs": [
+        {
+          "name": "label",
+          "type": "string (requis)",
+          "description": "Intitulé de l'indicateur ; nomme le groupe (role=group)."
+        },
+        {
+          "name": "value",
+          "type": "number | string | null",
+          "default": "null",
+          "description": "Nombre formaté par Intl.NumberFormat, chaîne affichée telle quelle, null = « — »."
+        },
+        {
+          "name": "valueFormat",
+          "type": "Intl.NumberFormatOptions",
+          "default": "{}",
+          "description": "Options de formatage (ex. { style: 'currency', currency: 'EUR' })."
+        },
+        {
+          "name": "delta",
+          "type": "number | null",
+          "default": "null",
+          "description": "Variation en pourcentage (12.5 = +12,5 %)."
+        },
+        {
+          "name": "invertDelta",
+          "type": "boolean",
+          "default": "false",
+          "description": "Une baisse est favorable (couleur verte)."
+        },
+        {
+          "name": "comparison",
+          "type": "string",
+          "description": "Texte après la variation (« vs mois dernier »)."
+        },
+        {
+          "name": "trend",
+          "type": "readonly number[]",
+          "default": "[]",
+          "description": "Série de la mini-courbe (≥ 2 points), décrite en texte masqué."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "description": "Squelette à la place de la valeur, aria-busy."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "default": "'fr-FR'",
+          "description": "Langue de formatage."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioStatCardLabels>",
+          "default": "{}",
+          "description": "Libellés (increase, decrease, stable, trend, loading)."
+        }
+      ],
+      "outputs": [],
+      "slots": [
+        {
+          "selector": "[gestioStatCardIcon]",
+          "description": "Icône décorative en haut à droite (masquée aux lecteurs d’écran par son conteneur)."
+        },
+        {
+          "selector": "(défaut)",
+          "description": "Contenu additionnel en bas de carte (lien « Voir le détail »…)."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Chiffre d'affaires du mois",
+          "code": "// imports: [GestioStatCard]\n<gestio-stat-card\n  label=\"Chiffre d'affaires\"\n  [value]=\"48250\"\n  [valueFormat]=\"{ style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }\"\n  [delta]=\"12.5\"\n  comparison=\"vs mois dernier\"\n  [trend]=\"[32, 35, 31, 40, 44, 48]\"\n/>"
+        },
+        {
+          "title": "Délai de paiement (baisse favorable)",
+          "code": "<gestio-stat-card label=\"Délai moyen de paiement\" value=\"32 j\" [delta]=\"-8\" invertDelta comparison=\"vs trimestre précédent\" />"
+        }
+      ],
+      "pitfalls": [
+        "delta est un pourcentage (12.5), pas un ratio (0.125).",
+        "La tonalité (vert/rouge) dépend de invertDelta ; le sens est toujours donné par la flèche et le texte masqué.",
+        "La carte occupe toute la largeur disponible : disposer plusieurs cartes avec gestio-grid ou une grille CSS."
+      ]
+    },
+    {
+      "id": "activity-feed",
+      "title": "Flux d'activité",
+      "kind": "block",
+      "entryPoint": "@gestiolabs336/ui/blocks/activity-feed",
+      "exports": [
+        "GestioActivityFeed",
+        "GestioActivityItemTemplate",
+        "GESTIO_ACTIVITY_FEED_IMPORTS",
+        "GestioActivityItem",
+        "GestioActivityItemContext",
+        "GestioActivityVariant",
+        "GestioActivityFeedLabels",
+        "GESTIO_ACTIVITY_FEED_LABELS"
+      ],
+      "classes": [
+        {
+          "class": "GestioActivityFeed",
+          "selector": "gestio-activity-feed"
+        },
+        {
+          "class": "GestioActivityItemTemplate",
+          "selector": "ng-template[gestioActivityItem]"
+        }
+      ],
+      "summary": "Flux chronologique (journal d'audit, historique d'un dossier) : liste <ol> avec repères colorés, dates relatives Intl.RelativeTimeFormat dans <time datetime>, regroupement optionnel par jour (Aujourd'hui, Hier, date), modèle d'élément personnalisable, bouton « Voir plus ».",
+      "inputs": [
+        {
+          "name": "items",
+          "type": "readonly GestioActivityItem[] (requis)",
+          "description": "Événements { id, actor, action, target?, date, description?, variant? }, affichés dans l’ordre fourni."
+        },
+        {
+          "name": "now",
+          "type": "Date",
+          "default": "heure de création du composant",
+          "description": "Référence des dates relatives ; à fournir pour rafraîchir les durées ou en SSR/tests."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "default": "'fr-FR'",
+          "description": "Langue des dates."
+        },
+        {
+          "name": "groupByDay",
+          "type": "boolean",
+          "default": "false",
+          "description": "Regroupe les événements consécutifs du même jour sous un intitulé."
+        },
+        {
+          "name": "hasMore",
+          "type": "boolean",
+          "default": "false",
+          "description": "Affiche le bouton « Voir plus »."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "description": "Bouton « Voir plus » en chargement."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Nom de la liste (défaut : « Activité récente »)."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioActivityFeedLabels>",
+          "default": "{}",
+          "description": "Libellés (feed, empty, loadMore, today, yesterday)."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "loadMore",
+          "type": "void",
+          "description": "Clic sur « Voir plus » : charger des événements plus anciens et les ajouter à items."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "ng-template[gestioActivityItem]",
+          "description": "Contenu personnalisé d’un événement ; contexte : $implicit (item), relative, absolute. Le repère et la date restent gérés par le flux."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Historique groupé par jour",
+          "code": "// imports: [GestioActivityFeed]\nactivite = signal<GestioActivityItem[]>([\n  { id: 1, actor: 'Claire Moreau', action: 'a validé la facture', target: 'F-2026-0142', date: '2026-10-26T13:55:00Z', variant: 'success' },\n  { id: 2, actor: 'Système', action: 'a envoyé une relance à', target: 'Atelier Moreau', date: '2026-10-26T09:00:00Z' },\n]);\n\n<gestio-activity-feed [items]=\"activite()\" groupByDay [hasMore]=\"suite()\" [loading]=\"chargement()\" (loadMore)=\"chargerPlus()\" />"
+        },
+        {
+          "title": "Modèle personnalisé",
+          "code": "// imports: [GESTIO_ACTIVITY_FEED_IMPORTS, RouterLink]\n<gestio-activity-feed [items]=\"activite()\">\n  <ng-template gestioActivityItem let-item let-relative=\"relative\">\n    <a [routerLink]=\"['/factures', item.target]\">{{ item.actor }} {{ item.action }} {{ item.target }}</a>\n  </ng-template>\n</gestio-activity-feed>"
+        }
+      ],
+      "pitfalls": [
+        "Les dates relatives sont calculées par rapport à now, figé par défaut à la création du composant : passer un signal mis à jour périodiquement pour qu'elles évoluent.",
+        "Les événements ne sont pas triés : fournir items dans l’ordre voulu (du plus récent au plus ancien en général).",
+        "Pour un modèle personnalisé, importer aussi GestioActivityItemTemplate (ou GESTIO_ACTIVITY_FEED_IMPORTS)."
+      ]
+    },
+    {
+      "id": "calendar",
+      "title": "Calendrier (sélecteur de date)",
+      "kind": "block",
+      "exports": [
+        "GestioCalendar",
+        "GESTIO_CALENDAR_LABELS",
+        "GestioCalendarMode",
+        "GestioDateRange",
+        "GestioCalendarLabels",
+        "GestioWeekday"
+      ],
+      "classes": [
+        {
+          "class": "GestioCalendar",
+          "selector": "gestio-calendar"
+        }
+      ],
+      "summary": "Calendrier mensuel pour choisir une date ou une plage (motif ARIA Date Picker, grille). Navigation clavier complète, bornes min/max, dates désactivables, noms localisés via Intl. Compatible Reactive Forms, ngModel et Signal Forms ([formField]) en mode single.",
+      "inputs": [
+        {
+          "name": "mode",
+          "type": "'single' | 'range'",
+          "default": "'single'",
+          "description": "Une date ou une plage début / fin."
+        },
+        {
+          "name": "value",
+          "type": "model<Date | null>",
+          "default": "null",
+          "description": "Date sélectionnée (mode single) ; [(value)]."
+        },
+        {
+          "name": "range",
+          "type": "model<GestioDateRange>",
+          "default": "{ start: null, end: null }",
+          "description": "Plage sélectionnée (mode range) ; [(range)]. end vaut null tant que la seconde date n'est pas choisie."
+        },
+        {
+          "name": "month",
+          "type": "model<Date | null>",
+          "default": "null",
+          "description": "Mois affiché (n'importe quel jour du mois) ; par défaut celui de la sélection ou du jour courant ; [(month)]."
+        },
+        {
+          "name": "min",
+          "type": "Date | null",
+          "description": "Première date sélectionnable."
+        },
+        {
+          "name": "max",
+          "type": "Date | null",
+          "description": "Dernière date sélectionnable."
+        },
+        {
+          "name": "dateDisabled",
+          "type": "((date: Date) => boolean) | null",
+          "default": "null",
+          "description": "Rend certaines dates non sélectionnables (week-ends, jours fériés…)."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "default": "'fr-FR'",
+          "description": "Locale des noms de mois et de jours."
+        },
+        {
+          "name": "firstDayOfWeek",
+          "type": "0 | 1 | 2 | 3 | 4 | 5 | 6",
+          "default": "1",
+          "description": "Premier jour de la semaine (0 = dimanche, 1 = lundi)."
+        },
+        {
+          "name": "today",
+          "type": "Date",
+          "default": "date de création",
+          "description": "Jour courant mis en évidence (aria-current=\"date\")."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Désactive tout le calendrier."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Nom accessible de la grille ; par défaut le mois affiché."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioCalendarLabels>",
+          "default": "{}",
+          "description": "Surcharge des libellés (previousMonth, nextMonth, grid, unavailable, today, rangeStart, rangeEnd)."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "valueChange",
+          "type": "Date | null",
+          "description": "Date choisie (mode single)."
+        },
+        {
+          "name": "rangeChange",
+          "type": "GestioDateRange",
+          "description": "Plage modifiée (mode range), à chaque clic."
+        },
+        {
+          "name": "monthChange",
+          "type": "Date",
+          "description": "Mois affiché modifié (premier jour du mois)."
+        }
+      ],
+      "slots": [],
+      "examples": [
+        {
+          "title": "Date d'échéance",
+          "code": "// imports: [GestioCalendar]\n<gestio-calendar [(value)]=\"dueDate\" [min]=\"today\" [dateDisabled]=\"isWeekend\" />\n\n// TS\nreadonly dueDate = signal<Date | null>(null);\nreadonly today = new Date();\nreadonly isWeekend = (d: Date) => d.getDay() === 0 || d.getDay() === 6;"
+        },
+        {
+          "title": "Période de congés",
+          "code": "// imports: [GestioCalendar]\n<gestio-calendar mode=\"range\" [(range)]=\"leave\" />\n\n// TS\nreadonly leave = signal<GestioDateRange>({ start: null, end: null });"
+        },
+        {
+          "title": "Signal Forms",
+          "code": "// imports: [GestioCalendar, FormField]\n<gestio-calendar [formField]=\"f.dueDate\" />"
+        }
+      ],
+      "pitfalls": [
+        "Les dates sont comparées au jour près, en heure locale ; les heures des Date fournies sont ignorées.",
+        "ControlValueAccessor ([formField], formControlName, ngModel) uniquement en mode single ; en mode range, utiliser [(range)].",
+        "En mode range, un clic sur une date antérieure au début redémarre la plage ; un troisième clic aussi.",
+        "Ce n'est pas un champ avec popup : pour un « date picker » déroulant, placer le calendrier dans un menu ou une modale.",
+        "Les jours hors du mois affiché ne sont pas rendus (cellules vides) ; changer de mois au clavier (Page préc./suiv.) ou avec les boutons d'en-tête."
+      ],
+      "entryPoint": "@gestiolabs336/ui/blocks/calendar"
+    },
+    {
+      "id": "event-calendar",
+      "title": "Agenda (calendrier d'événements)",
+      "kind": "block",
+      "exports": [
+        "GestioEventCalendar",
+        "GESTIO_EVENT_CALENDAR_LABELS",
+        "GestioCalendarEvent",
+        "GestioCalendarEventVariant",
+        "GestioCalendarMoreEvent",
+        "GestioEventCalendarLabels"
+      ],
+      "classes": [
+        {
+          "class": "GestioEventCalendar",
+          "selector": "gestio-event-calendar"
+        }
+      ],
+      "summary": "Agenda en vue mensuelle : événements colorés par jour (multi-jours dépliés, journées entières d'abord), « +N autres » au-delà d'un seuil, navigation mois / Aujourd'hui. Sur conteneur étroit : pastilles dans la grille et liste des événements du mois.",
+      "inputs": [
+        {
+          "name": "events",
+          "type": "readonly GestioCalendarEvent[]",
+          "default": "[]",
+          "description": "Événements : { id, title, start, end?, variant?, allDay? }."
+        },
+        {
+          "name": "month",
+          "type": "model<Date | null>",
+          "default": "null",
+          "description": "Mois affiché ; par défaut celui du jour courant ; [(month)]."
+        },
+        {
+          "name": "maxEventsPerDay",
+          "type": "number",
+          "default": "3",
+          "description": "Événements visibles par jour avant « +N autres »."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "default": "'fr-FR'",
+          "description": "Locale des noms de mois, de jours et des heures."
+        },
+        {
+          "name": "firstDayOfWeek",
+          "type": "0 | 1 | 2 | 3 | 4 | 5 | 6",
+          "default": "1",
+          "description": "Premier jour de la semaine (0 = dimanche, 1 = lundi)."
+        },
+        {
+          "name": "today",
+          "type": "Date",
+          "default": "date de création",
+          "description": "Jour courant mis en évidence (aria-current=\"date\")."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Nom accessible du tableau ; par défaut le titre du mois."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioEventCalendarLabels>",
+          "default": "{}",
+          "description": "Surcharge des libellés (previousMonth, nextMonth, today, more, moreLabel, eventCount, eventCountPlural, todayMarker, allDay, noEvents)."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "monthChange",
+          "type": "Date",
+          "description": "Mois affiché modifié (premier jour du mois)."
+        },
+        {
+          "name": "eventClick",
+          "type": "GestioCalendarEvent",
+          "description": "Clic sur un événement."
+        },
+        {
+          "name": "dayClick",
+          "type": "Date",
+          "description": "Clic sur le numéro d'un jour (ex. créer un événement)."
+        },
+        {
+          "name": "moreClick",
+          "type": "GestioCalendarMoreEvent",
+          "description": "Clic sur « +N autres » : { date, events } avec tous les événements du jour."
+        }
+      ],
+      "slots": [],
+      "examples": [
+        {
+          "title": "Planning des interventions",
+          "code": "// imports: [GestioEventCalendar]\n<gestio-event-calendar\n  [events]=\"interventions()\"\n  [(month)]=\"month\"\n  (eventClick)=\"open($event)\"\n  (dayClick)=\"create($event)\"\n  (moreClick)=\"showDay($event)\"\n/>\n\n// TS\nreadonly month = signal<Date | null>(null);\nreadonly interventions = signal<GestioCalendarEvent[]>([\n  { id: 1, title: 'Maintenance chaudière', start: new Date(2026, 9, 12, 9, 0), variant: 'warning' },\n  { id: 2, title: 'Salon pro', start: new Date(2026, 9, 20), end: new Date(2026, 9, 22), allDay: true, variant: 'success' },\n]);"
+        }
+      ],
+      "pitfalls": [
+        "Chaque événement doit avoir un id unique (suivi des listes).",
+        "Le composant ne charge rien : pour de gros volumes, charger les événements du mois affiché via (monthChange).",
+        "« +N autres » n'apparaît que pour N ≥ 2 : un seul événement en trop est affiché directement.",
+        "Le mode compact (pastilles + liste) dépend de la largeur du conteneur (container query < 36rem), pas de l'écran.",
+        "Réutilise les utilitaires de date de @gestiolabs336/ui/blocks/calendar : ce point d'entrée est chargé avec lui."
+      ],
+      "entryPoint": "@gestiolabs336/ui/blocks/event-calendar"
+    },
+    {
+      "id": "social-button",
+      "title": "Bouton de connexion sociale",
+      "kind": "block",
+      "exports": [
+        "GestioSocialButton",
+        "GestioSocialProvider",
+        "GestioSocialButtonLabels",
+        "GESTIO_SOCIAL_BUTTON_LABELS"
+      ],
+      "classes": [
+        {
+          "class": "GestioSocialButton",
+          "selector": "button[gestioSocialButton], a[gestioSocialButton]"
+        }
+      ],
+      "summary": "Bouton « Continuer avec Google / GitHub / Microsoft / Apple » sur <button> ou <a> natif : logo officiel (aria-hidden), libellé par défaut, chargement, pleine largeur. Google suit la charte Google Identity (clair et sombre).",
+      "inputs": [
+        {
+          "name": "provider",
+          "type": "'google' | 'github' | 'microsoft' | 'apple' (requis)",
+          "description": "Fournisseur : logo, couleurs et libellé par défaut."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Désactive (attribut natif sur <button>, aria-disabled + tabindex=-1 sur <a>)."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "description": "Indicateur de chargement ; clics bloqués, focus conservé."
+        },
+        {
+          "name": "fullWidth",
+          "type": "boolean",
+          "default": "false",
+          "description": "Toute la largeur."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioSocialButtonLabels>",
+          "default": "{}",
+          "description": "Libellés par défaut par fournisseur et texte de chargement."
+        }
+      ],
+      "outputs": [],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "Libellé ; remplace « Continuer avec <fournisseur> »."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Boutons sociaux d'un formulaire de connexion",
+          "code": "// imports: [GestioSocialButton]\n<button gestioSocialButton provider=\"google\" fullWidth (click)=\"signInWithGoogle()\"></button>\n<a gestioSocialButton provider=\"microsoft\" fullWidth href=\"/auth/microsoft\"></a>"
+        }
+      ],
+      "pitfalls": [
+        "Attribut sur un <button> ou <a> natif, pas un élément <gestio-…>.",
+        "type=\"button\" est posé automatiquement : le bouton ne soumet jamais le formulaire englobant.",
+        "Pour l'utiliser dans gestio-login-form / gestio-signup-form, ajouter l'attribut gestioAuthSocial."
+      ],
+      "entryPoint": "@gestiolabs336/ui/blocks/social-button"
+    },
+    {
+      "id": "login-form",
+      "title": "Formulaire de connexion",
+      "kind": "block",
+      "exports": [
+        "GestioLoginForm",
+        "GestioLoginFormValue",
+        "GestioLoginFormLabels",
+        "GESTIO_LOGIN_FORM_LABELS"
+      ],
+      "classes": [
+        {
+          "class": "GestioLoginForm",
+          "selector": "gestio-login-form"
+        }
+      ],
+      "summary": "Bloc de connexion complet : e-mail, mot de passe (afficher/masquer), « Se souvenir de moi », « Mot de passe oublié ? », boutons sociaux, pied. Validation Signal Forms, focus sur le premier champ en erreur, erreur serveur annoncée et focalisée.",
+      "inputs": [
+        {
+          "name": "heading",
+          "type": "string",
+          "default": "'Connexion'",
+          "description": "Titre du formulaire."
+        },
+        {
+          "name": "headingLevel",
+          "type": "1 | 2 | 3",
+          "default": "1",
+          "description": "Niveau du titre (h1 sur une page dédiée, 2 ou 3 dans une page qui a déjà un h1)."
+        },
+        {
+          "name": "appearance",
+          "type": "'card' | 'plain'",
+          "default": "'card'",
+          "description": "Carte centrée avec bordure, ou formulaire sans fond ni bordure."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "description": "Bloque la soumission et affiche l'indicateur du bouton."
+        },
+        {
+          "name": "error",
+          "type": "string | null",
+          "description": "Erreur serveur : affichée dans une alerte role=\"alert\" qui reçoit le focus."
+        },
+        {
+          "name": "subheading",
+          "type": "string",
+          "description": "Texte sous le titre."
+        },
+        {
+          "name": "initialEmail",
+          "type": "string",
+          "default": "''",
+          "description": "E-mail prérempli."
+        },
+        {
+          "name": "showRemember",
+          "type": "boolean",
+          "default": "true",
+          "description": "Affiche « Se souvenir de moi »."
+        },
+        {
+          "name": "showForgotPassword",
+          "type": "boolean",
+          "default": "true",
+          "description": "Affiche « Mot de passe oublié ? »."
+        },
+        {
+          "name": "forgotPasswordHref",
+          "type": "string",
+          "description": "URL du lien ; sans URL, un bouton émet forgotPassword."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioLoginFormLabels>",
+          "default": "{}",
+          "description": "Libellés et messages de validation."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "submitted",
+          "type": "GestioLoginFormValue { email, password, remember }",
+          "description": "Formulaire valide soumis."
+        },
+        {
+          "name": "forgotPassword",
+          "type": "void",
+          "description": "Clic sur « Mot de passe oublié ? » (sans forgotPasswordHref)."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "[gestioAuthSocial]",
+          "description": "Boutons sociaux, au-dessus du formulaire, suivis du séparateur « ou » (masqués si vide)."
+        },
+        {
+          "selector": "[gestioAuthFooter]",
+          "description": "Pied (ex. « Pas de compte ? S'inscrire »)."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Page de connexion",
+          "code": "// imports: [GestioLoginForm, GestioSocialButton]\n<gestio-login-form\n  subheading=\"Accédez à votre espace de gestion\"\n  forgotPasswordHref=\"/mot-de-passe-oublie\"\n  [loading]=\"pending()\"\n  [error]=\"error()\"\n  (submitted)=\"signIn($event)\"\n>\n  <button gestioAuthSocial gestioSocialButton provider=\"google\" fullWidth (click)=\"google()\"></button>\n  <p gestioAuthFooter>Pas de compte ? <a href=\"/inscription\">S'inscrire</a></p>\n</gestio-login-form>"
+        }
+      ],
+      "pitfalls": [
+        "submitted n'est émis que si le formulaire est valide : inutile de revalider.",
+        "loading et error sont pilotés par l'application (appel serveur) ; repasser error à null avant un nouvel essai pour que le message soit de nouveau focalisé.",
+        "Les éléments projetés (liens du pied) gardent les styles de l'application."
+      ],
+      "entryPoint": "@gestiolabs336/ui/blocks/login-form"
+    },
+    {
+      "id": "signup-form",
+      "title": "Formulaire d'inscription",
+      "kind": "block",
+      "exports": [
+        "GestioSignupForm",
+        "GestioSignupFormValue",
+        "GestioSignupFormLabels",
+        "GESTIO_SIGNUP_FORM_LABELS",
+        "GestioPasswordStrength",
+        "gestioPasswordStrength"
+      ],
+      "classes": [
+        {
+          "class": "GestioSignupForm",
+          "selector": "gestio-signup-form"
+        }
+      ],
+      "summary": "Bloc d'inscription : nom, e-mail, mot de passe avec indicateur de force (barre + texte aria-live), confirmation vérifiée, acceptation des conditions, boutons sociaux. Validation Signal Forms.",
+      "inputs": [
+        {
+          "name": "heading",
+          "type": "string",
+          "default": "'Créer un compte'",
+          "description": "Titre du formulaire."
+        },
+        {
+          "name": "headingLevel",
+          "type": "1 | 2 | 3",
+          "default": "1",
+          "description": "Niveau du titre (h1 sur une page dédiée, 2 ou 3 dans une page qui a déjà un h1)."
+        },
+        {
+          "name": "appearance",
+          "type": "'card' | 'plain'",
+          "default": "'card'",
+          "description": "Carte centrée avec bordure, ou formulaire sans fond ni bordure."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "description": "Bloque la soumission et affiche l'indicateur du bouton."
+        },
+        {
+          "name": "error",
+          "type": "string | null",
+          "description": "Erreur serveur : affichée dans une alerte role=\"alert\" qui reçoit le focus."
+        },
+        {
+          "name": "subheading",
+          "type": "string",
+          "description": "Texte sous le titre."
+        },
+        {
+          "name": "minPasswordLength",
+          "type": "number",
+          "default": "8",
+          "description": "Longueur minimale du mot de passe."
+        },
+        {
+          "name": "showTerms",
+          "type": "boolean",
+          "default": "true",
+          "description": "Affiche la case des conditions (obligatoire si affichée)."
+        },
+        {
+          "name": "termsHref",
+          "type": "string",
+          "description": "URL des conditions, ouverte dans un nouvel onglet."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioSignupFormLabels>",
+          "default": "{}",
+          "description": "Libellés, niveaux de force et messages de validation."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "submitted",
+          "type": "GestioSignupFormValue { name, email, password, acceptTerms }",
+          "description": "Formulaire valide soumis (sans la confirmation)."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "[gestioAuthSocial]",
+          "description": "Boutons sociaux + séparateur « ou » (masqués si vide)."
+        },
+        {
+          "selector": "[gestioAuthFooter]",
+          "description": "Pied (ex. « Déjà un compte ? Se connecter »)."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Page d'inscription",
+          "code": "// imports: [GestioSignupForm]\n<gestio-signup-form termsHref=\"/cgu\" [loading]=\"pending()\" [error]=\"error()\" (submitted)=\"signUp($event)\">\n  <p gestioAuthFooter>Déjà un compte ? <a href=\"/connexion\">Se connecter</a></p>\n</gestio-signup-form>"
+        }
+      ],
+      "pitfalls": [
+        "L'indicateur de force (gestioPasswordStrength) est indicatif : la politique de mot de passe se vérifie côté serveur.",
+        "Le nom et l'e-mail émis sont débarrassés des espaces de début et de fin."
+      ],
+      "entryPoint": "@gestiolabs336/ui/blocks/signup-form"
+    },
+    {
+      "id": "forgot-password-form",
+      "title": "Mot de passe oublié",
+      "kind": "block",
+      "exports": [
+        "GestioForgotPasswordForm",
+        "GestioForgotPasswordFormValue",
+        "GestioForgotPasswordFormLabels",
+        "GESTIO_FORGOT_PASSWORD_FORM_LABELS"
+      ],
+      "classes": [
+        {
+          "class": "GestioForgotPasswordForm",
+          "selector": "gestio-forgot-password-form"
+        }
+      ],
+      "summary": "Demande de réinitialisation : saisie de l'e-mail puis état « lien envoyé » (confirmation annoncée et focalisée, bouton « Renvoyer le lien »), retour à la connexion.",
+      "inputs": [
+        {
+          "name": "heading",
+          "type": "string",
+          "default": "'Mot de passe oublié'",
+          "description": "Titre du formulaire."
+        },
+        {
+          "name": "headingLevel",
+          "type": "1 | 2 | 3",
+          "default": "1",
+          "description": "Niveau du titre (h1 sur une page dédiée, 2 ou 3 dans une page qui a déjà un h1)."
+        },
+        {
+          "name": "appearance",
+          "type": "'card' | 'plain'",
+          "default": "'card'",
+          "description": "Carte centrée avec bordure, ou formulaire sans fond ni bordure."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "description": "Bloque la soumission et affiche l'indicateur du bouton."
+        },
+        {
+          "name": "error",
+          "type": "string | null",
+          "description": "Erreur serveur : affichée dans une alerte role=\"alert\" qui reçoit le focus."
+        },
+        {
+          "name": "initialEmail",
+          "type": "string",
+          "default": "''",
+          "description": "E-mail prérempli."
+        },
+        {
+          "name": "sent",
+          "type": "boolean",
+          "default": "false",
+          "description": "Affiche la confirmation d'envoi à la place du formulaire."
+        },
+        {
+          "name": "loginHref",
+          "type": "string",
+          "description": "URL de retour à la connexion ; sans URL, un bouton émet backToLogin."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioForgotPasswordFormLabels>",
+          "default": "{}",
+          "description": "Libellés ; {email} est remplacé dans le message d'envoi."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "submitted",
+          "type": "GestioForgotPasswordFormValue { email }",
+          "description": "E-mail valide soumis."
+        },
+        {
+          "name": "resend",
+          "type": "GestioForgotPasswordFormValue { email }",
+          "description": "Clic sur « Renvoyer le lien »."
+        },
+        {
+          "name": "backToLogin",
+          "type": "void",
+          "description": "Clic sur « Retour à la connexion » (sans loginHref)."
+        }
+      ],
+      "slots": [],
+      "examples": [
+        {
+          "title": "Envoi puis confirmation",
+          "code": "// imports: [GestioForgotPasswordForm]\n<gestio-forgot-password-form\n  loginHref=\"/connexion\"\n  [sent]=\"sent()\"\n  [loading]=\"pending()\"\n  (submitted)=\"sendLink($event.email)\"\n  (resend)=\"sendLink($event.email)\"\n/>"
+        }
+      ],
+      "pitfalls": [
+        "C'est l'application qui passe sent à true après l'appel serveur.",
+        "Le message d'envoi ne confirme pas l'existence du compte (bonne pratique de sécurité) : conserver cette formulation en surchargeant labels.sent."
+      ],
+      "entryPoint": "@gestiolabs336/ui/blocks/forgot-password-form"
+    },
+    {
+      "id": "otp-input",
+      "title": "Saisie de code OTP",
+      "kind": "block",
+      "exports": ["GestioOtpInput", "GestioOtpInputLabels", "GESTIO_OTP_INPUT_LABELS"],
+      "classes": [
+        {
+          "class": "GestioOtpInput",
+          "selector": "gestio-otp-input"
+        }
+      ],
+      "summary": "Code à usage unique, une case par chiffre : avance/recul automatiques, Retour arrière, flèches/Début/Fin, collage et remplissage SMS (autocomplete=\"one-time-code\"). Groupe role=\"group\" étiqueté, cases « Chiffre 2 sur 6 ».",
+      "forms": "Signal Forms ([formField]), ControlValueAccessor ou [(value)]. Valeur : string (chiffres).",
+      "inputs": [
+        {
+          "name": "length",
+          "type": "number",
+          "default": "6",
+          "description": "Nombre de chiffres."
+        },
+        {
+          "name": "value",
+          "type": "model<string>",
+          "default": "''",
+          "description": "Code saisi ; [(value)] hors formulaire."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Libellé visible du groupe (par défaut « Code de vérification »)."
+        },
+        {
+          "name": "hint",
+          "type": "string",
+          "description": "Aide sous les cases."
+        },
+        {
+          "name": "error",
+          "type": "string | null",
+          "description": "Message d'erreur ; active l'état invalide."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "default": "false",
+          "description": "État invalide (lié par [formField]) ; affiché après interaction."
+        },
+        {
+          "name": "touched",
+          "type": "boolean",
+          "default": "false",
+          "description": "Champ touché (lié par [formField])."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Désactive toutes les cases."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioOtpInputLabels>",
+          "default": "{}",
+          "description": "Libellé du groupe et nom des cases ({index}, {length})."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "valueChange",
+          "type": "string",
+          "description": "Code modifié."
+        },
+        {
+          "name": "completed",
+          "type": "string",
+          "description": "Toutes les cases viennent d'être remplies."
+        },
+        {
+          "name": "touch",
+          "type": "void",
+          "description": "Le focus quitte le groupe."
+        }
+      ],
+      "slots": [],
+      "examples": [
+        {
+          "title": "Vérification en deux étapes",
+          "code": "// imports: [GestioOtpInput]\n<gestio-otp-input\n  hint=\"Saisissez le code reçu par SMS.\"\n  [error]=\"codeError()\"\n  [(value)]=\"code\"\n  (completed)=\"verify($event)\"\n/>"
+        }
+      ],
+      "pitfalls": [
+        "La valeur est une chaîne (les zéros initiaux sont conservés), pas un nombre.",
+        "completed n'est émis qu'au passage à l'état complet par l'utilisateur, pas quand le code écrit le modèle.",
+        "Avec [formField], pas d'attribut name ni required statique : passer par le schéma (required, minLength)."
+      ],
+      "entryPoint": "@gestiolabs336/ui/blocks/otp-input"
+    },
+    {
+      "id": "product-card",
+      "title": "Carte produit",
+      "kind": "block",
+      "entryPoint": "@gestiolabs336/ui/blocks/product-card",
+      "exports": ["GestioProductCard", "GestioProductCardLabels", "GESTIO_PRODUCT_CARD_LABELS"],
+      "classes": [
+        {
+          "class": "GestioProductCard",
+          "selector": "gestio-product-card"
+        }
+      ],
+      "summary": "Carte produit e-commerce : image (NgOptimizedImage fill), badge, nom (lien étendu : toute la carte cliquable), description, note (gestio-rating), prix et prix barré via Intl, mention de stock et bouton « Ajouter au panier ».",
+      "inputs": [
+        {
+          "name": "name",
+          "type": "string (requis)",
+          "description": "Nom du produit (titre de la carte)."
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "description": "Lien vers la fiche : rend toute la carte cliquable."
+        },
+        {
+          "name": "image",
+          "type": "string",
+          "description": "URL de l'image (NgOptimizedImage, mode fill, ratio 4/3)."
+        },
+        {
+          "name": "imageAlt",
+          "type": "string",
+          "default": "''",
+          "description": "Texte alternatif ; vide si l'image est décorative."
+        },
+        {
+          "name": "imagePriority",
+          "type": "boolean",
+          "default": "false",
+          "description": "Chargement prioritaire (carte visible au chargement)."
+        },
+        {
+          "name": "imageSizes",
+          "type": "string",
+          "default": "'(min-width: 640px) 33vw, 100vw'",
+          "description": "Attribut sizes (valeurs relatives uniquement)."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "Courte description (2 lignes max)."
+        },
+        {
+          "name": "price",
+          "type": "number (requis)",
+          "description": "Prix courant."
+        },
+        {
+          "name": "compareAtPrice",
+          "type": "number | null",
+          "default": "null",
+          "description": "Prix avant remise, barré s’il est supérieur au prix."
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "default": "'EUR'",
+          "description": "Devise ISO 4217."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "default": "'fr-FR'",
+          "description": "Locale de formatage."
+        },
+        {
+          "name": "badge",
+          "type": "string",
+          "description": "Texte du badge (« -20 % », « Nouveau »)."
+        },
+        {
+          "name": "badgeVariant",
+          "type": "'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info'",
+          "default": "'danger'",
+          "description": "Couleur du badge."
+        },
+        {
+          "name": "rating",
+          "type": "number | null",
+          "default": "null",
+          "description": "Note moyenne ; masquée si null."
+        },
+        {
+          "name": "reviewCount",
+          "type": "number | null",
+          "default": "null",
+          "description": "Nombre d'avis."
+        },
+        {
+          "name": "inStock",
+          "type": "boolean",
+          "default": "true",
+          "description": "Disponibilité ; false désactive le bouton."
+        },
+        {
+          "name": "showStock",
+          "type": "boolean",
+          "default": "false",
+          "description": "Affiche « En stock » / « Rupture de stock »."
+        },
+        {
+          "name": "adding",
+          "type": "boolean",
+          "default": "false",
+          "description": "Ajout en cours : bouton en chargement."
+        },
+        {
+          "name": "hideAddToCart",
+          "type": "boolean",
+          "default": "false",
+          "description": "Masque le bouton d’ajout."
+        },
+        {
+          "name": "headingLevel",
+          "type": "number",
+          "default": "3",
+          "description": "aria-level du nom."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioProductCardLabels>",
+          "default": "{}",
+          "description": "Surcharge partielle des libellés."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "addToCart",
+          "type": "void",
+          "description": "Clic sur « Ajouter au panier »."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "[gestioProductCardActions]",
+          "description": "Actions sur l'image (ex. favori), au-dessus du lien étendu."
+        },
+        {
+          "selector": "(défaut)",
+          "description": "Contenu ajouté avant le prix (variantes, couleurs…)."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Produit en promotion",
+          "code": "// imports: [GestioProductCard]\n<gestio-product-card\n  name=\"Chaise de bureau Ergo\"\n  href=\"/produits/ergo\"\n  image=\"https://cdn.exemple.fr/ergo.jpg\"\n  imageAlt=\"Chaise de bureau noire à dossier en maille\"\n  [price]=\"189\"\n  [compareAtPrice]=\"239\"\n  badge=\"-20 %\"\n  [rating]=\"4.5\"\n  [reviewCount]=\"128\"\n  [adding]=\"adding()\"\n  (addToCart)=\"addToCart(product)\"\n/>"
+        }
+      ],
+      "pitfalls": [
+        "L'image passe par NgOptimizedImage : pas d'URL base64 (data:), et sizes ne doit contenir que des valeurs relatives (vw).",
+        "Avec href, placer tout autre élément interactif dans le slot gestioProductCardActions (sinon il est recouvert par le lien étendu).",
+        "Le bouton est décrit par le nom du produit (aria-describedby) : inutile de répéter le nom dans labels.addToCart."
+      ]
+    },
+    {
+      "id": "carousel",
+      "title": "Carrousel",
+      "kind": "block",
+      "entryPoint": "@gestiolabs336/ui/blocks/carousel",
+      "exports": [
+        "GestioCarousel",
+        "GestioCarouselSlide",
+        "GestioCarouselLabels",
+        "GESTIO_CAROUSEL_LABELS"
+      ],
+      "classes": [
+        {
+          "class": "GestioCarousel",
+          "selector": "gestio-carousel"
+        },
+        {
+          "class": "GestioCarouselSlide",
+          "selector": "gestio-carousel-slide"
+        }
+      ],
+      "summary": "Carrousel accessible (motif ARIA Carousel) : région aria-roledescription=\"carrousel\", diapositives role=\"group\" « 2 sur 5 » (inactives inert), boutons précédent/suivant, indicateurs, flèches ←/→, glissement tactile, défilement automatique optionnel avec bouton pause, arrêt au survol/focus et respect de prefers-reduced-motion.",
+      "inputs": [
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "gestio-carousel : nom accessible de la région (à toujours fournir)."
+        },
+        {
+          "name": "index",
+          "type": "model<number>",
+          "default": "0",
+          "description": "gestio-carousel : diapositive active (à partir de 0) ; [(index)]."
+        },
+        {
+          "name": "loop",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-carousel : boucle au début / à la fin."
+        },
+        {
+          "name": "autoplay",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-carousel : défilement automatique (affiche un bouton pause)."
+        },
+        {
+          "name": "interval",
+          "type": "number",
+          "default": "5000",
+          "description": "gestio-carousel : durée d'affichage d'une diapositive (ms)."
+        },
+        {
+          "name": "showControls",
+          "type": "boolean",
+          "default": "true",
+          "description": "gestio-carousel : boutons précédent / suivant."
+        },
+        {
+          "name": "showIndicators",
+          "type": "boolean",
+          "default": "true",
+          "description": "gestio-carousel : indicateurs de position."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioCarouselLabels>",
+          "default": "{}",
+          "description": "gestio-carousel : surcharge partielle des libellés."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "gestio-carousel-slide : nom de la diapositive (suivi de « (2 sur 5) »)."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "indexChange",
+          "type": "number",
+          "description": "gestio-carousel : émis au changement de diapositive."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "gestio-carousel : éléments <gestio-carousel-slide> ; gestio-carousel-slide : contenu libre."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Bannières",
+          "code": "// imports: [GestioCarousel, GestioCarouselSlide]\n<gestio-carousel ariaLabel=\"Nouveautés\" [(index)]=\"slide\" autoplay loop>\n  <gestio-carousel-slide label=\"Soldes d'hiver\">…</gestio-carousel-slide>\n  <gestio-carousel-slide>…</gestio-carousel-slide>\n</gestio-carousel>"
+        }
+      ],
+      "pitfalls": [
+        "Importer GestioCarousel et GestioCarouselSlide.",
+        "Méthodes publiques previous(), next(), goTo(index) accessibles via une référence de template.",
+        "Le défilement automatique ne démarre pas si prefers-reduced-motion est actif (l'utilisateur peut le lancer avec le bouton).",
+        "Une diapositive par vue : pour une liste défilante de cartes, utiliser une grille."
+      ]
+    },
+    {
+      "id": "rating",
+      "title": "Note et avis",
+      "kind": "block",
+      "entryPoint": "@gestiolabs336/ui/blocks/rating",
+      "exports": [
+        "GestioRating",
+        "GestioReview",
+        "GestioRatingSize",
+        "GestioRatingLabels",
+        "GESTIO_RATING_LABELS",
+        "GestioReviewLabels",
+        "GESTIO_REVIEW_LABELS"
+      ],
+      "classes": [
+        {
+          "class": "GestioRating",
+          "selector": "gestio-rating"
+        },
+        {
+          "class": "GestioReview",
+          "selector": "gestio-review"
+        }
+      ],
+      "summary": "Note en étoiles : affichage (readonly, fractions, nom accessible « Note : 4,5 sur 5 ») ou saisie (radios natifs dans un fieldset, flèches du clavier). gestio-review : avis client (auteur, initiales ou photo, date Intl, note, titre, commentaire projeté, mention « Achat vérifié »).",
+      "forms": "gestio-rating : ControlValueAccessor (number | null), Signal Forms [formField] ou [(value)].",
+      "inputs": [
+        {
+          "name": "value",
+          "type": "model<number | null>",
+          "default": "null",
+          "description": "gestio-rating : note ; [(value)] hors formulaire. Fractions acceptées en lecture seule."
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "default": "5",
+          "description": "gestio-rating : nombre d'étoiles."
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-rating : affichage seul (role=\"img\")."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-rating : désactive la saisie."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "'md'",
+          "description": "gestio-rating : taille des étoiles."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "gestio-rating : légende visible du groupe en saisie."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "gestio-rating : nom accessible sans légende (préfixe du résumé en lecture seule)."
+        },
+        {
+          "name": "showValue",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-rating : affiche la valeur numérique (lecture seule)."
+        },
+        {
+          "name": "count",
+          "type": "number | null",
+          "default": "null",
+          "description": "gestio-rating : nombre d'avis affiché (lecture seule)."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "gestio-rating : attribut name des radios (généré si absent)."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "default": "'fr-FR'",
+          "description": "Locale Intl (nombres pour gestio-rating, date pour gestio-review)."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioRatingLabels> | Partial<GestioReviewLabels>",
+          "default": "{}",
+          "description": "Surcharge partielle des libellés."
+        },
+        {
+          "name": "author",
+          "type": "string (requis)",
+          "description": "gestio-review : nom de l'auteur (initiales si pas d'avatar)."
+        },
+        {
+          "name": "rating",
+          "type": "number (requis)",
+          "description": "gestio-review : note attribuée."
+        },
+        {
+          "name": "date",
+          "type": "Date | string | null",
+          "default": "null",
+          "description": "gestio-review : date de l'avis ; « AAAA-MM-JJ » lu en heure locale."
+        },
+        {
+          "name": "heading",
+          "type": "string",
+          "description": "gestio-review : titre de l'avis."
+        },
+        {
+          "name": "headingLevel",
+          "type": "number",
+          "default": "3",
+          "description": "gestio-review : aria-level du titre."
+        },
+        {
+          "name": "avatar",
+          "type": "string",
+          "description": "gestio-review : URL de la photo de l'auteur."
+        },
+        {
+          "name": "verified",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-review : mention « Achat vérifié »."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "valueChange",
+          "type": "number | null",
+          "description": "gestio-rating : émis par le model value."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "gestio-review : texte du commentaire."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Note moyenne",
+          "code": "// imports: [GestioRating]\n<gestio-rating readonly showValue [value]=\"4.5\" [count]=\"128\" />"
+        },
+        {
+          "title": "Saisie dans un formulaire",
+          "code": "// imports: [GestioRating, FormField]\n<gestio-rating label=\"Votre note\" [formField]=\"f.score\" />"
+        },
+        {
+          "title": "Avis client",
+          "code": "// imports: [GestioReview]\n<gestio-review author=\"Claire Moreau\" date=\"2026-10-12\" [rating]=\"4\" heading=\"Très pratique\" verified>\n  Livraison rapide, produit conforme.\n</gestio-review>"
+        }
+      ],
+      "pitfalls": [
+        "En saisie, la valeur est un entier de 1 à max ; les fractions ne sont affichées qu’en lecture seule.",
+        "Sans label ni ariaLabel, le groupe de saisie n’a pas de nom accessible.",
+        "gestio-review rend la note en lecture seule : ne pas y lier de formulaire."
+      ]
+    },
+    {
+      "id": "quantity-input",
+      "title": "Sélecteur de quantité",
+      "kind": "block",
+      "entryPoint": "@gestiolabs336/ui/blocks/quantity-input",
+      "exports": [
+        "GestioQuantityInput",
+        "GestioQuantityInputSize",
+        "GestioQuantityInputLabels",
+        "GESTIO_QUANTITY_INPUT_LABELS"
+      ],
+      "classes": [
+        {
+          "class": "GestioQuantityInput",
+          "selector": "gestio-quantity-input"
+        }
+      ],
+      "summary": "Sélecteur de quantité : <input type=\"number\"> natif (flèches haut/bas) entre deux boutons − / +, bornes min/max, pas, normalisation à la sortie du champ, annonce de la nouvelle valeur aux lecteurs d’écran.",
+      "forms": "ControlValueAccessor (number | null), Signal Forms [formField] ou [(value)].",
+      "inputs": [
+        {
+          "name": "value",
+          "type": "model<number | null>",
+          "default": "null",
+          "description": "Quantité ; [(value)] hors formulaire."
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "default": "0",
+          "description": "Borne basse."
+        },
+        {
+          "name": "max",
+          "type": "number | null",
+          "default": "null",
+          "description": "Borne haute (aucune si null)."
+        },
+        {
+          "name": "step",
+          "type": "number",
+          "default": "1",
+          "description": "Pas des boutons et de l’alignement."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Libellé visible."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Nom accessible sans libellé visible."
+        },
+        {
+          "name": "hint",
+          "type": "string",
+          "description": "Texte d’aide."
+        },
+        {
+          "name": "error",
+          "type": "string | null",
+          "description": "Message d’erreur (aria-invalid)."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "'md'",
+          "description": "Taille."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Désactive."
+        },
+        {
+          "name": "inputId",
+          "type": "string",
+          "description": "id du champ natif."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Attribut name."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioQuantityInputLabels>",
+          "default": "{}",
+          "description": "Surcharge partielle des libellés."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "valueChange",
+          "type": "number | null",
+          "description": "Émis par le model value."
+        }
+      ],
+      "slots": [],
+      "examples": [
+        {
+          "title": "Ligne de panier",
+          "code": "// imports: [GestioQuantityInput]\n<gestio-quantity-input ariaLabel=\"Quantité de Chaise Ergo\" size=\"sm\" [min]=\"1\" [max]=\"stock\" [(value)]=\"quantity\" />"
+        }
+      ],
+      "pitfalls": [
+        "Une valeur hors bornes saisie au clavier est acceptée pendant la saisie puis ramenée dans les bornes à la sortie du champ.",
+        "Dans une liste, donner un ariaLabel unique par ligne (ex. « Quantité de <produit> »).",
+        "Avec [formField], ne pas lier [min] / [max] (erreur NG8022) : les validateurs min() / max() du schéma les fournissent."
+      ]
+    },
+    {
+      "id": "cart-summary",
+      "title": "Récapitulatif de panier",
+      "kind": "block",
+      "entryPoint": "@gestiolabs336/ui/blocks/cart-summary",
+      "exports": [
+        "GestioCartSummary",
+        "GestioCartItem",
+        "GestioCartQuantityChange",
+        "GestioCartSummaryLabels",
+        "GESTIO_CART_SUMMARY_LABELS"
+      ],
+      "classes": [
+        {
+          "class": "GestioCartSummary",
+          "selector": "gestio-cart-summary"
+        }
+      ],
+      "summary": "Récapitulatif de panier sans état : lignes (vignette, prix unitaire × quantité, total), boutons −/+ et retrait nommés par article, sous-total, remise, livraison (offerte / à calculer), TVA comprise ou ajoutée, total, bouton « Commander », annonces lecteur d'écran, focus replacé sur le titre après retrait, état vide.",
+      "inputs": [
+        {
+          "name": "items",
+          "type": "readonly GestioCartItem[] (requis)",
+          "description": "Lignes { id, name, unitPrice, quantity, description?, image?, imageAlt?, maxQuantity? }."
+        },
+        {
+          "name": "discount",
+          "type": "number",
+          "default": "0",
+          "description": "Montant de remise (positif), plafonné au sous-total."
+        },
+        {
+          "name": "shipping",
+          "type": "number | null",
+          "default": "null",
+          "description": "Livraison ; 0 = « Offerte », null = « Calculée à l’étape suivante »."
+        },
+        {
+          "name": "taxRate",
+          "type": "number",
+          "default": "0",
+          "description": "Taux de TVA (0.2 = 20 %) ; 0 masque la ligne."
+        },
+        {
+          "name": "taxIncluded",
+          "type": "boolean",
+          "default": "true",
+          "description": "Prix TTC : TVA indiquée (« Dont TVA ») ; false : TVA ajoutée au total."
+        },
+        {
+          "name": "editable",
+          "type": "boolean",
+          "default": "true",
+          "description": "Affiche les boutons de quantité et de retrait."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "description": "Bouton « Commander » en chargement."
+        },
+        {
+          "name": "checkoutDisabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Désactive « Commander »."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "default": "'fr-FR'",
+          "description": "Langue de formatage."
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "default": "'EUR'",
+          "description": "Devise ISO 4217."
+        },
+        {
+          "name": "headingLevel",
+          "type": "number",
+          "default": "2",
+          "description": "aria-level du titre « Votre panier »."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioCartSummaryLabels>",
+          "default": "{}",
+          "description": "Libellés (heading, empty, subtotal, discount, shipping, total, checkout, decrease, increase, remove…)."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "quantityChange",
+          "type": "GestioCartQuantityChange { item, quantity }",
+          "description": "Nouvelle quantité demandée (bornée entre 1 et maxQuantity) : mettre à jour items."
+        },
+        {
+          "name": "remove",
+          "type": "GestioCartItem",
+          "description": "Retrait demandé : retirer la ligne de items."
+        },
+        {
+          "name": "checkout",
+          "type": "void",
+          "description": "Clic sur « Commander »."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "[gestioCartPromo]",
+          "description": "Zone code promo, entre les lignes et les totaux (panier non vide)."
+        },
+        {
+          "selector": "[gestioCartEmpty]",
+          "description": "Action sous le message de panier vide (lien vers le catalogue…)."
+        },
+        {
+          "selector": "(défaut)",
+          "description": "Contenu sous le bouton (mentions de paiement sécurisé…)."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Panier avec code promo",
+          "code": "// imports: [GestioCartSummary]\npanier = signal<GestioCartItem[]>([\n  { id: 'pro', name: 'Licence Gestio Pro', description: '12 mois', unitPrice: 470, quantity: 2 },\n  { id: 'onboarding', name: 'Formation de prise en main', unitPrice: 290, quantity: 1, maxQuantity: 1 },\n]);\n\nchangerQuantite({ item, quantity }: GestioCartQuantityChange) {\n  this.panier.update((items) => items.map((i) => (i.id === item.id ? { ...i, quantity } : i)));\n}\nretirer(item: GestioCartItem) {\n  this.panier.update((items) => items.filter((i) => i.id !== item.id));\n}\n\n<gestio-cart-summary [items]=\"panier()\" [discount]=\"remise()\" [shipping]=\"0\" [taxRate]=\"0.2\" (quantityChange)=\"changerQuantite($event)\" (remove)=\"retirer($event)\" (checkout)=\"commander()\">\n  <form gestioCartPromo (submit)=\"appliquerCode($event)\">…</form>\n</gestio-cart-summary>"
+        }
+      ],
+      "pitfalls": [
+        "Composant sans état : sans mise à jour de items dans quantityChange/remove, rien ne change à l’écran.",
+        "Les montants sont exprimés dans la devise affichée (unités, pas centimes).",
+        "Avec taxIncluded=true (défaut), la TVA est seulement indiquée ; passer false pour des prix HT."
+      ]
+    },
+    {
+      "id": "pricing-table",
+      "title": "Grille tarifaire",
+      "kind": "block",
+      "entryPoint": "@gestiolabs336/ui/blocks/pricing-table",
+      "exports": [
+        "GestioPricingTable",
+        "GestioPricingPlan",
+        "GESTIO_PRICING_TABLE_IMPORTS",
+        "GestioPricingBilling",
+        "GestioPricingSelection",
+        "GestioPricingFeature",
+        "GestioPricingTableLabels",
+        "GESTIO_PRICING_TABLE_LABELS"
+      ],
+      "classes": [
+        {
+          "class": "GestioPricingTable",
+          "selector": "gestio-pricing-table"
+        },
+        {
+          "class": "GestioPricingPlan",
+          "selector": "gestio-pricing-plan"
+        }
+      ],
+      "summary": "Grille de forfaits : bascule mensuel/annuel (boutons aria-pressed), forfait mis en avant (badge « Populaire »), fonctionnalités incluses/exclues annoncées, prix Intl (gratuit, sur devis), forfait actuel désactivé, bouton d’action par forfait émettant planSelect.",
+      "inputs": [
+        {
+          "name": "billing",
+          "type": "model<'monthly' | 'yearly'>",
+          "default": "'monthly'",
+          "description": "gestio-pricing-table : période affichée ; [(billing)]."
+        },
+        {
+          "name": "showBillingToggle",
+          "type": "boolean",
+          "default": "true",
+          "description": "gestio-pricing-table : affiche la bascule mensuel/annuel."
+        },
+        {
+          "name": "yearlyHint",
+          "type": "string",
+          "description": "gestio-pricing-table : mention accolée à « Annuel » (ex. « −20 % »)."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "default": "'fr-FR'",
+          "description": "gestio-pricing-table : langue de formatage des prix."
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "default": "'EUR'",
+          "description": "gestio-pricing-table : devise ISO 4217."
+        },
+        {
+          "name": "headingLevel",
+          "type": "number",
+          "default": "3",
+          "description": "gestio-pricing-table : aria-level du nom de chaque forfait."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "gestio-pricing-table : nom de la liste des forfaits."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioPricingTableLabels>",
+          "default": "{}",
+          "description": "gestio-pricing-table : libellés (billing, monthly, yearly, perMonth, perYear, popular, included, excluded, choose, current, custom, free)."
+        },
+        {
+          "name": "name",
+          "type": "string (requis)",
+          "description": "gestio-pricing-plan : nom du forfait."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "default": "name",
+          "description": "gestio-pricing-plan : identifiant émis par planSelect."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "gestio-pricing-plan : phrase d'accroche."
+        },
+        {
+          "name": "monthlyPrice",
+          "type": "number | null",
+          "default": "null",
+          "description": "gestio-pricing-plan : prix mensuel ; null = « Sur devis », 0 = « Gratuit »."
+        },
+        {
+          "name": "yearlyPrice",
+          "type": "number | null",
+          "default": "12 × monthlyPrice",
+          "description": "gestio-pricing-plan : prix annuel total."
+        },
+        {
+          "name": "features",
+          "type": "readonly (string | { label: string; included?: boolean })[]",
+          "default": "[]",
+          "description": "gestio-pricing-plan : fonctionnalités (une chaîne = incluse)."
+        },
+        {
+          "name": "highlighted",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-pricing-plan : mis en avant (bordure, badge, bouton principal)."
+        },
+        {
+          "name": "current",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-pricing-plan : forfait actuel, bouton désactivé « Forfait actuel »."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-pricing-plan : désactive le bouton d'action."
+        },
+        {
+          "name": "ctaLabel",
+          "type": "string",
+          "default": "'Choisir ce forfait'",
+          "description": "gestio-pricing-plan : libellé du bouton."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "billingChange",
+          "type": "'monthly' | 'yearly'",
+          "description": "gestio-pricing-table : émis par le model billing."
+        },
+        {
+          "name": "planSelect",
+          "type": "GestioPricingSelection { plan: string; billing: 'monthly' | 'yearly' }",
+          "description": "gestio-pricing-table : clic sur le bouton d'un forfait."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "[gestioPricingHeader]",
+          "description": "gestio-pricing-table : titre/intro au-dessus de la bascule."
+        },
+        {
+          "selector": "(défaut)",
+          "description": "gestio-pricing-table : éléments <gestio-pricing-plan> ; gestio-pricing-plan : contenu entre les fonctionnalités et le bouton."
+        },
+        {
+          "selector": "[gestioPricingFooter]",
+          "description": "gestio-pricing-table : mentions sous la grille."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Trois forfaits avec bascule annuelle",
+          "code": "// imports: [GestioPricingTable, GestioPricingPlan]\nperiode = signal<GestioPricingBilling>('monthly');\n\n<gestio-pricing-table ariaLabel=\"Forfaits\" yearlyHint=\"−20 %\" [(billing)]=\"periode\" (planSelect)=\"souscrire($event)\">\n  <gestio-pricing-plan name=\"Essentiel\" value=\"essentiel\" [monthlyPrice]=\"19\" [yearlyPrice]=\"182\" [features]=\"['3 utilisateurs', 'Facturation', { label: 'API', included: false }]\" />\n  <gestio-pricing-plan name=\"Pro\" value=\"pro\" highlighted [monthlyPrice]=\"49\" [yearlyPrice]=\"470\" [features]=\"['10 utilisateurs', 'Facturation', 'API']\" />\n  <gestio-pricing-plan name=\"Entreprise\" value=\"entreprise\" [monthlyPrice]=\"null\" ctaLabel=\"Nous contacter\" [features]=\"['Utilisateurs illimités', 'SSO']\" />\n</gestio-pricing-table>"
+        }
+      ],
+      "pitfalls": [
+        "gestio-pricing-plan doit être placé dans gestio-pricing-table (il en lit la période, la devise et les libellés).",
+        "yearlyPrice est le montant annuel total affiché « / an », pas un prix mensuel remisé.",
+        "L'événement s'appelle planSelect (et non select) et est émis par gestio-pricing-table.",
+        "Importer GestioPricingTable et GestioPricingPlan (ou GESTIO_PRICING_TABLE_IMPORTS)."
+      ]
     }
   ]
 }

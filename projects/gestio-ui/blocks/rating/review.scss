@@ -1,0 +1,91 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gestio-space-2);
+  font-family: var(--gestio-font-sans);
+  color: var(--gestio-color-text);
+}
+
+.gestio-review__header {
+  display: flex;
+  align-items: center;
+  gap: var(--gestio-space-3);
+}
+
+.gestio-review__avatar {
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--gestio-radius-full);
+  object-fit: cover;
+}
+
+.gestio-review__avatar--initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gestio-color-primary-subtle);
+  color: var(--gestio-color-primary-text);
+  font-size: var(--gestio-font-size-sm);
+  font-weight: var(--gestio-font-weight-semibold);
+}
+
+.gestio-review__meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.gestio-review__author,
+.gestio-review__sub,
+.gestio-review__title {
+  margin: 0;
+}
+
+.gestio-review__author {
+  font-size: var(--gestio-font-size-md);
+  font-weight: var(--gestio-font-weight-semibold);
+}
+
+.gestio-review__sub {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gestio-space-1) var(--gestio-space-3);
+  color: var(--gestio-color-text-muted);
+  font-size: var(--gestio-font-size-sm);
+}
+
+.gestio-review__verified {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gestio-space-1);
+  color: var(--gestio-color-success-text);
+  font-weight: var(--gestio-font-weight-medium);
+
+  svg {
+    width: 0.875rem;
+    height: 0.875rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
+
+.gestio-review__title {
+  font-size: var(--gestio-font-size-md);
+  font-weight: var(--gestio-font-weight-semibold);
+  line-height: var(--gestio-line-height-tight);
+}
+
+.gestio-review__body {
+  color: var(--gestio-color-text);
+  font-size: var(--gestio-font-size-md);
+  line-height: var(--gestio-line-height-normal);
+
+  &:empty {
+    display: none;
+  }
+}

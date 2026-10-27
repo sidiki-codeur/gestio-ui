@@ -1,0 +1,312 @@
+:host {
+  display: block;
+  /* Les règles @container ci-dessous suivent la largeur disponible, pas l'écran. */
+  container-type: inline-size;
+  color: var(--gestio-color-text);
+  font-family: var(--gestio-font-sans);
+  font-size: var(--gestio-font-size-sm);
+}
+
+.gestio-event-calendar__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gestio-space-2) var(--gestio-space-4);
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--gestio-space-3);
+}
+
+.gestio-event-calendar__title {
+  font-size: var(--gestio-font-size-lg);
+  font-weight: var(--gestio-font-weight-semibold);
+}
+
+.gestio-event-calendar__actions {
+  display: flex;
+  gap: var(--gestio-space-1);
+  align-items: center;
+}
+
+%button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: var(--gestio-control-height-sm);
+  border: var(--gestio-border-width) solid var(--gestio-color-border);
+  border-radius: var(--gestio-radius-md);
+  background: var(--gestio-color-surface);
+  color: var(--gestio-color-text);
+  font: inherit;
+  cursor: pointer;
+  transition: background-color var(--gestio-duration-fast) var(--gestio-easing-standard);
+
+  &:hover:not(:disabled) {
+    background: var(--gestio-color-surface-hover);
+  }
+
+  &:disabled {
+    color: var(--gestio-color-text-disabled);
+    cursor: not-allowed;
+  }
+}
+
+%focus {
+  &:focus-visible {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: 1px;
+  }
+}
+
+.gestio-event-calendar__today {
+  @extend %button;
+  @extend %focus;
+  padding: 0 var(--gestio-space-3);
+  font-weight: var(--gestio-font-weight-medium);
+}
+
+.gestio-event-calendar__nav {
+  @extend %button;
+  @extend %focus;
+  width: var(--gestio-control-height-sm);
+  padding: 0;
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
+
+.gestio-event-calendar__table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  border: var(--gestio-border-width) solid var(--gestio-color-border);
+  background: var(--gestio-color-surface);
+}
+
+.gestio-event-calendar__weekday {
+  padding: var(--gestio-space-2);
+  border-bottom: var(--gestio-border-width) solid var(--gestio-color-border);
+  background: var(--gestio-color-surface-muted);
+  color: var(--gestio-color-text-muted);
+  font-size: var(--gestio-font-size-xs);
+  font-weight: var(--gestio-font-weight-semibold);
+  text-align: start;
+}
+
+.gestio-event-calendar__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.gestio-event-calendar__cell {
+  height: 6.5rem;
+  padding: var(--gestio-space-1);
+  border: var(--gestio-border-width) solid var(--gestio-color-border);
+  vertical-align: top;
+
+  &.is-outside {
+    background: var(--gestio-color-surface-muted);
+
+    .gestio-event-calendar__date {
+      color: var(--gestio-color-text-muted);
+    }
+  }
+}
+
+.gestio-event-calendar__date {
+  @extend %focus;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.75rem;
+  height: 1.75rem;
+  padding: 0 var(--gestio-space-1);
+  border: 0;
+  border-radius: var(--gestio-radius-full);
+  background: transparent;
+  color: var(--gestio-color-text);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--gestio-color-surface-hover);
+  }
+
+  .is-today > & {
+    background: var(--gestio-color-primary);
+    color: var(--gestio-color-on-primary);
+    font-weight: var(--gestio-font-weight-semibold);
+  }
+}
+
+.gestio-event-calendar__events,
+.gestio-event-calendar__agenda-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: var(--gestio-space-1) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gestio-event-calendar__event {
+  @extend %focus;
+  display: flex;
+  gap: var(--gestio-space-1);
+  align-items: baseline;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 1px var(--gestio-space-1);
+  border: 0;
+  border-inline-start: 3px solid var(--event-accent);
+  border-radius: var(--gestio-radius-sm);
+  background: var(--event-background);
+  color: var(--event-text);
+  font: inherit;
+  font-size: var(--gestio-font-size-xs);
+  text-align: start;
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(0.97);
+  }
+}
+
+.gestio-event-calendar__time {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--gestio-font-weight-semibold);
+}
+
+.gestio-event-calendar__event-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gestio-event-calendar__more {
+  @extend %focus;
+  margin-top: 2px;
+  padding: 0 var(--gestio-space-1);
+  border: 0;
+  border-radius: var(--gestio-radius-sm);
+  background: transparent;
+  color: var(--gestio-color-primary-text);
+  font: inherit;
+  font-size: var(--gestio-font-size-xs);
+  font-weight: var(--gestio-font-weight-medium);
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.is-primary {
+  --event-accent: var(--gestio-color-primary);
+  --event-background: var(--gestio-color-primary-subtle);
+  --event-text: var(--gestio-color-primary-text);
+}
+
+.is-success {
+  --event-accent: var(--gestio-color-success);
+  --event-background: var(--gestio-color-success-subtle);
+  --event-text: var(--gestio-color-success-text);
+}
+
+.is-warning {
+  --event-accent: var(--gestio-color-warning);
+  --event-background: var(--gestio-color-warning-subtle);
+  --event-text: var(--gestio-color-warning-text);
+}
+
+.is-danger {
+  --event-accent: var(--gestio-color-danger);
+  --event-background: var(--gestio-color-danger-subtle);
+  --event-text: var(--gestio-color-danger-text);
+}
+
+.is-neutral {
+  --event-accent: var(--gestio-color-neutral);
+  --event-background: var(--gestio-color-neutral-subtle);
+  --event-text: var(--gestio-color-neutral-text);
+}
+
+/* Pastilles et liste : réservées aux conteneurs étroits. */
+.gestio-event-calendar__dots,
+.gestio-event-calendar__agenda {
+  display: none;
+}
+
+.gestio-event-calendar__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--gestio-radius-full);
+  background: var(--event-accent);
+}
+
+.gestio-event-calendar__agenda-day + .gestio-event-calendar__agenda-day {
+  margin-top: var(--gestio-space-3);
+}
+
+.gestio-event-calendar__agenda-date {
+  margin: 0;
+  color: var(--gestio-color-text-muted);
+  font-weight: var(--gestio-font-weight-semibold);
+
+  &::first-letter {
+    text-transform: uppercase;
+  }
+}
+
+.gestio-event-calendar__agenda .gestio-event-calendar__event {
+  padding: var(--gestio-space-1) var(--gestio-space-2);
+  font-size: var(--gestio-font-size-sm);
+}
+
+.gestio-event-calendar__empty {
+  margin: 0;
+  color: var(--gestio-color-text-muted);
+}
+
+@container (max-width: 36rem) {
+  .gestio-event-calendar__cell {
+    height: 3.25rem;
+    text-align: center;
+  }
+
+  .gestio-event-calendar__weekday {
+    padding: var(--gestio-space-1);
+    text-align: center;
+  }
+
+  .gestio-event-calendar__events,
+  .gestio-event-calendar__more {
+    display: none;
+  }
+
+  .gestio-event-calendar__dots {
+    display: flex;
+    gap: 2px;
+    justify-content: center;
+    margin-top: 2px;
+  }
+
+  .gestio-event-calendar__agenda {
+    display: block;
+    margin-top: var(--gestio-space-4);
+  }
+}

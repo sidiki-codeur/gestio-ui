@@ -1,0 +1,128 @@
+:host {
+  display: inline-block;
+  box-sizing: border-box;
+  padding: var(--gestio-space-3);
+  border: var(--gestio-border-width) solid var(--gestio-color-border);
+  border-radius: var(--gestio-radius-lg);
+  background: var(--gestio-color-surface);
+  color: var(--gestio-color-text);
+  font-family: var(--gestio-font-sans);
+  font-size: var(--gestio-font-size-sm);
+}
+
+.gestio-calendar__header {
+  display: flex;
+  gap: var(--gestio-space-2);
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--gestio-space-2);
+}
+
+.gestio-calendar__title {
+  margin: 0;
+  font-size: var(--gestio-font-size-md);
+  font-weight: var(--gestio-font-weight-semibold);
+  text-align: center;
+}
+
+.gestio-calendar__nav,
+.gestio-calendar__day {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--gestio-control-height-sm);
+  height: var(--gestio-control-height-sm);
+  padding: 0;
+  border: var(--gestio-border-width) solid transparent;
+  border-radius: var(--gestio-radius-md);
+  background: transparent;
+  color: var(--gestio-color-text);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background-color var(--gestio-duration-fast) var(--gestio-easing-standard);
+
+  &:hover:not(:disabled, [aria-disabled='true'], .is-selected) {
+    background: var(--gestio-color-surface-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: 1px;
+  }
+
+  &:disabled {
+    color: var(--gestio-color-text-disabled);
+    cursor: not-allowed;
+  }
+}
+
+.gestio-calendar__nav svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.gestio-calendar__grid {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.gestio-calendar__weekday {
+  padding: 0 0 var(--gestio-space-1);
+  color: var(--gestio-color-text-muted);
+  font-size: var(--gestio-font-size-xs);
+  font-weight: var(--gestio-font-weight-medium);
+  text-align: center;
+}
+
+.gestio-calendar__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.gestio-calendar__cell {
+  padding: 1px 0;
+  text-align: center;
+
+  &.is-in-range {
+    background: var(--gestio-color-primary-subtle);
+  }
+}
+
+.gestio-calendar__day {
+  &.is-today {
+    border-color: var(--gestio-color-primary-border);
+    color: var(--gestio-color-primary-text);
+    font-weight: var(--gestio-font-weight-semibold);
+  }
+
+  &.is-selected {
+    border-color: var(--gestio-color-primary);
+    background: var(--gestio-color-primary);
+    color: var(--gestio-color-on-primary);
+  }
+
+  .is-in-range > & {
+    color: var(--gestio-color-primary-text);
+  }
+
+  &.is-unavailable {
+    color: var(--gestio-color-text-disabled);
+    text-decoration: line-through;
+    cursor: not-allowed;
+  }
+}
+
+:host(.is-disabled) {
+  opacity: 0.6;
+}

@@ -29,3 +29,22 @@ export * from '@gestiolabs336/ui/tabs';
 export * from '@gestiolabs336/ui/textarea';
 export * from '@gestiolabs336/ui/toast';
 export * from '@gestiolabs336/ui/tooltip';
+
+// Blocs
+export * from '@gestiolabs336/ui/blocks/activity-feed';
+export * from '@gestiolabs336/ui/blocks/calendar';
+export * from '@gestiolabs336/ui/blocks/carousel';
+export * from '@gestiolabs336/ui/blocks/cart-summary';
+export * from '@gestiolabs336/ui/blocks/empty-state';
+export * from '@gestiolabs336/ui/blocks/event-calendar';
+export * from '@gestiolabs336/ui/blocks/forgot-password-form';
+export * from '@gestiolabs336/ui/blocks/login-form';
+export * from '@gestiolabs336/ui/blocks/otp-input';
+export * from '@gestiolabs336/ui/blocks/page-header';
+export * from '@gestiolabs336/ui/blocks/pricing-table';
+export * from '@gestiolabs336/ui/blocks/product-card';
+export * from '@gestiolabs336/ui/blocks/quantity-input';
+export * from '@gestiolabs336/ui/blocks/rating';
+export * from '@gestiolabs336/ui/blocks/signup-form';
+export * from '@gestiolabs336/ui/blocks/social-button';
+export * from '@gestiolabs336/ui/blocks/stat-card';

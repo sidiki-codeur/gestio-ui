@@ -1,0 +1,78 @@
+@if (highlighted()) {
+  <gestio-badge class="gestio-pricing-plan__badge" variant="primary" appearance="solid" size="sm">
+    {{ table.text().popular }}
+  </gestio-badge>
+}
+
+<p
+  class="gestio-pricing-plan__name"
+  role="heading"
+  [attr.aria-level]="table.headingLevel()"
+  [id]="nameId"
+>
+  {{ name() }}
+</p>
+
+@if (description()) {
+  <p class="gestio-pricing-plan__description">{{ description() }}</p>
+}
+
+<p class="gestio-pricing-plan__price" [id]="priceId">
+  <span class="gestio-pricing-plan__amount">{{ priceText() }}</span>
+  @if (periodText()) {
+    <span class="gestio-pricing-plan__period">&ngsp;{{ periodText() }}</span>
+  }
+</p>
+
+@if (featureList().length) {
+  <ul class="gestio-pricing-plan__features">
+    @for (feature of featureList(); track $index) {
+      <li
+        class="gestio-pricing-plan__feature"
+        [class.gestio-pricing-plan__feature--excluded]="!feature.included"
+      >
+        @if (feature.included) {
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <path
+              d="m3.5 8.5 3 3 6-7"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span class="gestio-pricing-plan__sr-only">{{ table.text().included }}&ngsp;</span>
+        } @else {
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <path
+              d="m4.5 4.5 7 7m0-7-7 7"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+            />
+          </svg>
+          <span class="gestio-pricing-plan__sr-only">{{ table.text().excluded }}&ngsp;</span>
+        }
+        <span>{{ feature.label }}</span>
+      </li>
+    }
+  </ul>
+}
+
+<div class="gestio-pricing-plan__extra">
+  <ng-content />
+</div>
+
+<button
+  gestioButton
+  class="gestio-pricing-plan__cta"
+  fullWidth
+  [variant]="highlighted() ? 'primary' : 'outline'"
+  [disabled]="current() || disabled()"
+  [attr.aria-describedby]="nameId + ' ' + priceId"
+  (click)="choose()"
+>
+  {{ buttonLabel() }}
+</button>

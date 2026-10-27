@@ -1,0 +1,50 @@
+<div
+  class="gestio-otp"
+  role="group"
+  [class.is-invalid]="showInvalid()"
+  [class.is-disabled]="isDisabled()"
+  [attr.aria-labelledby]="labelId"
+  [attr.aria-describedby]="describedBy()"
+>
+  <span class="gestio-otp__label" [id]="labelId">{{ label() ?? text().label }}</span>
+
+  <div class="gestio-otp__cells">
+    @for (cell of cells(); track $index) {
+      <input
+        #cell
+        class="gestio-otp__cell"
+        type="text"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        [value]="cell"
+        [disabled]="isDisabled()"
+        [attr.autocomplete]="$first ? 'one-time-code' : 'off'"
+        [attr.aria-label]="digitLabel($index)"
+        [attr.aria-invalid]="showInvalid() ? 'true' : null"
+        (focus)="handleFocus($any($event.target))"
+        (input)="handleInput($index, $any($event.target))"
+        (keydown)="handleKeydown($index, $event)"
+        (paste)="handlePaste($index, $event)"
+        (blur)="handleBlur($event)"
+      />
+    }
+  </div>
+
+  @if (hint()) {
+    <p class="gestio-otp__hint" [id]="hintId">{{ hint() }}</p>
+  }
+  @if (error()) {
+    <p class="gestio-otp__error" [id]="errorId">
+      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5" />
+        <path
+          d="M8 4.5v4.2M8 11v.5"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+        />
+      </svg>
+      <span>{{ error() }}</span>
+    </p>
+  }
+</div>

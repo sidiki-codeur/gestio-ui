@@ -1,0 +1,110 @@
+@use '../../core/field' as field;
+
+:host {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gestio-space-4);
+  box-sizing: border-box;
+  min-width: 0;
+  padding: var(--gestio-space-6);
+  border: var(--gestio-border-width) solid var(--gestio-color-border);
+  border-radius: var(--gestio-radius-xl);
+  background: var(--gestio-color-surface);
+  box-shadow: var(--gestio-shadow-xs);
+}
+
+:host(.gestio-pricing-plan--highlighted) {
+  border: 2px solid var(--gestio-color-primary);
+  box-shadow: var(--gestio-shadow-md);
+}
+
+.gestio-pricing-plan__badge {
+  align-self: flex-start;
+}
+
+.gestio-pricing-plan__name {
+  margin: 0;
+  font-size: var(--gestio-font-size-lg);
+  font-weight: var(--gestio-font-weight-semibold);
+  line-height: var(--gestio-line-height-tight);
+}
+
+.gestio-pricing-plan__description {
+  margin: calc(var(--gestio-space-2) * -1) 0 0;
+  color: var(--gestio-color-text-muted);
+  font-size: var(--gestio-font-size-sm);
+  line-height: var(--gestio-line-height-normal);
+}
+
+.gestio-pricing-plan__price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--gestio-space-1);
+  margin: 0;
+}
+
+.gestio-pricing-plan__amount {
+  font-size: var(--gestio-font-size-3xl);
+  font-weight: var(--gestio-font-weight-bold);
+  line-height: var(--gestio-line-height-tight);
+  font-variant-numeric: tabular-nums;
+}
+
+.gestio-pricing-plan__period {
+  color: var(--gestio-color-text-muted);
+  font-size: var(--gestio-font-size-sm);
+}
+
+.gestio-pricing-plan__features {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--gestio-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--gestio-font-size-sm);
+  line-height: var(--gestio-line-height-normal);
+}
+
+.gestio-pricing-plan__feature {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gestio-space-2);
+
+  svg {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    margin-block-start: 0.125rem;
+    color: var(--gestio-color-success-text);
+  }
+}
+
+.gestio-pricing-plan__feature--excluded {
+  color: var(--gestio-color-text-muted);
+
+  svg {
+    color: var(--gestio-color-text-subtle);
+  }
+}
+
+.gestio-pricing-plan__extra:empty {
+  display: none;
+}
+
+.gestio-pricing-plan__cta {
+  margin-block-start: auto;
+}
+
+.gestio-pricing-plan__sr-only {
+  @include field.sr-only;
+}
+
+@media (forced-colors: active) {
+  :host {
+    border-color: CanvasText;
+  }
+}

@@ -1,0 +1,91 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gestio-space-6);
+  color: var(--gestio-color-text);
+  font-family: var(--gestio-font-sans);
+}
+
+.gestio-pricing-table__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gestio-space-4);
+  text-align: center;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.gestio-pricing-table__billing {
+  display: inline-flex;
+  gap: var(--gestio-space-1);
+  padding: var(--gestio-space-1);
+  border: var(--gestio-border-width) solid var(--gestio-color-border);
+  border-radius: var(--gestio-radius-full);
+  background: var(--gestio-color-surface-muted);
+}
+
+.gestio-pricing-table__billing-option {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gestio-space-2);
+  min-height: var(--gestio-control-height-sm);
+  margin: 0;
+  padding: 0 var(--gestio-space-4);
+  border: 0;
+  border-radius: var(--gestio-radius-full);
+  background: transparent;
+  color: var(--gestio-color-text-muted);
+  font: inherit;
+  font-size: var(--gestio-font-size-sm);
+  font-weight: var(--gestio-font-weight-medium);
+  cursor: pointer;
+  transition:
+    background-color var(--gestio-duration-fast) var(--gestio-easing-standard),
+    color var(--gestio-duration-fast) var(--gestio-easing-standard);
+
+  &:hover {
+    color: var(--gestio-color-text);
+  }
+
+  &[aria-pressed='true'] {
+    background: var(--gestio-color-surface);
+    box-shadow: var(--gestio-shadow-sm);
+    color: var(--gestio-color-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+.gestio-pricing-table__hint {
+  padding: 0 var(--gestio-space-2);
+  border-radius: var(--gestio-radius-full);
+  background: var(--gestio-color-success-subtle);
+  color: var(--gestio-color-success-text);
+  font-size: var(--gestio-font-size-xs);
+  font-weight: var(--gestio-font-weight-semibold);
+}
+
+.gestio-pricing-table__plans {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--gestio-space-5);
+  align-items: stretch;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gestio-pricing-table__billing-option {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .gestio-pricing-table__billing-option[aria-pressed='true'] {
+    outline: 2px solid Highlight;
+  }
+}

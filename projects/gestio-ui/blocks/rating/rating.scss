@@ -1,0 +1,148 @@
+@use '../../core/field' as field;
+
+:host {
+  --_star-size: 1.25rem;
+
+  display: inline-flex;
+  font-family: var(--gestio-font-sans);
+  color: var(--gestio-color-text);
+  vertical-align: middle;
+}
+
+:host(.gestio-rating--sm) {
+  --_star-size: 1rem;
+}
+
+:host(.gestio-rating--lg) {
+  --_star-size: 1.75rem;
+}
+
+.gestio-rating__display {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gestio-space-2);
+  font-size: var(--gestio-font-size-sm);
+}
+
+.gestio-rating__value {
+  font-weight: var(--gestio-font-weight-semibold);
+}
+
+.gestio-rating__count {
+  color: var(--gestio-color-text-muted);
+}
+
+.gestio-rating__stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.125rem;
+}
+
+.gestio-rating__group {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.gestio-rating__legend {
+  margin-block-end: var(--gestio-space-1);
+  padding: 0;
+  font-size: var(--gestio-font-size-md);
+  font-weight: var(--gestio-font-weight-medium);
+}
+
+.gestio-rating__star {
+  position: relative;
+  display: inline-block;
+  width: var(--_star-size);
+  height: var(--_star-size);
+  flex: none;
+}
+
+.gestio-rating__fill {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  overflow: hidden;
+}
+
+.gestio-rating__icon {
+  display: block;
+  width: var(--_star-size);
+  height: var(--_star-size);
+  stroke: var(--gestio-color-warning);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.gestio-rating__icon--empty {
+  fill: transparent;
+}
+
+.gestio-rating__icon--full {
+  fill: var(--gestio-color-warning);
+}
+
+/* Les étoiles RTL se remplissent depuis la droite. */
+:host-context([dir='rtl']) .gestio-rating__fill {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+
+  .gestio-rating__icon {
+    margin-inline-start: auto;
+  }
+}
+
+.gestio-rating__option {
+  position: relative;
+  display: inline-flex;
+  padding: 0.125rem;
+  border-radius: var(--gestio-radius-sm);
+  cursor: pointer;
+  transition: transform var(--gestio-duration-fast) var(--gestio-easing-standard);
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &:has(.gestio-rating__input:focus-visible) {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: 1px;
+  }
+}
+
+.gestio-rating__input {
+  @include field.sr-only;
+}
+
+.gestio-rating__group:disabled {
+  .gestio-rating__option {
+    cursor: not-allowed;
+    opacity: 0.5;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gestio-rating__option {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+@media (forced-colors: active) {
+  .gestio-rating__icon {
+    stroke: CanvasText;
+  }
+
+  .gestio-rating__icon--full {
+    fill: CanvasText;
+  }
+}

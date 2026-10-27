@@ -1,0 +1,152 @@
+<p
+  #heading
+  class="gestio-cart-summary__heading"
+  role="heading"
+  tabindex="-1"
+  [attr.aria-level]="headingLevel()"
+  [id]="headingId"
+>
+  {{ text().heading }}
+</p>
+
+@if (items().length) {
+  <ul class="gestio-cart-summary__items" [attr.aria-label]="text().items">
+    @for (item of items(); track item.id) {
+      <li class="gestio-cart-summary__item">
+        @if (item.image) {
+          <img
+            class="gestio-cart-summary__image"
+            [src]="item.image"
+            [alt]="item.imageAlt ?? ''"
+            width="64"
+            height="64"
+            loading="lazy"
+            decoding="async"
+          />
+        }
+        <div class="gestio-cart-summary__details">
+          <p class="gestio-cart-summary__name">{{ item.name }}</p>
+          @if (item.description) {
+            <p class="gestio-cart-summary__description">{{ item.description }}</p>
+          }
+          <p class="gestio-cart-summary__unit">{{ label('unitPrice', item) }}</p>
+        </div>
+
+        <p class="gestio-cart-summary__line-total">{{ format(item.unitPrice * item.quantity) }}</p>
+
+        @if (editable()) {
+          <div class="gestio-cart-summary__controls">
+            <div
+              class="gestio-cart-summary__quantity"
+              role="group"
+              [attr.aria-label]="label('quantity', item)"
+            >
+              <button
+                type="button"
+                class="gestio-cart-summary__step"
+                [attr.aria-label]="label('decrease', item)"
+                [attr.aria-disabled]="item.quantity <= 1 ? 'true' : null"
+                (click)="changeQuantity(item, -1)"
+              >
+                <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                  <path
+                    d="M3.5 8h9"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </button>
+              <span class="gestio-cart-summary__count">{{ item.quantity }}</span>
+              <button
+                type="button"
+                class="gestio-cart-summary__step"
+                [attr.aria-label]="label('increase', item)"
+                [attr.aria-disabled]="canIncrease(item) ? null : 'true'"
+                (click)="changeQuantity(item, 1)"
+              >
+                <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                  <path
+                    d="M3.5 8h9M8 3.5v9"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </button>
+            </div>
+            <button
+              type="button"
+              class="gestio-cart-summary__remove"
+              [attr.aria-label]="label('remove', item)"
+              (click)="removeItem(item)"
+            >
+              <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                <path
+                  d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.6 8.5h5.8l.6-8.5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+        }
+      </li>
+    }
+  </ul>
+
+  <div class="gestio-cart-summary__promo">
+    <ng-content select="[gestioCartPromo]" />
+  </div>
+
+  <dl class="gestio-cart-summary__totals">
+    <div class="gestio-cart-summary__row">
+      <dt>{{ text().subtotal }}</dt>
+      <dd>{{ format(subtotal()) }}</dd>
+    </div>
+    @if (discountAmount() > 0) {
+      <div class="gestio-cart-summary__row gestio-cart-summary__row--discount">
+        <dt>{{ text().discount }}</dt>
+        <dd>{{ format(-discountAmount()) }}</dd>
+      </div>
+    }
+    <div class="gestio-cart-summary__row">
+      <dt>{{ text().shipping }}</dt>
+      <dd>{{ shippingText() }}</dd>
+    </div>
+    @if (taxRate() > 0) {
+      <div class="gestio-cart-summary__row gestio-cart-summary__row--tax">
+        <dt>{{ taxLabel() }}</dt>
+        <dd>{{ format(taxAmount()) }}</dd>
+      </div>
+    }
+    <div class="gestio-cart-summary__row gestio-cart-summary__row--total">
+      <dt>{{ text().total }}</dt>
+      <dd>{{ format(total()) }}</dd>
+    </div>
+  </dl>
+
+  <button
+    gestioButton
+    size="lg"
+    fullWidth
+    class="gestio-cart-summary__checkout"
+    [loading]="loading()"
+    [disabled]="checkoutDisabled()"
+    (click)="checkout.emit()"
+  >
+    {{ text().checkout }}
+  </button>
+} @else {
+  <div class="gestio-cart-summary__empty">
+    <p class="gestio-cart-summary__empty-text">{{ text().empty }}</p>
+    <ng-content select="[gestioCartEmpty]" />
+  </div>
+}
+
+<ng-content />
+
+<div class="gestio-cart-summary__sr-only" role="status">{{ announcement() }}</div>

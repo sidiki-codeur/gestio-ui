@@ -1,0 +1,159 @@
+@use '../../core/field' as field;
+
+:host {
+  --_bg: var(--gestio-color-surface);
+  --_bg-hover: var(--gestio-color-surface-hover);
+  --_bg-active: var(--gestio-color-surface-active);
+  --_fg: var(--gestio-color-text);
+  --_border: var(--gestio-color-border-strong);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gestio-space-3);
+  box-sizing: border-box;
+  min-height: var(--gestio-control-height-lg);
+  margin: 0;
+  padding: 0 var(--gestio-space-4);
+  border: var(--gestio-border-width) solid var(--_border);
+  border-radius: var(--gestio-radius-md);
+  background: var(--_bg);
+  box-shadow: var(--gestio-shadow-xs);
+  color: var(--_fg);
+  font-family: var(--gestio-font-sans);
+  font-size: var(--gestio-font-size-md);
+  font-weight: var(--gestio-font-weight-medium);
+  line-height: var(--gestio-line-height-tight);
+  text-decoration: none;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--gestio-duration-fast) var(--gestio-easing-standard),
+    border-color var(--gestio-duration-fast) var(--gestio-easing-standard);
+}
+
+:host(:hover:not([disabled]):not([aria-disabled='true'])) {
+  background: var(--_bg-hover);
+}
+
+:host(:active:not([disabled]):not([aria-disabled='true'])) {
+  background: var(--_bg-active);
+}
+
+:host(:focus-visible) {
+  outline: 2px solid var(--gestio-color-focus-ring);
+  outline-offset: 2px;
+}
+
+:host([disabled]),
+:host([aria-disabled='true']:not([aria-busy='true'])) {
+  opacity: 0.5;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+:host(.gestio-social-button--loading) {
+  cursor: progress;
+}
+
+:host(.gestio-social-button--full-width) {
+  display: flex;
+  width: 100%;
+}
+
+/*
+ * Google : couleurs imposées par la charte Google Identity
+ * (thème clair : fond #FFF, bordure #747775, texte #1F1F1F ;
+ * thème sombre : fond #131314, bordure #8E918F, texte #E3E3E3).
+ */
+:host(.gestio-social-button--google) {
+  --_bg: #fff;
+  --_bg-hover: #f8fafd;
+  --_bg-active: #eef2f8;
+  --_fg: #1f1f1f;
+  --_border: #747775;
+}
+
+:host-context([data-gestio-theme='dark']):host(.gestio-social-button--google) {
+  --_bg: #131314;
+  --_bg-hover: #1f1f21;
+  --_bg-active: #2a2a2c;
+  --_fg: #e3e3e3;
+  --_border: #8e918f;
+}
+
+@media (prefers-color-scheme: dark) {
+  :host-context([data-gestio-theme='system']):host(.gestio-social-button--google) {
+    --_bg: #131314;
+    --_bg-hover: #1f1f21;
+    --_bg-active: #2a2a2c;
+    --_fg: #e3e3e3;
+    --_border: #8e918f;
+  }
+}
+
+.gestio-social-button__logo {
+  display: inline-flex;
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.gestio-social-button__label {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Le contenu reste dans le flux (largeur stable) mais devient invisible. */
+:host(.gestio-social-button--loading) .gestio-social-button__logo,
+:host(.gestio-social-button--loading) .gestio-social-button__label {
+  opacity: 0;
+}
+
+.gestio-social-button__spinner {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 1em;
+  height: 1em;
+  box-sizing: border-box;
+  border: 2px solid currentColor;
+  border-inline-end-color: transparent;
+  border-radius: 50%;
+  animation: gestio-social-button-spin 700ms linear infinite;
+}
+
+.gestio-social-button__sr-only {
+  @include field.sr-only;
+}
+
+@keyframes gestio-social-button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host {
+    transition: none;
+  }
+
+  .gestio-social-button__spinner {
+    animation-duration: 1600ms;
+  }
+}
+
+@media (forced-colors: active) {
+  :host {
+    border-color: ButtonText;
+  }
+}

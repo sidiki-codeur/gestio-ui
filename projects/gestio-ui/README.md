@@ -66,6 +66,21 @@ Les champs fonctionnent avec Reactive Forms, `ngModel` et Signal Forms (`[formFi
 | `/dialog`, `/toast`                  | `GestioDialogService`, `GestioToastService` + `gestio-toaster`                             |
 | `/layout`                            | `gestio-app-shell`, `gestio-container`, `gestio-stack`, `gestio-grid`, `GestioBreakpoints` |
 
+## Blocs
+
+Composants de plus haut niveau, chacun dans son point d’entrée `@gestiolabs336/ui/blocks/<bloc>`.
+
+| Point d’entrée                                                              | Composants                                                                          |
+| --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `/blocks/login-form`, `/blocks/signup-form`, `/blocks/forgot-password-form` | `gestio-login-form`, `gestio-signup-form`, `gestio-forgot-password-form`            |
+| `/blocks/social-button`, `/blocks/otp-input`                                | `button[gestioSocialButton]` (Google, GitHub, Microsoft, Apple), `gestio-otp-input` |
+| `/blocks/calendar`, `/blocks/event-calendar`                                | `gestio-calendar` (date ou plage), `gestio-event-calendar` (agenda mensuel)         |
+| `/blocks/carousel`, `/blocks/product-card`                                  | `gestio-carousel` + `gestio-carousel-slide`, `gestio-product-card`                  |
+| `/blocks/rating`, `/blocks/quantity-input`                                  | `gestio-rating`, `gestio-review`, `gestio-quantity-input`                           |
+| `/blocks/cart-summary`, `/blocks/pricing-table`                             | `gestio-cart-summary`, `gestio-pricing-table` + `gestio-pricing-plan`               |
+| `/blocks/stat-card`, `/blocks/activity-feed`                                | `gestio-stat-card`, `gestio-activity-feed`                                          |
+| `/blocks/empty-state`, `/blocks/page-header`                                | `gestio-empty-state`, `gestio-page-header`                                          |
+
 ## Personnalisation
 
 Surchargez les tokens dans une feuille chargée après le thème :

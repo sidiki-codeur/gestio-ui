@@ -1,0 +1,108 @@
+:host {
+  display: block;
+  font-family: var(--gestio-font-sans);
+  color: var(--gestio-color-text);
+}
+
+.gestio-otp {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gestio-space-2);
+}
+
+.gestio-otp__label {
+  font-size: var(--gestio-font-size-md);
+  font-weight: var(--gestio-font-weight-medium);
+  line-height: var(--gestio-line-height-tight);
+}
+
+.gestio-otp__cells {
+  display: flex;
+  gap: var(--gestio-space-2);
+}
+
+.gestio-otp__cell {
+  box-sizing: border-box;
+  width: 2.75rem;
+  height: 3.25rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: var(--gestio-border-width) solid var(--gestio-color-border-strong);
+  border-radius: var(--gestio-radius-md);
+  background: var(--gestio-color-surface);
+  box-shadow: var(--gestio-shadow-xs);
+  color: var(--gestio-color-text);
+  font-family: var(--gestio-font-mono);
+  font-size: var(--gestio-font-size-xl);
+  font-weight: var(--gestio-font-weight-semibold);
+  text-align: center;
+  caret-color: var(--gestio-color-primary);
+  transition:
+    border-color var(--gestio-duration-fast) var(--gestio-easing-standard),
+    box-shadow var(--gestio-duration-fast) var(--gestio-easing-standard);
+
+  &:hover:not(:disabled) {
+    border-color: var(--gestio-color-border-hover);
+  }
+
+  // Focus toujours visible (souris comprise) : la case active doit se repérer.
+  &:focus {
+    border-color: var(--gestio-color-primary);
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    background: var(--gestio-color-surface-disabled);
+    color: var(--gestio-color-text-disabled);
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+.is-invalid .gestio-otp__cell {
+  border-color: var(--gestio-color-danger);
+}
+
+.gestio-otp__hint,
+.gestio-otp__error {
+  margin: 0;
+  font-size: var(--gestio-font-size-sm);
+  line-height: var(--gestio-line-height-normal);
+}
+
+.gestio-otp__hint {
+  color: var(--gestio-color-text-muted);
+}
+
+.gestio-otp__error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gestio-space-1);
+  color: var(--gestio-color-danger-text);
+
+  svg {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    margin-top: 0.125rem;
+  }
+}
+
+@media (max-width: 24rem) {
+  .gestio-otp__cells {
+    gap: var(--gestio-space-1);
+  }
+
+  .gestio-otp__cell {
+    width: 2.25rem;
+    height: 2.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gestio-otp__cell {
+    transition: none;
+  }
+}

@@ -1,0 +1,76 @@
+@if (breadcrumbs().length || hasBack()) {
+  <div class="gestio-page-header__top">
+    @if (hasBack()) {
+      @if (backHref(); as href) {
+        <a class="gestio-page-header__back" [href]="href">
+          <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <path d="M12 15 7 10l5-5" />
+          </svg>
+          {{ backText() }}
+        </a>
+      } @else {
+        <button type="button" class="gestio-page-header__back" (click)="back.emit()">
+          <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <path d="M12 15 7 10l5-5" />
+          </svg>
+          {{ backText() }}
+        </button>
+      }
+    }
+
+    @if (breadcrumbs().length) {
+      <nav class="gestio-page-header__breadcrumb" [attr.aria-label]="text().breadcrumb">
+        <ol>
+          @for (item of breadcrumbs(); track $index; let last = $last, i = $index) {
+            <li>
+              @if (last) {
+                <span class="gestio-page-header__crumb is-current" aria-current="page">{{
+                  item.label
+                }}</span>
+              } @else {
+                @if (item.href; as href) {
+                  <a
+                    class="gestio-page-header__crumb"
+                    [href]="href"
+                    (click)="breadcrumbClick.emit({ item, index: i, event: $event })"
+                    >{{ item.label }}</a
+                  >
+                } @else {
+                  <span class="gestio-page-header__crumb">{{ item.label }}</span>
+                }
+                <svg
+                  class="gestio-page-header__separator"
+                  viewBox="0 0 20 20"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path d="m8 5 5 5-5 5" />
+                </svg>
+              }
+            </li>
+          }
+        </ol>
+      </nav>
+    }
+  </div>
+}
+
+<div class="gestio-page-header__main">
+  <div class="gestio-page-header__titles">
+    <div class="gestio-page-header__title-row">
+      <h1 class="gestio-page-header__heading">{{ heading() }}</h1>
+      <div class="gestio-page-header__status">
+        <ng-content select="[gestioPageHeaderStatus]" />
+      </div>
+    </div>
+    @if (subheading()) {
+      <p class="gestio-page-header__subheading">{{ subheading() }}</p>
+    }
+    <div class="gestio-page-header__body"><ng-content /></div>
+  </div>
+  <div class="gestio-page-header__actions">
+    <ng-content select="[gestioPageHeaderActions]" />
+  </div>
+</div>
+
+<div class="gestio-page-header__footer"><ng-content select="[gestioPageHeaderFooter]" /></div>

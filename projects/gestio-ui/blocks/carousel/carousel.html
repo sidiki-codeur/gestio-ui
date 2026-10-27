@@ -1,0 +1,78 @@
+@if (autoplay()) {
+  <button
+    type="button"
+    class="gestio-carousel__play"
+    [attr.aria-controls]="trackId"
+    [attr.aria-label]="playing() ? text().pause : text().play"
+    (click)="togglePlay()"
+  >
+    @if (playing()) {
+      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M5.5 3.5v9M10.5 3.5v9" />
+      </svg>
+    } @else {
+      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M5 3.5l7 4.5-7 4.5z" />
+      </svg>
+    }
+  </button>
+}
+
+<div
+  class="gestio-carousel__viewport"
+  (pointerdown)="handlePointerDown($event)"
+  (pointerup)="handlePointerUp($event)"
+  (pointercancel)="handlePointerUp($event)"
+>
+  <div
+    class="gestio-carousel__track"
+    [id]="trackId"
+    [attr.aria-live]="rotating() ? 'off' : 'polite'"
+    [style.--_index]="current()"
+  >
+    <ng-content />
+  </div>
+</div>
+
+@if (showControls() && count() > 1) {
+  <button
+    type="button"
+    class="gestio-carousel__nav gestio-carousel__nav--previous"
+    [attr.aria-controls]="trackId"
+    [attr.aria-label]="text().previous"
+    [disabled]="!canPrevious()"
+    (click)="previous()"
+  >
+    <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+      <path d="M10 3.5L5.5 8l4.5 4.5" />
+    </svg>
+  </button>
+  <button
+    type="button"
+    class="gestio-carousel__nav gestio-carousel__nav--next"
+    [attr.aria-controls]="trackId"
+    [attr.aria-label]="text().next"
+    [disabled]="!canNext()"
+    (click)="next()"
+  >
+    <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+      <path d="M6 3.5L10.5 8 6 12.5" />
+    </svg>
+  </button>
+}
+
+@if (showIndicators() && count() > 1) {
+  <div class="gestio-carousel__indicators" role="group" [attr.aria-label]="text().indicators">
+    @for (dot of indicators(); track dot.index) {
+      <button
+        type="button"
+        class="gestio-carousel__indicator"
+        [class.is-active]="dot.index === current()"
+        [attr.aria-controls]="trackId"
+        [attr.aria-label]="dot.label"
+        [attr.aria-current]="dot.index === current() ? 'true' : null"
+        (click)="goTo(dot.index)"
+      ></button>
+    }
+  </div>
+}

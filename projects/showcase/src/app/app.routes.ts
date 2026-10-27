@@ -131,6 +131,119 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'blocs',
+    children: [
+      { path: '', pathMatch: 'full', redirectTo: 'etat-vide' },
+      {
+        path: 'etat-vide',
+        title: 'État vide — Gestio UI',
+        loadComponent: () =>
+          import('./pages/blocks/empty-state/empty-state-page').then((m) => m.EmptyStatePage),
+      },
+      {
+        path: 'en-tete-de-page',
+        title: 'En-tête de page — Gestio UI',
+        loadComponent: () =>
+          import('./pages/blocks/page-header/page-header-page').then((m) => m.PageHeaderPage),
+      },
+      {
+        path: 'carte-statistique',
+        title: 'Carte statistique — Gestio UI',
+        loadComponent: () =>
+          import('./pages/blocks/stat-card/stat-card-page').then((m) => m.StatCardPage),
+      },
+      {
+        path: 'flux-activite',
+        title: 'Flux d’activité — Gestio UI',
+        loadComponent: () =>
+          import('./pages/blocks/activity-feed/activity-feed-page').then((m) => m.ActivityFeedPage),
+      },
+      {
+        path: 'calendrier',
+        title: 'Calendrier — Gestio UI',
+        loadComponent: () =>
+          import('./pages/blocks/calendar/calendar-page').then((m) => m.CalendarPage),
+      },
+      {
+        path: 'agenda',
+        title: 'Agenda — Gestio UI',
+        loadComponent: () =>
+          import('./pages/blocks/event-calendar/event-calendar-page').then(
+            (m) => m.EventCalendarPage,
+          ),
+      },
+      {
+        path: 'boutons-sociaux',
+        title: 'Boutons sociaux — Gestio UI',
+        loadComponent: () =>
+          import('./pages/blocks/social-button/social-button-page').then((m) => m.SocialButtonPage),
+      },
+      {
+        path: 'connexion',
+        title: 'Connexion — Gestio UI',
+        loadComponent: () =>
+          import('./pages/blocks/login-form/login-form-page').then((m) => m.LoginFormPage),
+      },
+      {
+        path: 'inscription',
+        title: 'Inscription — Gestio UI',
+        loadComponent: () =>
+          import('./pages/blocks/signup-form/signup-form-page').then((m) => m.SignupFormPage),
+      },
+      {
+        path: 'mot-de-passe-oublie',
+        title: 'Mot de passe oublié — Gestio UI',
+        loadComponent: () =>
+          import('./pages/blocks/forgot-password-form/forgot-password-form-page').then(
+            (m) => m.ForgotPasswordFormPage,
+          ),
+      },
+      {
+        path: 'code-otp',
+        title: 'Code OTP — Gestio UI',
+        loadComponent: () =>
+          import('./pages/blocks/otp-input/otp-input-page').then((m) => m.OtpInputPage),
+      },
+      {
+        path: 'carte-produit',
+        title: 'Carte produit — Gestio UI',
+        loadComponent: () =>
+          import('./pages/blocks/product-card/product-card-page').then((m) => m.ProductCardPage),
+      },
+      {
+        path: 'carrousel',
+        title: 'Carrousel — Gestio UI',
+        loadComponent: () =>
+          import('./pages/blocks/carousel/carousel-page').then((m) => m.CarouselPage),
+      },
+      {
+        path: 'note-et-avis',
+        title: 'Note et avis — Gestio UI',
+        loadComponent: () => import('./pages/blocks/rating/rating-page').then((m) => m.RatingPage),
+      },
+      {
+        path: 'selecteur-quantite',
+        title: 'Sélecteur de quantité — Gestio UI',
+        loadComponent: () =>
+          import('./pages/blocks/quantity-input/quantity-input-page').then(
+            (m) => m.QuantityInputPage,
+          ),
+      },
+      {
+        path: 'recapitulatif-panier',
+        title: 'Récapitulatif de panier — Gestio UI',
+        loadComponent: () =>
+          import('./pages/blocks/cart-summary/cart-summary-page').then((m) => m.CartSummaryPage),
+      },
+      {
+        path: 'grille-tarifaire',
+        title: 'Grille tarifaire — Gestio UI',
+        loadComponent: () =>
+          import('./pages/blocks/pricing-table/pricing-table-page').then((m) => m.PricingTablePage),
+      },
+    ],
+  },
+  {
     path: '**',
     title: 'Page introuvable — Gestio UI',
     loadComponent: () => import('./pages/not-found/not-found-page').then((m) => m.NotFoundPage),

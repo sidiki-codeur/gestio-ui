@@ -1,0 +1,74 @@
+<div class="gestio-auth">
+  <div class="gestio-auth__header">
+    @switch (headingLevel()) {
+      @case (2) {
+        <h2 class="gestio-auth__heading" [id]="headingId">{{ heading() }}</h2>
+      }
+      @case (3) {
+        <h3 class="gestio-auth__heading" [id]="headingId">{{ heading() }}</h3>
+      }
+      @default {
+        <h1 class="gestio-auth__heading" [id]="headingId">{{ heading() }}</h1>
+      }
+    }
+    @if (subheading()) {
+      <p class="gestio-auth__subheading">{{ subheading() }}</p>
+    }
+  </div>
+
+  @if (error()) {
+    <div #errorRegion class="gestio-auth__error" tabindex="-1">
+      <gestio-alert variant="danger" live="assertive">{{ error() }}</gestio-alert>
+    </div>
+  }
+
+  <div class="gestio-auth__social"><ng-content select="[gestioAuthSocial]" /></div>
+  <p class="gestio-auth__separator">{{ text().separator }}</p>
+
+  <form
+    class="gestio-auth__form"
+    novalidate
+    [attr.aria-labelledby]="headingId"
+    (submit)="onSubmit($event)"
+  >
+    <gestio-input
+      type="email"
+      autocomplete="username"
+      required
+      [label]="text().email"
+      [error]="emailError()"
+      [formField]="loginForm.email"
+    />
+    <gestio-input
+      type="password"
+      autocomplete="current-password"
+      required
+      [label]="text().password"
+      [error]="passwordError()"
+      [formField]="loginForm.password"
+    />
+
+    @if (showRemember() || showForgotPassword()) {
+      <div class="gestio-auth__row">
+        @if (showRemember()) {
+          <gestio-checkbox [label]="text().remember" [formField]="loginForm.remember" />
+        }
+        @if (showForgotPassword()) {
+          @if (forgotPasswordHref(); as href) {
+            <a class="gestio-auth__link" [href]="href">{{ text().forgotPassword }}</a>
+          } @else {
+            <button type="button" class="gestio-auth__link" (click)="forgotPassword.emit()">
+              {{ text().forgotPassword }}
+            </button>
+          }
+        }
+      </div>
+    }
+
+    <button gestioButton type="submit" size="lg" fullWidth [loading]="loading()">
+      {{ text().submit }}
+    </button>
+  </form>
+
+  <div class="gestio-auth__footer"><ng-content select="[gestioAuthFooter]" /></div>
+</div>

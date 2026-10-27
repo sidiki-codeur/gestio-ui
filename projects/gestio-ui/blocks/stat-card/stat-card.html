@@ -1,0 +1,71 @@
+<div class="gestio-stat-card__header">
+  <p class="gestio-stat-card__label" [id]="labelId">{{ label() }}</p>
+  <span class="gestio-stat-card__icon" aria-hidden="true">
+    <ng-content select="[gestioStatCardIcon]" />
+  </span>
+</div>
+
+@if (loading()) {
+  <div class="gestio-stat-card__loading">
+    <gestio-skeleton width="60%" height="1.75rem" />
+    <gestio-skeleton width="40%" />
+  </div>
+  <span class="gestio-stat-card__sr-only">{{ text().loading }}</span>
+} @else {
+  <p class="gestio-stat-card__value">{{ formattedValue() }}</p>
+
+  @if (hasDelta() || comparison()) {
+    <p class="gestio-stat-card__meta">
+      @if (hasDelta()) {
+        <span class="gestio-stat-card__delta" [class]="'gestio-stat-card__delta--' + tone()">
+          @switch (direction()) {
+            @case ('up') {
+              <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                <path d="M8 3.5 13 9H9.5v3.5h-3V9H3z" fill="currentColor" />
+              </svg>
+            }
+            @case ('down') {
+              <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                <path d="M8 12.5 3 7h3.5V3.5h3V7H13z" fill="currentColor" />
+              </svg>
+            }
+            @default {
+              <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                <path d="M3 6.5h10v3H3z" fill="currentColor" />
+              </svg>
+            }
+          }
+          <span aria-hidden="true">{{ formattedDelta() }}</span>
+          <span class="gestio-stat-card__sr-only">{{ deltaDescription() }}</span>
+        </span>
+      }
+      @if (comparison()) {
+        <span class="gestio-stat-card__comparison">&ngsp;{{ comparison() }}</span>
+      }
+    </p>
+  }
+
+  @if (sparkPoints()) {
+    <svg
+      class="gestio-stat-card__sparkline"
+      [class]="'gestio-stat-card__sparkline--' + tone()"
+      [attr.viewBox]="sparkViewBox"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <polyline
+        [attr.points]="sparkPath()"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        vector-effect="non-scaling-stroke"
+      />
+    </svg>
+    <span class="gestio-stat-card__sr-only">{{ trendDescription() }}</span>
+  }
+}
+
+<ng-content />

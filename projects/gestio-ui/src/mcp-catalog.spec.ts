@@ -23,6 +23,23 @@ import * as tabs from '@gestiolabs336/ui/tabs';
 import * as textarea from '@gestiolabs336/ui/textarea';
 import * as toast from '@gestiolabs336/ui/toast';
 import * as tooltip from '@gestiolabs336/ui/tooltip';
+import * as blockActivityFeed from '@gestiolabs336/ui/blocks/activity-feed';
+import * as blockCalendar from '@gestiolabs336/ui/blocks/calendar';
+import * as blockCarousel from '@gestiolabs336/ui/blocks/carousel';
+import * as blockCartSummary from '@gestiolabs336/ui/blocks/cart-summary';
+import * as blockEmptyState from '@gestiolabs336/ui/blocks/empty-state';
+import * as blockEventCalendar from '@gestiolabs336/ui/blocks/event-calendar';
+import * as blockForgotPasswordForm from '@gestiolabs336/ui/blocks/forgot-password-form';
+import * as blockLoginForm from '@gestiolabs336/ui/blocks/login-form';
+import * as blockOtpInput from '@gestiolabs336/ui/blocks/otp-input';
+import * as blockPageHeader from '@gestiolabs336/ui/blocks/page-header';
+import * as blockPricingTable from '@gestiolabs336/ui/blocks/pricing-table';
+import * as blockProductCard from '@gestiolabs336/ui/blocks/product-card';
+import * as blockQuantityInput from '@gestiolabs336/ui/blocks/quantity-input';
+import * as blockRating from '@gestiolabs336/ui/blocks/rating';
+import * as blockSignupForm from '@gestiolabs336/ui/blocks/signup-form';
+import * as blockSocialButton from '@gestiolabs336/ui/blocks/social-button';
+import * as blockStatCard from '@gestiolabs336/ui/blocks/stat-card';
 
 /**
  * Le catalogue du serveur MCP (mcp/catalog.json) doit décrire exactement
@@ -70,6 +87,23 @@ const ENTRY_POINTS: Record<string, Record<string, unknown>> = {
   '@gestiolabs336/ui/textarea': textarea,
   '@gestiolabs336/ui/toast': toast,
   '@gestiolabs336/ui/tooltip': tooltip,
+  '@gestiolabs336/ui/blocks/activity-feed': blockActivityFeed,
+  '@gestiolabs336/ui/blocks/calendar': blockCalendar,
+  '@gestiolabs336/ui/blocks/carousel': blockCarousel,
+  '@gestiolabs336/ui/blocks/cart-summary': blockCartSummary,
+  '@gestiolabs336/ui/blocks/empty-state': blockEmptyState,
+  '@gestiolabs336/ui/blocks/event-calendar': blockEventCalendar,
+  '@gestiolabs336/ui/blocks/forgot-password-form': blockForgotPasswordForm,
+  '@gestiolabs336/ui/blocks/login-form': blockLoginForm,
+  '@gestiolabs336/ui/blocks/otp-input': blockOtpInput,
+  '@gestiolabs336/ui/blocks/page-header': blockPageHeader,
+  '@gestiolabs336/ui/blocks/pricing-table': blockPricingTable,
+  '@gestiolabs336/ui/blocks/product-card': blockProductCard,
+  '@gestiolabs336/ui/blocks/quantity-input': blockQuantityInput,
+  '@gestiolabs336/ui/blocks/rating': blockRating,
+  '@gestiolabs336/ui/blocks/signup-form': blockSignupForm,
+  '@gestiolabs336/ui/blocks/social-button': blockSocialButton,
+  '@gestiolabs336/ui/blocks/stat-card': blockStatCard,
 };
 
 /** Définition compilée d'un composant (ɵcmp) ou d'une directive (ɵdir). */

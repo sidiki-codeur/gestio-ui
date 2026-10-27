@@ -1,0 +1,147 @@
+// Mise en page partagée par les blocs d'authentification (login-form,
+// signup-form, forgot-password-form). Incluse dans chaque composant :
+// l'encapsulation émulée évite toute fuite vers l'application hôte.
+
+@use '../core/field' as field;
+
+@mixin layout {
+  :host {
+    display: block;
+    font-family: var(--gestio-font-sans);
+    color: var(--gestio-color-text);
+  }
+
+  .gestio-auth {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gestio-space-6);
+    box-sizing: border-box;
+    width: 100%;
+    max-width: var(--gestio-auth-max-width, 26rem);
+    margin-inline: auto;
+    padding: var(--gestio-space-8) var(--gestio-space-6);
+    background: var(--gestio-color-surface);
+    border: var(--gestio-border-width) solid var(--gestio-color-border);
+    border-radius: var(--gestio-radius-xl);
+    box-shadow: var(--gestio-shadow-sm);
+  }
+
+  :host(.gestio-auth--plain) .gestio-auth {
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .gestio-auth__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gestio-space-2);
+    text-align: center;
+  }
+
+  .gestio-auth__heading {
+    margin: 0;
+    font-size: var(--gestio-font-size-2xl);
+    font-weight: var(--gestio-font-weight-semibold);
+    line-height: var(--gestio-line-height-tight);
+  }
+
+  .gestio-auth__subheading {
+    margin: 0;
+    color: var(--gestio-color-text-muted);
+    font-size: var(--gestio-font-size-md);
+    line-height: var(--gestio-line-height-normal);
+  }
+
+  .gestio-auth__social {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gestio-space-3);
+  }
+
+  .gestio-auth__separator {
+    display: flex;
+    align-items: center;
+    gap: var(--gestio-space-3);
+    margin: 0;
+    color: var(--gestio-color-text-muted);
+    font-size: var(--gestio-font-size-sm);
+
+    &::before,
+    &::after {
+      content: '';
+      flex: 1;
+      border-top: var(--gestio-border-width) solid var(--gestio-color-border);
+    }
+  }
+
+  // Sans bouton social projeté, ni la zone ni le séparateur ne s'affichent.
+  .gestio-auth__social:empty,
+  .gestio-auth__social:empty + .gestio-auth__separator,
+  .gestio-auth__footer:empty {
+    display: none;
+  }
+
+  .gestio-auth__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gestio-space-4);
+    margin: 0;
+  }
+
+  .gestio-auth__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gestio-space-2) var(--gestio-space-4);
+  }
+
+  .gestio-auth__link {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--gestio-color-primary-text);
+    font: inherit;
+    font-size: var(--gestio-font-size-sm);
+    font-weight: var(--gestio-font-weight-medium);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration-thickness: 2px;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--gestio-color-focus-ring);
+      outline-offset: 2px;
+      border-radius: var(--gestio-radius-sm);
+    }
+  }
+
+  // Les messages (erreur, confirmation) reçoivent le focus par programme : pas de contour au clic.
+  .gestio-auth__error:focus,
+  .gestio-auth__status:focus {
+    outline: none;
+  }
+
+  .gestio-auth__error:focus-visible,
+  .gestio-auth__status:focus-visible {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--gestio-radius-md);
+  }
+
+  .gestio-auth__footer {
+    margin: 0;
+    color: var(--gestio-color-text-muted);
+    font-size: var(--gestio-font-size-sm);
+    text-align: center;
+  }
+
+  .gestio-auth__sr-only {
+    @include field.sr-only;
+  }
+}

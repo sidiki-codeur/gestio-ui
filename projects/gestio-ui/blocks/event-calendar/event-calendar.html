@@ -1,0 +1,141 @@
+<div class="gestio-event-calendar__header">
+  <div class="gestio-event-calendar__title" [id]="titleId" aria-live="polite">{{ title() }}</div>
+  <div class="gestio-event-calendar__actions">
+    <button
+      type="button"
+      class="gestio-event-calendar__today"
+      [disabled]="isCurrentMonth()"
+      (click)="goToToday()"
+    >
+      {{ text().today }}
+    </button>
+    <button
+      type="button"
+      class="gestio-event-calendar__nav"
+      [attr.aria-label]="text().previousMonth"
+      (click)="previousMonth()"
+    >
+      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M10 3.5 5.5 8l4.5 4.5" />
+      </svg>
+    </button>
+    <button
+      type="button"
+      class="gestio-event-calendar__nav"
+      [attr.aria-label]="text().nextMonth"
+      (click)="nextMonth()"
+    >
+      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M6 3.5 10.5 8 6 12.5" />
+      </svg>
+    </button>
+  </div>
+</div>
+
+<table
+  class="gestio-event-calendar__table"
+  [attr.aria-label]="ariaLabel() ?? null"
+  [attr.aria-labelledby]="ariaLabel() ? null : titleId"
+>
+  <thead>
+    <tr>
+      @for (weekday of weekdays(); track $index) {
+        <th scope="col" class="gestio-event-calendar__weekday" [attr.abbr]="weekday.long">
+          <span aria-hidden="true">{{ weekday.short }}</span>
+          <span class="gestio-event-calendar__sr-only">{{ weekday.long }}</span>
+        </th>
+      }
+    </tr>
+  </thead>
+  <tbody>
+    @for (week of weeks(); track week[0].key) {
+      <tr>
+        @for (day of week; track day.key) {
+          <td
+            class="gestio-event-calendar__cell"
+            [class.is-outside]="!day.inMonth"
+            [class.is-today]="day.today"
+          >
+            <button
+              type="button"
+              class="gestio-event-calendar__date"
+              [attr.aria-label]="day.label"
+              [attr.aria-current]="day.today ? 'date' : null"
+              (click)="dayClick.emit(day.date)"
+            >
+              {{ day.date.getDate() }}
+            </button>
+
+            @if (day.events.length) {
+              <ul class="gestio-event-calendar__events">
+                @for (event of day.visible; track event.id) {
+                  <li>
+                    <button
+                      type="button"
+                      class="gestio-event-calendar__event"
+                      [class]="'is-' + (event.variant ?? 'primary')"
+                      [attr.aria-label]="eventLabel(event)"
+                      (click)="eventClick.emit(event)"
+                    >
+                      @if (!event.allDay) {
+                        <span class="gestio-event-calendar__time">{{ eventTime(event) }}</span>
+                      }
+                      <span class="gestio-event-calendar__event-title">{{ event.title }}</span>
+                    </button>
+                  </li>
+                }
+              </ul>
+              @if (day.hidden) {
+                <button
+                  type="button"
+                  class="gestio-event-calendar__more"
+                  [attr.aria-label]="day.moreLabel"
+                  (click)="moreClick.emit({ date: day.date, events: day.events })"
+                >
+                  {{ day.moreText }}
+                </button>
+              }
+              <span class="gestio-event-calendar__dots" aria-hidden="true">
+                @for (event of day.dots; track event.id) {
+                  <span
+                    class="gestio-event-calendar__dot"
+                    [class]="'is-' + (event.variant ?? 'primary')"
+                  ></span>
+                }
+              </span>
+            }
+          </td>
+        }
+      </tr>
+    }
+  </tbody>
+</table>
+
+<div class="gestio-event-calendar__agenda">
+  @for (day of agenda(); track day.key) {
+    <section class="gestio-event-calendar__agenda-day" [attr.aria-label]="day.label">
+      <p class="gestio-event-calendar__agenda-date" aria-hidden="true">
+        {{ agendaDayFormat().format(day.date) }}
+      </p>
+      <ul class="gestio-event-calendar__agenda-list">
+        @for (event of day.events; track event.id) {
+          <li>
+            <button
+              type="button"
+              class="gestio-event-calendar__event"
+              [class]="'is-' + (event.variant ?? 'primary')"
+              (click)="eventClick.emit(event)"
+            >
+              <span class="gestio-event-calendar__time">{{
+                event.allDay ? text().allDay : eventTime(event)
+              }}</span>
+              <span class="gestio-event-calendar__event-title">{{ event.title }}</span>
+            </button>
+          </li>
+        }
+      </ul>
+    </section>
+  } @empty {
+    <p class="gestio-event-calendar__empty">{{ text().noEvents }}</p>
+  }
+</div>

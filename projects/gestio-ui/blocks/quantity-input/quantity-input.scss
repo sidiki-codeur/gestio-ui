@@ -1,0 +1,91 @@
+@use '../../core/field' as field;
+
+@include field.field;
+
+:host {
+  display: inline-block;
+}
+
+.gestio-quantity {
+  gap: 0;
+  padding-inline: 0;
+  width: max-content;
+
+  &.is-sm,
+  &.is-lg {
+    padding-inline: 0;
+  }
+}
+
+.gestio-quantity__native {
+  flex: none;
+  width: 3.5rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  appearance: textfield;
+  -moz-appearance: textfield;
+
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+.gestio-quantity__step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  align-self: stretch;
+  width: var(--gestio-control-height-md);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--gestio-radius-md);
+  background: transparent;
+  color: var(--gestio-color-text);
+  cursor: pointer;
+  transition: background-color var(--gestio-duration-fast) var(--gestio-easing-standard);
+
+  .is-sm > & {
+    width: var(--gestio-control-height-sm);
+  }
+
+  .is-lg > & {
+    width: var(--gestio-control-height-lg);
+  }
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+  }
+
+  &:hover:not(:disabled) {
+    background: var(--gestio-color-surface-hover);
+  }
+
+  &:active:not(:disabled) {
+    background: var(--gestio-color-surface-active);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: -2px;
+  }
+
+  &:disabled {
+    color: var(--gestio-color-text-disabled);
+    cursor: not-allowed;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gestio-quantity__step {
+    transition: none;
+  }
+}

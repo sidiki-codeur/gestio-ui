@@ -1,0 +1,3 @@
+@use '../auth-layout' as auth;
+
+@include auth.layout;

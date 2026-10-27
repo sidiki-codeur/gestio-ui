@@ -1,0 +1,64 @@
+<div class="gestio-field">
+  @if (label()) {
+    <label class="gestio-field__label" [for]="controlId()">{{ label() }}</label>
+  }
+
+  <div
+    class="gestio-field__control gestio-quantity"
+    [class.is-sm]="size() === 'sm'"
+    [class.is-lg]="size() === 'lg'"
+    [class.is-invalid]="!!error()"
+    [class.is-disabled]="isDisabled()"
+  >
+    <button
+      type="button"
+      class="gestio-quantity__step"
+      [attr.aria-label]="text().decrease"
+      [attr.aria-controls]="controlId()"
+      [disabled]="!canDecrease()"
+      (click)="decrease()"
+    >
+      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M3.5 8h9" /></svg>
+    </button>
+
+    <input
+      #control
+      type="number"
+      class="gestio-field__native gestio-quantity__native"
+      inputmode="numeric"
+      [id]="controlId()"
+      [value]="value() ?? ''"
+      [disabled]="isDisabled()"
+      [attr.min]="min()"
+      [attr.max]="max()"
+      [attr.step]="step()"
+      [attr.name]="name() ?? null"
+      [attr.aria-label]="label() ? null : (ariaLabel() ?? null)"
+      [attr.aria-invalid]="error() ? 'true' : null"
+      [attr.aria-describedby]="describedBy()"
+      (input)="handleInput(control)"
+      (blur)="handleBlur(control)"
+    />
+
+    <button
+      type="button"
+      class="gestio-quantity__step"
+      [attr.aria-label]="text().increase"
+      [attr.aria-controls]="controlId()"
+      [disabled]="!canIncrease()"
+      (click)="increase()"
+    >
+      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3.5 8h9M8 3.5v9" />
+      </svg>
+    </button>
+  </div>
+
+  @if (hint()) {
+    <p class="gestio-field__hint" [id]="hintId">{{ hint() }}</p>
+  }
+  @if (error()) {
+    <p class="gestio-field__error" [id]="errorId">{{ error() }}</p>
+  }
+  <span class="gestio-sr-only" aria-live="polite">{{ announcement() }}</span>
+</div>

@@ -1,0 +1,76 @@
+@use '../auth-layout' as auth;
+
+@include auth.layout;
+
+.gestio-signup-form__password {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gestio-space-2);
+}
+
+.gestio-signup-form__strength {
+  display: flex;
+  align-items: center;
+  gap: var(--gestio-space-3);
+
+  &.is-hidden {
+    display: none;
+  }
+}
+
+.gestio-signup-form__meter {
+  display: flex;
+  flex: 1;
+  gap: var(--gestio-space-1);
+  max-width: 10rem;
+}
+
+.gestio-signup-form__segment {
+  flex: 1;
+  height: 0.375rem;
+  border-radius: var(--gestio-radius-full);
+  background: var(--gestio-color-neutral-subtle);
+  transition: background-color var(--gestio-duration-normal) var(--gestio-easing-standard);
+}
+
+[data-level='1'] .is-on {
+  background: var(--gestio-color-danger);
+}
+
+[data-level='2'] .is-on {
+  background: var(--gestio-color-warning);
+}
+
+[data-level='3'] .is-on,
+[data-level='4'] .is-on {
+  background: var(--gestio-color-success);
+}
+
+.gestio-signup-form__strength-text {
+  margin: 0;
+  color: var(--gestio-color-text-muted);
+  font-size: var(--gestio-font-size-sm);
+}
+
+.gestio-signup-form__terms {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gestio-space-1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gestio-signup-form__segment {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .gestio-signup-form__segment {
+    border: 1px solid CanvasText;
+  }
+
+  .gestio-signup-form__segment.is-on {
+    background: CanvasText;
+  }
+}
