@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, DestroyRef, inject, input, signal } from '@angular/core';
+import { Component, DestroyRef, booleanAttribute, inject, input, signal } from '@angular/core';
 
 type CopyState = 'idle' | 'copied' | 'error';
 
@@ -33,6 +33,7 @@ type CopyState = 'idle' | 'copied' | 'error';
       </div>
       <pre
         class="sc-code__pre"
+        [class.sc-code__pre--wrap]="wrap()"
         tabindex="0"
         [attr.aria-label]="'Code ' + language()"
       ><code>{{ code() }}</code></pre>
@@ -45,6 +46,8 @@ export class CodeBlock {
 
   readonly code = input.required<string>();
   readonly language = input('html');
+  /** Retour à la ligne automatique (textes longs, prompts) au lieu du défilement horizontal. */
+  readonly wrap = input(false, { transform: booleanAttribute });
 
   protected readonly state = signal<CopyState>('idle');
   protected readonly announcement = signal('');

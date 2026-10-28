@@ -377,6 +377,11 @@ h3 {
   }
 }
 
+.sc-code__pre--wrap {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 .sc-code__pre {
   margin: 0;
   padding: var(--gestio-space-4);

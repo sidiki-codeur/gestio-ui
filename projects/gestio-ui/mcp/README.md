@@ -32,7 +32,15 @@ Une fois `@gestiolabs336/ui` installé dans le projet, la commande `npx gestio-u
 }
 ```
 
-**Cursor** (`.cursor/mcp.json`) : même format que Claude Code.
+**Cursor** (`.cursor/mcp.json`) et **Gemini CLI** (`.gemini/settings.json`) : même format que Claude Code.
+
+**Codex** (`~/.codex/config.toml`) :
+
+```toml
+[mcp_servers.gestio-ui]
+command = "npx"
+args = ["gestio-ui-mcp"]
+```
 
 Sans `npx` : `node node_modules/@gestiolabs336/ui/mcp/server.mjs`.
 
