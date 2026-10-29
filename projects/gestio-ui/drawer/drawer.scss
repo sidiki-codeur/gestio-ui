@@ -1,0 +1,195 @@
+:host {
+  --_radius: var(--gestio-drawer-radius, var(--gestio-radius-xl));
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  max-height: inherit;
+  overflow: hidden;
+  background: var(--gestio-color-surface);
+  border: 0 solid var(--gestio-color-border);
+  box-shadow: var(--gestio-shadow-lg);
+  color: var(--gestio-color-text);
+  font-family: var(--gestio-font-sans);
+  font-size: var(--gestio-font-size-md);
+  line-height: var(--gestio-line-height-normal);
+  animation: gestio-drawer-enter-right var(--gestio-duration-slow) var(--gestio-easing-standard);
+}
+
+/* Bord intérieur arrondi et bordé, selon le côté (propriétés logiques : RTL inclus). */
+:host(.gestio-drawer-content--end) {
+  border-inline-start-width: var(--gestio-border-width);
+  border-start-start-radius: var(--_radius);
+  border-end-start-radius: var(--_radius);
+}
+
+:host(.gestio-drawer-content--start) {
+  border-inline-end-width: var(--gestio-border-width);
+  border-start-end-radius: var(--_radius);
+  border-end-end-radius: var(--_radius);
+}
+
+:host(.gestio-drawer-content--bottom) {
+  height: auto;
+  border-top-width: var(--gestio-border-width);
+  border-start-start-radius: var(--_radius);
+  border-start-end-radius: var(--_radius);
+}
+
+:host(.gestio-drawer-content--from-left) {
+  animation-name: gestio-drawer-enter-left;
+}
+
+:host(.gestio-drawer-content--from-bottom) {
+  animation-name: gestio-drawer-enter-bottom;
+}
+
+.gestio-drawer__header {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  gap: var(--gestio-space-3);
+  align-items: flex-start;
+  padding: var(--gestio-space-5) var(--gestio-space-6) var(--gestio-space-3);
+  border-bottom: var(--gestio-border-width) solid var(--gestio-color-border);
+}
+
+.gestio-drawer__header.has-close {
+  padding-inline-end: calc(var(--gestio-space-6) + 2rem);
+}
+
+.gestio-drawer__heading {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.gestio-drawer__header-extra {
+  flex: 1 1 100%;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.gestio-drawer__title {
+  margin: 0;
+  font-size: var(--gestio-font-size-xl);
+  font-weight: var(--gestio-font-weight-semibold);
+  line-height: var(--gestio-line-height-tight);
+  overflow-wrap: anywhere;
+}
+
+.gestio-drawer__description {
+  margin: var(--gestio-space-1) 0 0;
+  color: var(--gestio-color-text-muted);
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.gestio-drawer__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: var(--gestio-space-4);
+  inset-inline-end: var(--gestio-space-4);
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--gestio-radius-md);
+  background: transparent;
+  color: var(--gestio-color-text-muted);
+  cursor: pointer;
+  transition:
+    background-color var(--gestio-duration-fast) var(--gestio-easing-standard),
+    color var(--gestio-duration-fast) var(--gestio-easing-standard);
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+  }
+
+  &:hover {
+    background: var(--gestio-color-surface-hover);
+    color: var(--gestio-color-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+.gestio-drawer__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--gestio-space-5) var(--gestio-space-6);
+
+  &:focus-visible {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: -2px;
+  }
+}
+
+.gestio-drawer__footer {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  gap: var(--gestio-space-2);
+  justify-content: flex-end;
+  padding: var(--gestio-space-4) var(--gestio-space-6);
+  border-top: var(--gestio-border-width) solid var(--gestio-color-border);
+  background: var(--gestio-color-surface-muted);
+
+  &:empty {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .gestio-drawer__header,
+  .gestio-drawer__body,
+  .gestio-drawer__footer {
+    padding-inline: var(--gestio-space-4);
+  }
+
+  .gestio-drawer__header.has-close {
+    padding-inline-end: calc(var(--gestio-space-4) + 2rem);
+  }
+}
+
+@keyframes gestio-drawer-enter-right {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes gestio-drawer-enter-left {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes gestio-drawer-enter-bottom {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host {
+    animation: none;
+  }
+}

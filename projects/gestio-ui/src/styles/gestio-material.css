@@ -35,6 +35,13 @@
   --gestio-button-press-offset: 0;
   --gestio-field-radius: 4px;
   --gestio-dialog-radius: 28px;
+  --gestio-drawer-radius: 16px;
+  --gestio-popover-radius: 12px;
+  --gestio-notification-center-radius: 16px;
+  --gestio-chip-radius: 8px;
+  --gestio-segmented-control-radius: var(--gestio-radius-full);
+  --gestio-file-upload-radius: 12px;
+  --gestio-kanban-card-radius: 12px;
 
   /* Onde de pression (directive gestioRipple) */
   --gestio-ripple: on;

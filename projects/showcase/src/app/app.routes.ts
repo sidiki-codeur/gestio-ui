@@ -128,6 +128,78 @@ export const routes: Routes = [
         title: 'Onglets — Gestio UI',
         loadComponent: () => import('./pages/tabs/tabs-page').then((m) => m.TabsPage),
       },
+      {
+        path: 'accordeon',
+        title: 'Accordéon — Gestio UI',
+        loadComponent: () =>
+          import('./pages/accordion/accordion-page').then((m) => m.AccordionPage),
+      },
+      {
+        path: 'avatar',
+        title: 'Avatar — Gestio UI',
+        loadComponent: () => import('./pages/avatar/avatar-page').then((m) => m.AvatarPage),
+      },
+      {
+        path: 'fil-d-ariane',
+        title: 'Fil d’Ariane — Gestio UI',
+        loadComponent: () =>
+          import('./pages/breadcrumb/breadcrumb-page').then((m) => m.BreadcrumbPage),
+      },
+      {
+        path: 'puces',
+        title: 'Puces — Gestio UI',
+        loadComponent: () => import('./pages/chips/chips-page').then((m) => m.ChipsPage),
+      },
+      {
+        path: 'liste-avec-recherche',
+        title: 'Liste avec recherche — Gestio UI',
+        loadComponent: () => import('./pages/combobox/combobox-page').then((m) => m.ComboboxPage),
+      },
+      {
+        path: 'selecteur-de-date',
+        title: 'Sélecteur de date — Gestio UI',
+        loadComponent: () =>
+          import('./pages/date-picker/date-picker-page').then((m) => m.DatePickerPage),
+      },
+      {
+        path: 'panneau-lateral',
+        title: 'Panneau latéral — Gestio UI',
+        loadComponent: () => import('./pages/drawer/drawer-page').then((m) => m.DrawerPage),
+      },
+      {
+        path: 'depot-de-fichiers',
+        title: 'Dépôt de fichiers — Gestio UI',
+        loadComponent: () =>
+          import('./pages/file-upload/file-upload-page').then((m) => m.FileUploadPage),
+      },
+      {
+        path: 'fenetre-surgissante',
+        title: 'Fenêtre surgissante — Gestio UI',
+        loadComponent: () => import('./pages/popover/popover-page').then((m) => m.PopoverPage),
+      },
+      {
+        path: 'progression',
+        title: 'Progression — Gestio UI',
+        loadComponent: () => import('./pages/progress/progress-page').then((m) => m.ProgressPage),
+      },
+      {
+        path: 'controle-segmente',
+        title: 'Contrôle segmenté — Gestio UI',
+        loadComponent: () =>
+          import('./pages/segmented-control/segmented-control-page').then(
+            (m) => m.SegmentedControlPage,
+          ),
+      },
+      {
+        path: 'curseur',
+        title: 'Curseur — Gestio UI',
+        loadComponent: () => import('./pages/slider/slider-page').then((m) => m.SliderPage),
+      },
+      {
+        path: 'etapes',
+        title: 'Assistant en étapes — Gestio UI',
+        loadComponent: () => import('./pages/stepper/stepper-page').then((m) => m.StepperPage),
+      },
     ],
   },
   {
@@ -240,6 +312,38 @@ export const routes: Routes = [
         title: 'Grille tarifaire — Gestio UI',
         loadComponent: () =>
           import('./pages/blocks/pricing-table/pricing-table-page').then((m) => m.PricingTablePage),
+      },
+      {
+        path: 'graphiques',
+        title: 'Graphiques — Gestio UI',
+        loadComponent: () => import('./pages/blocks/chart/chart-page').then((m) => m.ChartPage),
+      },
+      {
+        path: 'kanban',
+        title: 'Tableau Kanban — Gestio UI',
+        loadComponent: () => import('./pages/blocks/kanban/kanban-page').then((m) => m.KanbanPage),
+      },
+      {
+        path: 'palette-de-commandes',
+        title: 'Palette de commandes — Gestio UI',
+        loadComponent: () =>
+          import('./pages/blocks/command-palette/command-palette-page').then(
+            (m) => m.CommandPalettePage,
+          ),
+      },
+      {
+        path: 'centre-de-notifications',
+        title: 'Centre de notifications — Gestio UI',
+        loadComponent: () =>
+          import('./pages/blocks/notification-center/notification-center-page').then(
+            (m) => m.NotificationCenterPage,
+          ),
+      },
+      {
+        path: 'page-erreur',
+        title: 'Page d’erreur — Gestio UI',
+        loadComponent: () =>
+          import('./pages/blocks/error-page/error-page-page').then((m) => m.ErrorPagePage),
       },
     ],
   },

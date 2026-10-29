@@ -1,0 +1,44 @@
+<span class="gestio-avatar__frame">
+  @if (showImage()) {
+    <!--
+      <img> natif plutôt que NgOptimizedImage : les avatars proviennent d'URL
+      dynamiques et arbitraires (téléversements, Gravatar, domaines tiers).
+      NgOptimizedImage n'apporte ses optimisations (srcset, redimensionnement)
+      qu'avec un IMAGE_LOADER adapté au domaine, et le loader global de
+      l'application ne doit pas réécrire des URL qu'il ne connaît pas. La taille
+      est fixée par CSS (pas de décalage de mise en page) ; chargement différé.
+    -->
+    <img
+      class="gestio-avatar__image"
+      [src]="src()"
+      [alt]="label()"
+      loading="lazy"
+      decoding="async"
+      (error)="onError()"
+    />
+  } @else if (initials()) {
+    <span class="gestio-avatar__initials" role="img" [attr.aria-label]="label()">
+      <span aria-hidden="true">{{ initials() }}</span>
+    </span>
+  } @else {
+    <svg
+      class="gestio-avatar__icon"
+      viewBox="0 0 24 24"
+      focusable="false"
+      [attr.role]="label() ? 'img' : null"
+      [attr.aria-label]="label() || null"
+      [attr.aria-hidden]="label() ? null : 'true'"
+    >
+      <circle cx="12" cy="9" r="4" />
+      <path d="M4.5 20.5c1.2-3.7 4-5.5 7.5-5.5s6.3 1.8 7.5 5.5" />
+    </svg>
+  }
+</span>
+@if (status(); as current) {
+  <span
+    class="gestio-avatar__status"
+    [class]="'gestio-avatar__status--' + current"
+    aria-hidden="true"
+  ></span>
+  <span class="gestio-avatar__sr-only">{{ statusLabel() }}</span>
+}

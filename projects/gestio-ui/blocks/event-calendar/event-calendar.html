@@ -74,11 +74,13 @@
                       type="button"
                       class="gestio-event-calendar__event"
                       [class]="'is-' + (event.variant ?? 'primary')"
-                      [attr.aria-label]="eventLabel(event)"
+                      [attr.aria-label]="event.allDay ? eventLabel(event) : null"
                       (click)="eventClick.emit(event)"
                     >
+                      <!-- Heure visible incluse dans le nom accessible (WCAG 2.5.3) -->
                       @if (!event.allDay) {
                         <span class="gestio-event-calendar__time">{{ eventTime(event) }}</span>
+                        <span class="gestio-event-calendar__sr-only"> · </span>
                       }
                       <span class="gestio-event-calendar__event-title">{{ event.title }}</span>
                     </button>

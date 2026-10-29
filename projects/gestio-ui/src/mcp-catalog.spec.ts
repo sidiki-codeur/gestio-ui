@@ -41,6 +41,24 @@ import * as blockRating from '@gestiolabs336/ui/blocks/rating';
 import * as blockSignupForm from '@gestiolabs336/ui/blocks/signup-form';
 import * as blockSocialButton from '@gestiolabs336/ui/blocks/social-button';
 import * as blockStatCard from '@gestiolabs336/ui/blocks/stat-card';
+import * as accordion from '@gestiolabs336/ui/accordion';
+import * as avatar from '@gestiolabs336/ui/avatar';
+import * as breadcrumb from '@gestiolabs336/ui/breadcrumb';
+import * as chips from '@gestiolabs336/ui/chips';
+import * as combobox from '@gestiolabs336/ui/combobox';
+import * as datePicker from '@gestiolabs336/ui/date-picker';
+import * as drawer from '@gestiolabs336/ui/drawer';
+import * as fileUpload from '@gestiolabs336/ui/file-upload';
+import * as popover from '@gestiolabs336/ui/popover';
+import * as progress from '@gestiolabs336/ui/progress';
+import * as segmentedControl from '@gestiolabs336/ui/segmented-control';
+import * as slider from '@gestiolabs336/ui/slider';
+import * as stepper from '@gestiolabs336/ui/stepper';
+import * as blockChart from '@gestiolabs336/ui/blocks/chart';
+import * as blockKanban from '@gestiolabs336/ui/blocks/kanban';
+import * as blockCommandPalette from '@gestiolabs336/ui/blocks/command-palette';
+import * as blockNotificationCenter from '@gestiolabs336/ui/blocks/notification-center';
+import * as blockErrorPage from '@gestiolabs336/ui/blocks/error-page';
 
 /**
  * Le catalogue du serveur MCP (mcp/catalog.json) doit décrire exactement
@@ -106,6 +124,24 @@ const ENTRY_POINTS: Record<string, Record<string, unknown>> = {
   '@gestiolabs336/ui/blocks/signup-form': blockSignupForm,
   '@gestiolabs336/ui/blocks/social-button': blockSocialButton,
   '@gestiolabs336/ui/blocks/stat-card': blockStatCard,
+  '@gestiolabs336/ui/accordion': accordion,
+  '@gestiolabs336/ui/avatar': avatar,
+  '@gestiolabs336/ui/breadcrumb': breadcrumb,
+  '@gestiolabs336/ui/chips': chips,
+  '@gestiolabs336/ui/combobox': combobox,
+  '@gestiolabs336/ui/date-picker': datePicker,
+  '@gestiolabs336/ui/drawer': drawer,
+  '@gestiolabs336/ui/file-upload': fileUpload,
+  '@gestiolabs336/ui/popover': popover,
+  '@gestiolabs336/ui/progress': progress,
+  '@gestiolabs336/ui/segmented-control': segmentedControl,
+  '@gestiolabs336/ui/slider': slider,
+  '@gestiolabs336/ui/stepper': stepper,
+  '@gestiolabs336/ui/blocks/chart': blockChart,
+  '@gestiolabs336/ui/blocks/kanban': blockKanban,
+  '@gestiolabs336/ui/blocks/command-palette': blockCommandPalette,
+  '@gestiolabs336/ui/blocks/notification-center': blockNotificationCenter,
+  '@gestiolabs336/ui/blocks/error-page': blockErrorPage,
 };
 
 /** Définition compilée d'un composant (ɵcmp) ou d'une directive (ɵdir). */

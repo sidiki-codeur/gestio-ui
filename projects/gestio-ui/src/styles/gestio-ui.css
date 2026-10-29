@@ -161,6 +161,16 @@
   --gestio-z-overlay: 1200;
   --gestio-z-modal: 1300;
   --gestio-z-toast: 1400;
+
+  /* Graphiques (blocs/chart) : contraste ≥ 3:1 sur les surfaces claires. */
+  --gestio-chart-1: #4f46e5;
+  --gestio-chart-2: #0891b2;
+  --gestio-chart-3: #b45309;
+  --gestio-chart-4: #db2777;
+  --gestio-chart-5: #15803d;
+  --gestio-chart-6: #7c3aed;
+  --gestio-chart-7: #64748b;
+  --gestio-chart-8: #dc2626;
 }
 
 /* Thème sombre — tokens communs aux modes "dark" et "system" (sombre). */
@@ -232,6 +242,16 @@
   --gestio-shadow-sm: 0 1px 3px rgb(0 0 0 / 0.45), 0 1px 2px rgb(0 0 0 / 0.3);
   --gestio-shadow-md: 0 4px 14px rgb(0 0 0 / 0.45), 0 2px 4px rgb(0 0 0 / 0.3);
   --gestio-shadow-lg: 0 18px 44px rgb(0 0 0 / 0.6), 0 4px 12px rgb(0 0 0 / 0.4);
+
+  /* Graphiques (blocs/chart) : contraste ≥ 3:1 sur les surfaces sombres. */
+  --gestio-chart-1: #818cf8;
+  --gestio-chart-2: #22d3ee;
+  --gestio-chart-3: #fbbf24;
+  --gestio-chart-4: #f472b6;
+  --gestio-chart-5: #4ade80;
+  --gestio-chart-6: #a78bfa;
+  --gestio-chart-7: #94a3b8;
+  --gestio-chart-8: #f87171;
 }
 
 /* Mode "system" : applique les tokens sombres si l'OS le demande. */
@@ -304,6 +324,16 @@
     --gestio-shadow-sm: 0 1px 3px rgb(0 0 0 / 0.45), 0 1px 2px rgb(0 0 0 / 0.3);
     --gestio-shadow-md: 0 4px 14px rgb(0 0 0 / 0.45), 0 2px 4px rgb(0 0 0 / 0.3);
     --gestio-shadow-lg: 0 18px 44px rgb(0 0 0 / 0.6), 0 4px 12px rgb(0 0 0 / 0.4);
+
+    /* Graphiques (blocs/chart) : contraste ≥ 3:1 sur les surfaces sombres. */
+    --gestio-chart-1: #818cf8;
+    --gestio-chart-2: #22d3ee;
+    --gestio-chart-3: #fbbf24;
+    --gestio-chart-4: #f472b6;
+    --gestio-chart-5: #4ade80;
+    --gestio-chart-6: #a78bfa;
+    --gestio-chart-7: #94a3b8;
+    --gestio-chart-8: #f87171;
   }
 }
 

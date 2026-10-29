@@ -1,0 +1,232 @@
+@use '../core/field' as field;
+
+@include field.field;
+
+.gestio-file-upload__zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gestio-space-2);
+  box-sizing: border-box;
+  padding: var(--gestio-space-6) var(--gestio-space-4);
+  border: 2px dashed var(--gestio-color-border-strong);
+  border-radius: var(--gestio-file-upload-radius, var(--gestio-radius-lg));
+  background: var(--gestio-color-surface);
+  color: var(--gestio-color-text-muted);
+  text-align: center;
+  cursor: pointer;
+  transition:
+    border-color var(--gestio-duration-fast) var(--gestio-easing-standard),
+    background-color var(--gestio-duration-fast) var(--gestio-easing-standard);
+
+  &:hover:not(.is-disabled) {
+    border-color: var(--gestio-color-border-hover);
+    background: var(--gestio-color-surface-hover);
+  }
+
+  &.is-dragging {
+    border-color: var(--gestio-color-primary);
+    background: var(--gestio-color-primary-subtle);
+    color: var(--gestio-color-primary-text);
+  }
+
+  &.is-invalid {
+    border-color: var(--gestio-color-danger);
+  }
+
+  &.is-disabled {
+    border-color: var(--gestio-color-border);
+    background: var(--gestio-color-surface-disabled);
+    color: var(--gestio-color-text-disabled);
+    cursor: not-allowed;
+  }
+}
+
+.gestio-file-upload__icon {
+  width: 2rem;
+  height: 2rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.gestio-file-upload__prompt {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--gestio-space-1) var(--gestio-space-2);
+  margin: 0;
+  color: var(--gestio-color-text);
+  font-size: var(--gestio-font-size-md);
+
+  .is-disabled & {
+    color: var(--gestio-color-text-disabled);
+  }
+}
+
+/* Champ natif masqué visuellement mais focalisable : le focus s'affiche sur « Parcourir ». */
+.gestio-file-upload__native {
+  @include field.sr-only;
+}
+
+.gestio-file-upload__browse {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--gestio-control-height-sm);
+  padding: 0 var(--gestio-space-3);
+  border: var(--gestio-border-width) solid var(--gestio-color-border-strong);
+  border-radius: var(--gestio-button-radius, var(--gestio-radius-md));
+  background: var(--gestio-color-surface);
+  color: var(--gestio-color-text);
+  font-weight: var(--gestio-font-weight-medium);
+  cursor: pointer;
+  transition: background-color var(--gestio-duration-fast) var(--gestio-easing-standard);
+
+  &:hover {
+    background: var(--gestio-color-surface-hover);
+  }
+
+  .gestio-file-upload__native:focus-visible + & {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  .gestio-file-upload__native:disabled + & {
+    border-color: var(--gestio-color-border);
+    background: var(--gestio-color-surface-disabled);
+    color: var(--gestio-color-text-disabled);
+    cursor: not-allowed;
+  }
+}
+
+.gestio-file-upload__constraints {
+  margin: 0;
+  font-size: var(--gestio-font-size-sm);
+}
+
+.gestio-file-upload__rejections:empty {
+  display: none;
+}
+
+.gestio-file-upload__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gestio-space-2);
+  margin: var(--gestio-space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gestio-file-upload__item {
+  display: flex;
+  align-items: center;
+  gap: var(--gestio-space-3);
+  padding: var(--gestio-space-2) var(--gestio-space-3);
+  border: var(--gestio-border-width) solid var(--gestio-color-border);
+  border-radius: var(--gestio-file-upload-radius, var(--gestio-radius-md));
+  background: var(--gestio-color-surface);
+}
+
+.gestio-file-upload__file-icon {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: none;
+  stroke: var(--gestio-color-text-muted);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.gestio-file-upload__details {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.gestio-file-upload__name {
+  overflow: hidden;
+  font-size: var(--gestio-font-size-md);
+  font-weight: var(--gestio-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gestio-file-upload__meta {
+  color: var(--gestio-color-text-muted);
+  font-size: var(--gestio-font-size-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.gestio-file-upload__progress {
+  overflow: hidden;
+  height: 0.25rem;
+  margin-block-start: var(--gestio-space-1);
+  border-radius: var(--gestio-radius-full);
+  background: var(--gestio-color-surface-active);
+}
+
+.gestio-file-upload__progress-bar {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--gestio-color-primary);
+  transition: inline-size var(--gestio-duration-normal) var(--gestio-easing-standard);
+}
+
+.gestio-file-upload__remove {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--gestio-radius-sm);
+  background: transparent;
+  color: var(--gestio-color-text-muted);
+  cursor: pointer;
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+  }
+
+  &:hover:not(:disabled) {
+    background: var(--gestio-color-surface-hover);
+    color: var(--gestio-color-danger-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: 1px;
+  }
+
+  &:disabled {
+    color: var(--gestio-color-text-disabled);
+    cursor: not-allowed;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gestio-file-upload__zone,
+  .gestio-file-upload__browse,
+  .gestio-file-upload__progress-bar {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .gestio-file-upload__progress-bar {
+    background: Highlight;
+  }
+}

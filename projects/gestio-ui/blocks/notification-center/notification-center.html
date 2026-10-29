@@ -1,0 +1,237 @@
+<button
+  #trigger
+  type="button"
+  class="gestio-notification-center__trigger"
+  cdkOverlayOrigin
+  #origin="cdkOverlayOrigin"
+  aria-haspopup="dialog"
+  [attr.aria-label]="triggerLabel()"
+  [attr.aria-expanded]="open()"
+  [attr.aria-controls]="open() ? panelId : null"
+  (click)="toggle()"
+>
+  <svg
+    class="gestio-notification-center__bell"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.75"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <path d="M6 9a6 6 0 1 1 12 0c0 4.5 1.5 6.5 2.5 7.5h-17C4.5 15.5 6 13.5 6 9Z" />
+    <path d="M10 19.5a2.1 2.1 0 0 0 4 0" />
+  </svg>
+  @if (unreadCount()) {
+    <span class="gestio-notification-center__badge" aria-hidden="true">{{ badgeText() }}</span>
+  }
+</button>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="origin"
+  [cdkConnectedOverlayOpen]="open()"
+  [cdkConnectedOverlayPositions]="positions()"
+  [cdkConnectedOverlayDisableClose]="true"
+  [cdkConnectedOverlayViewportMargin]="8"
+  cdkConnectedOverlayPush
+  cdkConnectedOverlayUsePopover="inline"
+  (attach)="onAttach()"
+  (detach)="onDetach()"
+  (overlayKeydown)="onKeydown($event)"
+  (overlayOutsideClick)="onOutsideClick()"
+>
+  <div
+    #panel
+    class="gestio-notification-center__panel"
+    role="dialog"
+    aria-modal="true"
+    tabindex="-1"
+    cdkTrapFocus
+    [id]="panelId"
+    [attr.aria-labelledby]="titleId"
+  >
+    <div class="gestio-notification-center__header">
+      <h2 class="gestio-notification-center__title" [id]="titleId">{{ text().title }}</h2>
+      @if (unreadCount()) {
+        <button gestioButton variant="ghost" size="sm" (click)="onMarkAllRead()">
+          {{ text().markAllRead }}
+        </button>
+      }
+      <button
+        type="button"
+        class="gestio-notification-center__icon-button"
+        [attr.aria-label]="text().close"
+        (click)="hide()"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path d="M6 6l12 12M18 6 6 18" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="gestio-notification-center__filters" role="group" [attr.aria-label]="text().filter">
+      <button
+        type="button"
+        class="gestio-notification-center__filter"
+        [attr.aria-pressed]="filter() === 'all'"
+        (click)="setFilter('all')"
+      >
+        {{ text().filterAll }}
+      </button>
+      <button
+        type="button"
+        class="gestio-notification-center__filter"
+        [attr.aria-pressed]="filter() === 'unread'"
+        (click)="setFilter('unread')"
+      >
+        {{ text().filterUnread }}
+        @if (unreadCount()) {
+          <span class="gestio-notification-center__filter-count">{{ unreadCount() }}</span>
+        }
+      </button>
+    </div>
+
+    <div class="gestio-notification-center__body" [attr.aria-busy]="loading() ? 'true' : null">
+      @if (loading()) {
+        <div class="gestio-notification-center__loading">
+          <gestio-spinner [label]="text().loading" />
+        </div>
+      } @else if (groups().length) {
+        @for (group of groups(); track group.id) {
+          <section class="gestio-notification-center__group" [attr.aria-labelledby]="group.id">
+            <h3 class="gestio-notification-center__group-title" [id]="group.id">
+              {{ group.heading }}
+            </h3>
+            <ul class="gestio-notification-center__list">
+              @for (entry of group.entries; track entry.item.id) {
+                <li
+                  #row
+                  class="gestio-notification-center__item"
+                  [class.gestio-notification-center__item--unread]="!entry.item.read"
+                >
+                  @if (entry.item.href) {
+                    <a
+                      class="gestio-notification-center__action"
+                      [attr.href]="entry.item.href"
+                      (click)="onSelect(entry.item)"
+                    >
+                      <ng-container *ngTemplateOutlet="content; context: { $implicit: entry }" />
+                    </a>
+                  } @else {
+                    <button
+                      type="button"
+                      class="gestio-notification-center__action"
+                      (click)="onSelect(entry.item)"
+                    >
+                      <ng-container *ngTemplateOutlet="content; context: { $implicit: entry }" />
+                    </button>
+                  }
+                  @if (!entry.item.read) {
+                    <button
+                      type="button"
+                      class="gestio-notification-center__icon-button gestio-notification-center__mark"
+                      [attr.aria-label]="markReadLabel(entry.item)"
+                      (click)="onMarkRead(entry.item, row)"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                        focusable="false"
+                      >
+                        <path d="m5 12.5 4.5 4.5L19 7.5" />
+                      </svg>
+                    </button>
+                  }
+                </li>
+              }
+            </ul>
+          </section>
+        }
+      } @else {
+        <gestio-empty-state
+          class="gestio-notification-center__empty"
+          size="sm"
+          [headingLevel]="3"
+          [heading]="filter() === 'unread' ? text().emptyUnread : text().empty"
+          [description]="text().emptyDescription"
+        />
+      }
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #content let-entry>
+  <span
+    class="gestio-notification-center__icon"
+    [class]="'gestio-notification-center__icon--' + (entry.item.tone ?? 'neutral')"
+    aria-hidden="true"
+  >
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      focusable="false"
+    >
+      @switch (entry.item.tone) {
+        @case ('success') {
+          <path d="m7 12.5 3.5 3.5L17 9.5" />
+        }
+        @case ('warning') {
+          <path d="M12 8.5v4.5M12 16.5h.01" />
+        }
+        @case ('danger') {
+          <path d="M12 7.5v5.5M12 16.5h.01" />
+        }
+        @case ('info') {
+          <path d="M12 11v5.5M12 7.5h.01" />
+        }
+        @default {
+          <path d="M8 9a4 4 0 1 1 8 0c0 3 1 4.5 1.5 5h-11C7 13.5 8 12 8 9Z" />
+          <path d="M10.5 17a1.6 1.6 0 0 0 3 0" />
+        }
+      }
+    </svg>
+  </span>
+  <span class="gestio-notification-center__content">
+    <span class="gestio-notification-center__item-title">
+      @if (!entry.item.read) {
+        <span class="gestio-notification-center__sr-only">{{ text().unread }}</span>
+      }
+      {{ entry.item.title }}
+    </span>
+    @if (entry.item.body) {
+      <span class="gestio-notification-center__item-body">{{ entry.item.body }}</span>
+    }
+    @if (entry.iso) {
+      <time
+        class="gestio-notification-center__time"
+        [attr.datetime]="entry.iso"
+        [attr.title]="entry.absolute"
+      >
+        {{ entry.relative }}
+      </time>
+    }
+  </span>
+  @if (!entry.item.read) {
+    <span class="gestio-notification-center__dot" aria-hidden="true"></span>
+  }
+</ng-template>

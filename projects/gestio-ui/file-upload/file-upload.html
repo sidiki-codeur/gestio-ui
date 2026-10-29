@@ -1,0 +1,136 @@
+<div class="gestio-field">
+  @if (label()) {
+    <span class="gestio-field__label" [id]="labelId">
+      {{ label() }}
+      @if (required()) {
+        <span class="gestio-field__required" aria-hidden="true">*</span>
+      }
+    </span>
+  }
+
+  <div
+    #zone
+    class="gestio-file-upload__zone"
+    [class.is-dragging]="dragging()"
+    [class.is-disabled]="isDisabled()"
+    [class.is-invalid]="!!error()"
+    (click)="onZoneClick($event)"
+    (dragenter)="onDragOver($event)"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event, zone)"
+    (drop)="onDrop($event)"
+  >
+    <svg class="gestio-file-upload__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 15V4m0 0L7.5 8.5M12 4l4.5 4.5" />
+      <path d="M4 14.5v3A2.5 2.5 0 0 0 6.5 20h11a2.5 2.5 0 0 0 2.5-2.5v-3" />
+    </svg>
+    <p class="gestio-file-upload__prompt">
+      <span>{{
+        dragging() ? text().dragActive : multiple() ? text().dropzone : text().dropzoneSingle
+      }}</span>
+      <input
+        #fileInput
+        type="file"
+        class="gestio-file-upload__native"
+        [id]="controlId()"
+        [attr.accept]="accept() || null"
+        [multiple]="multiple()"
+        [disabled]="isDisabled()"
+        [attr.aria-labelledby]="labelledBy()"
+        [attr.aria-label]="label() ? null : (ariaLabel() ?? null)"
+        [attr.aria-describedby]="describedBy()"
+        [attr.aria-invalid]="error() ? 'true' : null"
+        (change)="onNativeChange(fileInput)"
+        (blur)="onNativeBlur()"
+      />
+      <label class="gestio-file-upload__browse" [id]="browseId" [for]="controlId()">{{
+        text().browse
+      }}</label>
+    </p>
+    @if (constraints()) {
+      <p class="gestio-file-upload__constraints" [id]="constraintsId">{{ constraints() }}</p>
+    }
+  </div>
+
+  @if (hint()) {
+    <p class="gestio-field__hint" [id]="hintId">{{ hint() }}</p>
+  }
+  @if (error()) {
+    <p class="gestio-field__error" [id]="errorId">{{ error() }}</p>
+  }
+
+  <div class="gestio-file-upload__rejections" [id]="rejectionsId" aria-live="polite">
+    @for (rejection of rejections(); track $index) {
+      <p class="gestio-field__error">
+        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5" />
+          <path
+            d="M8 4.5v4.2M8 11v.5"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+        </svg>
+        <span>{{ rejection.message }}</span>
+      </p>
+    }
+  </div>
+
+  @if (files().length) {
+    <ul class="gestio-file-upload__list" [attr.aria-label]="text().fileList">
+      @for (file of files(); track file; let i = $index) {
+        @let percent = progressOf(file);
+        <li class="gestio-file-upload__item">
+          <svg
+            class="gestio-file-upload__file-icon"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+            <path d="M14 3v5h5" />
+          </svg>
+          <div class="gestio-file-upload__details">
+            <span class="gestio-file-upload__name">{{ file.name }}</span>
+            <span class="gestio-file-upload__meta">
+              {{ formatSize(file.size) }}
+              @if (percent !== null) {
+                <span aria-hidden="true"> · {{ formatPercent(percent) }}</span>
+              }
+            </span>
+            @if (percent !== null) {
+              <div
+                class="gestio-file-upload__progress"
+                role="progressbar"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                [attr.aria-valuenow]="percent"
+                [attr.aria-valuetext]="formatPercent(percent)"
+                [attr.aria-label]="interpolate(text().progress, file.name)"
+              >
+                <span
+                  class="gestio-file-upload__progress-bar"
+                  [style.inline-size.%]="percent"
+                ></span>
+              </div>
+            }
+          </div>
+          <button
+            #removeButton
+            type="button"
+            class="gestio-file-upload__remove"
+            [attr.aria-label]="interpolate(text().remove, file.name)"
+            [disabled]="isDisabled()"
+            (click)="removeFile(i)"
+          >
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M4 4l8 8M12 4l-8 8" />
+            </svg>
+          </button>
+        </li>
+      }
+    </ul>
+  }
+
+  <span class="gestio-sr-only" aria-live="polite" aria-atomic="true">{{ announcement() }}</span>
+</div>

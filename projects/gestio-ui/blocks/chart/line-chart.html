@@ -1,0 +1,196 @@
+@if (hasData()) {
+  <div class="gestio-chart__plot">
+    <svg
+      class="gestio-chart__svg"
+      role="img"
+      [attr.aria-labelledby]="titleId"
+      [attr.aria-describedby]="descId"
+      [attr.viewBox]="'0 0 ' + viewWidth() + ' ' + viewHeight()"
+      [attr.height]="viewHeight()"
+      width="100%"
+      focusable="false"
+    >
+      <title [attr.id]="titleId">{{ heading() }}</title>
+      <desc [attr.id]="descId">{{ description() }} {{ summary() }}</desc>
+
+      <g class="gestio-chart__axis">
+        @for (tick of yTicks(); track tick.value) {
+          @if (grid()) {
+            <line
+              class="gestio-chart__grid-line"
+              [attr.x1]="plot().left"
+              [attr.x2]="plot().right"
+              [attr.y1]="tick.y"
+              [attr.y2]="tick.y"
+            />
+          }
+          <text
+            class="gestio-chart__tick"
+            [attr.x]="plot().left - 8"
+            [attr.y]="tick.y"
+            text-anchor="end"
+            dominant-baseline="middle"
+          >
+            {{ tick.label }}
+          </text>
+        }
+        @for (label of xLabels(); track label.index) {
+          <text
+            class="gestio-chart__tick"
+            [attr.x]="label.x"
+            [attr.y]="plot().bottom + 18"
+            text-anchor="middle"
+          >
+            {{ label.label }}
+          </text>
+        }
+      </g>
+      <line
+        class="gestio-chart__baseline"
+        [attr.x1]="plot().left"
+        [attr.x2]="plot().right"
+        [attr.y1]="baselineY()"
+        [attr.y2]="baselineY()"
+      />
+
+      @if (tooltip(); as tip) {
+        <line
+          class="gestio-chart__grid-line"
+          [attr.x1]="tip.point.x"
+          [attr.x2]="tip.point.x"
+          [attr.y1]="plot().top"
+          [attr.y2]="plot().bottom"
+        />
+      }
+
+      @if (area()) {
+        @for (line of lines(); track line.index) {
+          <path class="gestio-chart__area" [attr.d]="line.area" [style.fill]="line.color" />
+        }
+      }
+      @for (line of lines(); track line.index) {
+        <g
+          class="gestio-chart__series"
+          [class.gestio-chart__mark--dim]="activeSeries() !== null && activeSeries() !== line.index"
+        >
+          <path
+            class="gestio-chart__line"
+            [attr.d]="line.path"
+            [attr.stroke-dasharray]="line.dash"
+            [style.stroke]="line.color"
+          />
+          @if (markers()) {
+            @for (marker of line.markers; track marker.key) {
+              <path
+                class="gestio-chart__marker"
+                [class.gestio-chart__marker--hollow]="line.hollow"
+                [attr.d]="marker.d"
+                [style.fill]="line.color"
+                [style.stroke]="line.color"
+              />
+            }
+          }
+        </g>
+      }
+
+      @if (focusedPoint(); as point) {
+        <circle class="gestio-chart__focus" [attr.cx]="point.x" [attr.cy]="point.y" r="9" />
+      }
+    </svg>
+
+    <svg
+      class="gestio-chart__hits"
+      role="group"
+      [attr.aria-label]="text().points"
+      [attr.viewBox]="'0 0 ' + viewWidth() + ' ' + viewHeight()"
+      [attr.height]="viewHeight()"
+      width="100%"
+      (keydown)="onPointsKeydown($event)"
+    >
+      @for (point of points(); track point.key) {
+        <circle
+          class="gestio-chart__hit"
+          role="img"
+          r="12"
+          [attr.cx]="point.x"
+          [attr.cy]="point.y"
+          [attr.data-point]="point.key"
+          [attr.aria-label]="point.ariaLabel"
+          [attr.tabindex]="point.key === rovingKey() ? 0 : -1"
+          (mouseenter)="pointEnter(point.key)"
+          (mouseleave)="pointLeave()"
+          (mousedown)="$event.preventDefault()"
+          (focus)="pointFocus(point.key)"
+          (blur)="pointBlur()"
+        />
+      }
+    </svg>
+
+    @if (tooltip(); as tip) {
+      <div
+        class="gestio-chart__tooltip"
+        aria-hidden="true"
+        [style.left.%]="tip.left"
+        [style.top.%]="tip.top"
+      >
+        <span class="gestio-chart__tooltip-title">{{ tip.point.category }}</span>
+        <span class="gestio-chart__tooltip-row">
+          <svg class="gestio-chart__swatch" viewBox="0 0 12 12" focusable="false">
+            <rect width="12" height="12" rx="2" [style.fill]="tip.point.fill" />
+          </svg>
+          {{ tip.point.seriesName }}&nbsp;: <strong>{{ tip.point.value }}</strong>
+        </span>
+      </div>
+    }
+  </div>
+
+  @if (legend()) {
+    <ul class="gestio-chart__legend">
+      @for (item of lineLegend(); track item.index) {
+        <li class="gestio-chart__legend-item">
+          <svg
+            class="gestio-chart__swatch gestio-chart__swatch--line"
+            viewBox="0 0 28 12"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <line
+              class="gestio-chart__line"
+              x1="1"
+              x2="27"
+              y1="6"
+              y2="6"
+              [attr.stroke-dasharray]="item.dash"
+              [style.stroke]="item.color"
+            />
+            @if (markers()) {
+              <path
+                class="gestio-chart__marker"
+                [class.gestio-chart__marker--hollow]="item.hollow"
+                [attr.d]="item.marker"
+                [style.fill]="item.color"
+                [style.stroke]="item.color"
+              />
+            }
+          </svg>
+          {{ item.name }}
+        </li>
+      }
+    </ul>
+  }
+
+  <gestio-chart-table
+    [caption]="heading()"
+    [columns]="tableColumns()"
+    [rows]="tableRows()"
+    [tableId]="tableId"
+    [toggle]="tableToggle()"
+    [showLabel]="text().showTable"
+    [hideLabel]="text().hideTable"
+    [(visible)]="tableVisible"
+  />
+} @else {
+  <p class="gestio-chart__empty">
+    <span class="gestio-chart__sr-only">{{ heading() }}&nbsp;: </span>{{ text().noData }}
+  </p>
+}

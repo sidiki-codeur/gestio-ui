@@ -1,0 +1,105 @@
+:host {
+  --_color: var(--gestio-color-primary);
+  --_height: 0.5rem;
+  display: block;
+  font-family: var(--gestio-font-sans);
+  color: var(--gestio-color-text);
+}
+
+:host(.gestio-progress-bar--success) {
+  --_color: var(--gestio-color-success);
+}
+
+:host(.gestio-progress-bar--warning) {
+  --_color: var(--gestio-color-warning);
+}
+
+:host(.gestio-progress-bar--danger) {
+  --_color: var(--gestio-color-danger);
+}
+
+:host(.gestio-progress-bar--sm) {
+  --_height: 0.25rem;
+}
+
+:host(.gestio-progress-bar--lg) {
+  --_height: 0.75rem;
+}
+
+.gestio-progress-bar__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--gestio-space-3);
+  margin-block-end: var(--gestio-space-2);
+  font-size: var(--gestio-font-size-sm);
+  line-height: var(--gestio-line-height-tight);
+}
+
+.gestio-progress-bar__label {
+  font-weight: var(--gestio-font-weight-medium);
+}
+
+.gestio-progress-bar__value {
+  margin-inline-start: auto;
+  color: var(--gestio-color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.gestio-progress-bar__track {
+  position: relative;
+  overflow: hidden;
+  block-size: var(--_height);
+  border-radius: var(--gestio-progress-radius, var(--gestio-radius-full));
+  background: color-mix(in srgb, var(--_color) 18%, var(--gestio-color-surface-muted));
+}
+
+.gestio-progress-bar__fill {
+  block-size: 100%;
+  max-inline-size: 100%;
+  border-radius: inherit;
+  background: var(--_color);
+  transition: inline-size var(--gestio-duration-normal) var(--gestio-easing-standard);
+}
+
+:host(.gestio-progress-bar--indeterminate) .gestio-progress-bar__fill {
+  position: absolute;
+  inset-block: 0;
+  inline-size: 40%;
+  animation: gestio-progress-bar-slide 1.4s var(--gestio-easing-standard) infinite;
+}
+
+@keyframes gestio-progress-bar-slide {
+  from {
+    inset-inline-start: -40%;
+  }
+
+  to {
+    inset-inline-start: 100%;
+  }
+}
+
+/* Moins d'animations : pas de transition ni de balayage ; l'état indéterminé
+   reste lisible grâce à une barre pleine atténuée. */
+@media (prefers-reduced-motion: reduce) {
+  .gestio-progress-bar__fill {
+    transition: none;
+  }
+
+  :host(.gestio-progress-bar--indeterminate) .gestio-progress-bar__fill {
+    inset-inline-start: 0;
+    inline-size: 100%;
+    opacity: 0.5;
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .gestio-progress-bar__track {
+    border: 1px solid CanvasText;
+  }
+
+  .gestio-progress-bar__fill {
+    background: Highlight;
+  }
+}

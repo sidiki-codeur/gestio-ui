@@ -1,0 +1,272 @@
+@use '../../core/field' as field;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gestio-space-3);
+  min-width: 0;
+  color: var(--gestio-color-text);
+  font-family: var(--gestio-font-sans);
+}
+
+.gestio-chart__plot {
+  position: relative;
+  min-width: 0;
+}
+
+.gestio-chart__svg,
+.gestio-chart__hits {
+  display: block;
+  overflow: visible;
+}
+
+.gestio-chart__hits {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.gestio-chart__hit {
+  fill: transparent;
+  pointer-events: all;
+  cursor: default;
+  outline: none;
+}
+
+.gestio-chart__tick {
+  fill: var(--gestio-color-text-muted);
+  font-size: var(--gestio-font-size-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.gestio-chart__grid-line {
+  stroke: var(--gestio-color-border);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.gestio-chart__baseline {
+  stroke: var(--gestio-color-border-strong);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.gestio-chart__hatch {
+  fill: none;
+  stroke: var(--gestio-color-surface);
+  stroke-width: 1.5;
+  stroke-opacity: 0.75;
+}
+
+.gestio-chart__bar {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  transition: opacity var(--gestio-duration-fast) var(--gestio-easing-standard);
+  animation: gestio-chart-grow var(--gestio-duration-slow) var(--gestio-easing-standard) both;
+}
+
+.gestio-chart__bar--negative {
+  transform-origin: top;
+}
+
+.gestio-chart__line {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: opacity var(--gestio-duration-fast) var(--gestio-easing-standard);
+  animation: gestio-chart-fade var(--gestio-duration-slow) var(--gestio-easing-standard) both;
+}
+
+.gestio-chart__area {
+  fill-opacity: 0.14;
+  stroke: none;
+  animation: gestio-chart-fade var(--gestio-duration-slow) var(--gestio-easing-standard) both;
+}
+
+.gestio-chart__marker {
+  stroke-width: 2;
+  transition: opacity var(--gestio-duration-fast) var(--gestio-easing-standard);
+  animation: gestio-chart-fade var(--gestio-duration-slow) var(--gestio-easing-standard) both;
+}
+
+.gestio-chart__marker--hollow {
+  fill: var(--gestio-color-surface) !important;
+}
+
+.gestio-chart__slice {
+  stroke: var(--gestio-color-surface);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  transition: opacity var(--gestio-duration-fast) var(--gestio-easing-standard);
+  animation: gestio-chart-fade var(--gestio-duration-slow) var(--gestio-easing-standard) both;
+}
+
+.gestio-chart__mark--dim {
+  opacity: 0.45;
+}
+
+.gestio-chart__focus {
+  fill: none;
+  stroke: var(--gestio-color-focus-ring);
+  stroke-width: 2;
+  pointer-events: none;
+}
+
+.gestio-chart__center-value {
+  fill: var(--gestio-color-text);
+  font-weight: var(--gestio-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.gestio-chart__center-label {
+  fill: var(--gestio-color-text-muted);
+}
+
+.gestio-chart__tooltip {
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  box-sizing: border-box;
+  max-width: 16rem;
+  padding: var(--gestio-space-2) var(--gestio-space-3);
+  border: var(--gestio-border-width) solid var(--gestio-color-border);
+  border-radius: var(--gestio-chart-radius, var(--gestio-radius-md));
+  background: var(--gestio-color-surface);
+  box-shadow: var(--gestio-shadow-md);
+  color: var(--gestio-color-text);
+  font-size: var(--gestio-font-size-sm);
+  line-height: var(--gestio-line-height-normal);
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translate(-50%, calc(-100% - var(--gestio-space-2)));
+}
+
+.gestio-chart__tooltip-title {
+  font-weight: var(--gestio-font-weight-semibold);
+}
+
+.gestio-chart__tooltip-row {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gestio-space-2);
+  color: var(--gestio-color-text-muted);
+  font-variant-numeric: tabular-nums;
+
+  strong {
+    color: var(--gestio-color-text);
+    font-weight: var(--gestio-font-weight-semibold);
+  }
+}
+
+.gestio-chart__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gestio-space-2) var(--gestio-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--gestio-font-size-sm);
+  color: var(--gestio-color-text);
+}
+
+.gestio-chart__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gestio-space-2);
+}
+
+.gestio-chart__legend-detail {
+  color: var(--gestio-color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.gestio-chart__swatch {
+  flex: none;
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.gestio-chart__swatch--line {
+  width: 1.75rem;
+}
+
+.gestio-chart__empty {
+  display: grid;
+  place-items: center;
+  min-height: 8rem;
+  margin: 0;
+  border: var(--gestio-border-width) dashed var(--gestio-color-border-strong);
+  border-radius: var(--gestio-chart-radius, var(--gestio-radius-md));
+  color: var(--gestio-color-text-muted);
+  font-size: var(--gestio-font-size-sm);
+}
+
+.gestio-chart__sr-only {
+  @include field.sr-only;
+}
+
+// Anneau : graphique et légende côte à côte quand la place le permet.
+.gestio-chart__donut {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gestio-space-4) var(--gestio-space-6);
+
+  .gestio-chart__plot {
+    flex: 0 1 auto;
+  }
+
+  .gestio-chart__legend {
+    flex: 1 1 12rem;
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+}
+
+@keyframes gestio-chart-grow {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes gestio-chart-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gestio-chart__bar,
+  .gestio-chart__line,
+  .gestio-chart__area,
+  .gestio-chart__marker,
+  .gestio-chart__slice {
+    animation: none;
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .gestio-chart__bar,
+  .gestio-chart__slice,
+  .gestio-chart__marker {
+    stroke: CanvasText;
+  }
+
+  .gestio-chart__line {
+    stroke: CanvasText !important;
+  }
+
+  .gestio-chart__focus {
+    stroke: Highlight;
+  }
+
+  .gestio-chart__tooltip {
+    border-color: CanvasText;
+  }
+}

@@ -1,0 +1,60 @@
+@use '../core/field' as field;
+
+:host {
+  display: inline-flex;
+  align-items: center;
+  /* Le chevauchement est porté par les avatars (classe gestio-avatar--grouped). */
+}
+
+.gestio-avatar-group__more {
+  --_size: 2.5rem;
+  --_font-size: var(--gestio-font-size-sm);
+
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--_size);
+  height: var(--_size);
+  margin-inline-start: calc(var(--_size) * -0.25);
+  box-sizing: border-box;
+  border-radius: var(--gestio-radius-full);
+  background: var(--gestio-color-surface-muted);
+  box-shadow: 0 0 0 2px var(--gestio-color-surface);
+  color: var(--gestio-color-text-muted);
+  font-family: var(--gestio-font-sans);
+  font-size: var(--_font-size);
+  font-weight: var(--gestio-font-weight-semibold);
+  line-height: 1;
+}
+
+.gestio-avatar-group__more--xs {
+  --_size: 1.5rem;
+  --_font-size: 0.625rem;
+}
+
+.gestio-avatar-group__more--sm {
+  --_size: 2rem;
+  --_font-size: var(--gestio-font-size-xs);
+}
+
+.gestio-avatar-group__more--lg {
+  --_size: 3rem;
+  --_font-size: var(--gestio-font-size-md);
+}
+
+.gestio-avatar-group__more--xl {
+  --_size: 4rem;
+  --_font-size: var(--gestio-font-size-lg);
+}
+
+.gestio-avatar-group__sr-only {
+  @include field.sr-only;
+}
+
+@media (forced-colors: active) {
+  .gestio-avatar-group__more {
+    border: 1px solid CanvasText;
+  }
+}

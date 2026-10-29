@@ -1,0 +1,194 @@
+:host {
+  --_subtle: var(--gestio-color-neutral-subtle);
+  --_subtle-hover: var(--gestio-color-neutral-subtle-hover);
+  --_text: var(--gestio-color-neutral-text);
+  --_border: var(--gestio-color-neutral-border);
+
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: 1.75rem;
+  border: var(--gestio-border-width) solid var(--_border);
+  border-radius: var(--gestio-chip-radius, var(--gestio-radius-full));
+  background: var(--_subtle);
+  color: var(--_text);
+  font-family: var(--gestio-font-sans);
+  font-size: var(--gestio-font-size-sm);
+  font-weight: var(--gestio-font-weight-medium);
+  line-height: var(--gestio-line-height-tight);
+  vertical-align: middle;
+}
+
+:host(.gestio-chip--primary) {
+  --_subtle: var(--gestio-color-primary-subtle);
+  --_subtle-hover: var(--gestio-color-primary-subtle-hover);
+  --_text: var(--gestio-color-primary-text);
+  --_border: var(--gestio-color-primary-border);
+}
+
+:host(.gestio-chip--success) {
+  --_subtle: var(--gestio-color-success-subtle);
+  --_subtle-hover: var(--_subtle);
+  --_text: var(--gestio-color-success-text);
+  --_border: var(--gestio-color-success-border);
+}
+
+:host(.gestio-chip--warning) {
+  --_subtle: var(--gestio-color-warning-subtle);
+  --_subtle-hover: var(--_subtle);
+  --_text: var(--gestio-color-warning-text);
+  --_border: var(--gestio-color-warning-border);
+}
+
+:host(.gestio-chip--danger) {
+  --_subtle: var(--gestio-color-danger-subtle);
+  --_subtle-hover: var(--_subtle);
+  --_text: var(--gestio-color-danger-text);
+  --_border: var(--gestio-color-danger-border);
+}
+
+:host(.gestio-chip--info) {
+  --_subtle: var(--gestio-color-info-subtle);
+  --_subtle-hover: var(--_subtle);
+  --_text: var(--gestio-color-info-text);
+  --_border: var(--gestio-color-info-border);
+}
+
+/* Puce de filtre non sélectionnée : contour seul. */
+:host(.is-toggle:not(.is-selected)) {
+  background: var(--gestio-color-surface);
+  border-color: var(--gestio-color-border-strong);
+  color: var(--gestio-color-text);
+}
+
+:host(.is-disabled) {
+  opacity: 0.55;
+}
+
+.gestio-chip__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:host(:not(.is-toggle)) .gestio-chip__label {
+  padding-inline: var(--gestio-space-3);
+}
+
+:host(:not(.is-toggle).is-removable) .gestio-chip__label {
+  padding-inline-end: var(--gestio-space-1);
+}
+
+.gestio-chip__toggle {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gestio-space-1);
+  min-width: 0;
+  min-height: inherit;
+  margin: 0;
+  padding: 0 var(--gestio-space-3);
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--gestio-duration-fast) var(--gestio-easing-standard);
+
+  &:hover:not(:disabled) {
+    background: var(--gestio-color-surface-hover);
+  }
+
+  :host(.is-selected) &:hover:not(:disabled) {
+    background: var(--_subtle-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  :host(.is-removable) & {
+    padding-inline-end: var(--gestio-space-1);
+  }
+}
+
+.gestio-chip__check {
+  flex: none;
+  width: 0;
+  height: 0.875rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: width var(--gestio-duration-fast) var(--gestio-easing-standard);
+
+  :host(.is-selected) & {
+    width: 0.875rem;
+  }
+}
+
+.gestio-chip__remove {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 0 0.125rem 0 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--gestio-radius-full);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+
+  svg {
+    width: 0.875rem;
+    height: 0.875rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+  }
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, currentColor 14%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: 0;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gestio-chip__toggle,
+  .gestio-chip__check {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  :host {
+    border-color: CanvasText;
+  }
+
+  :host(.is-selected) {
+    border-width: 2px;
+  }
+}

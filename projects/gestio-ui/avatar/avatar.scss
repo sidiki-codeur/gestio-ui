@@ -1,0 +1,201 @@
+@use '../core/field' as field;
+
+:host {
+  --_size: 2.5rem;
+  --_font-size: var(--gestio-font-size-md);
+  --_status-size: 0.75rem;
+  --_bg: var(--gestio-color-neutral-subtle);
+  --_fg: var(--gestio-color-neutral-text);
+
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  width: var(--_size);
+  height: var(--_size);
+  vertical-align: middle;
+  font-family: var(--gestio-font-sans);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+/* Tailles */
+:host(.gestio-avatar--xs) {
+  --_size: 1.5rem;
+  --_font-size: 0.625rem;
+  --_status-size: 0.5rem;
+}
+
+:host(.gestio-avatar--sm) {
+  --_size: 2rem;
+  --_font-size: var(--gestio-font-size-xs);
+  --_status-size: 0.625rem;
+}
+
+:host(.gestio-avatar--lg) {
+  --_size: 3rem;
+  --_font-size: var(--gestio-font-size-lg);
+  --_status-size: 0.875rem;
+}
+
+:host(.gestio-avatar--xl) {
+  --_size: 4rem;
+  --_font-size: var(--gestio-font-size-2xl);
+  --_status-size: 1rem;
+}
+
+/* Dans un gestio-avatar-group : chevauchement et liseré de séparation. */
+:host(.gestio-avatar--grouped) {
+  margin-inline-start: calc(var(--_size) * -0.25);
+}
+
+:host(.gestio-avatar--grouped:first-child) {
+  margin-inline-start: 0;
+}
+
+:host(.gestio-avatar--grouped) .gestio-avatar__frame {
+  box-shadow:
+    0 0 0 2px var(--gestio-color-surface),
+    inset 0 0 0 var(--gestio-border-width) var(--gestio-color-border);
+}
+
+/* Teintes (texte « -text » sur fond « -subtle » : contraste AA) */
+:host(.gestio-avatar--primary) {
+  --_bg: var(--gestio-color-primary-subtle);
+  --_fg: var(--gestio-color-primary-text);
+}
+
+:host(.gestio-avatar--info) {
+  --_bg: var(--gestio-color-info-subtle);
+  --_fg: var(--gestio-color-info-text);
+}
+
+:host(.gestio-avatar--success) {
+  --_bg: var(--gestio-color-success-subtle);
+  --_fg: var(--gestio-color-success-text);
+}
+
+:host(.gestio-avatar--warning) {
+  --_bg: var(--gestio-color-warning-subtle);
+  --_fg: var(--gestio-color-warning-text);
+}
+
+:host(.gestio-avatar--danger) {
+  --_bg: var(--gestio-color-danger-subtle);
+  --_fg: var(--gestio-color-danger-text);
+}
+
+.gestio-avatar__frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  border-radius: var(--gestio-radius-full);
+  background: var(--_bg);
+  color: var(--_fg);
+  box-shadow: inset 0 0 0 var(--gestio-border-width) var(--gestio-color-border);
+}
+
+:host(.gestio-avatar--square) .gestio-avatar__frame {
+  border-radius: var(--gestio-avatar-radius, var(--gestio-radius-md));
+}
+
+:host(.gestio-avatar--square.gestio-avatar--lg) .gestio-avatar__frame,
+:host(.gestio-avatar--square.gestio-avatar--xl) .gestio-avatar__frame {
+  border-radius: var(--gestio-avatar-radius, var(--gestio-radius-lg));
+}
+
+.gestio-avatar__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gestio-avatar__initials {
+  font-size: var(--_font-size);
+  font-weight: var(--gestio-font-weight-semibold);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  user-select: none;
+}
+
+.gestio-avatar__icon {
+  width: 62%;
+  height: 62%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+}
+
+/*
+ * Pastille de statut : la forme varie avec le statut (la couleur n'est pas la
+ * seule information) — plein (en ligne), croissant (absent), barre (occupé),
+ * anneau (hors ligne).
+ */
+.gestio-avatar__status {
+  position: absolute;
+  inset-inline-end: 0;
+  bottom: 0;
+  width: var(--_status-size);
+  height: var(--_status-size);
+  box-sizing: border-box;
+  border-radius: var(--gestio-radius-full);
+  background: var(--_status);
+  box-shadow: 0 0 0 2px var(--gestio-color-surface);
+}
+
+:host(.gestio-avatar--square) .gestio-avatar__status {
+  transform: translate(25%, 25%);
+}
+
+:host(.gestio-avatar--square) .gestio-avatar__status:dir(rtl) {
+  transform: translate(-25%, 25%);
+}
+
+.gestio-avatar__status--online {
+  --_status: var(--gestio-color-success);
+}
+
+.gestio-avatar__status--away {
+  --_status: var(--gestio-color-warning);
+  background: radial-gradient(
+    circle at 30% 30%,
+    var(--gestio-color-surface) 0 32%,
+    var(--_status) 33%
+  );
+}
+
+.gestio-avatar__status--busy {
+  --_status: var(--gestio-color-danger);
+  background:
+    linear-gradient(var(--gestio-color-surface), var(--gestio-color-surface)) center / 60% 22%
+      no-repeat,
+    var(--_status);
+}
+
+.gestio-avatar__status--offline {
+  --_status: var(--gestio-color-text-subtle);
+  background: var(--gestio-color-surface);
+  border: max(2px, calc(var(--_status-size) * 0.22)) solid var(--_status);
+}
+
+.gestio-avatar__sr-only {
+  @include field.sr-only;
+}
+
+@media (forced-colors: active) {
+  .gestio-avatar__frame {
+    border: 1px solid CanvasText;
+  }
+
+  .gestio-avatar__status {
+    forced-color-adjust: none;
+    border: 1px solid CanvasText;
+  }
+}

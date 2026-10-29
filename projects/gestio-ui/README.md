@@ -52,34 +52,45 @@ Les champs fonctionnent avec Reactive Forms, `ngModel` et Signal Forms (`[formFi
 
 ## Composants
 
-| Point d’entrée                       | Composants                                                                                 |
-| ------------------------------------ | ------------------------------------------------------------------------------------------ |
-| `/button`                            | `button[gestioButton]`, `a[gestioButton]`                                                  |
-| `/input`, `/textarea`, `/select`     | `gestio-input`, `gestio-textarea`, `gestio-select`                                         |
-| `/checkbox`, `/radio`, `/switch`     | `gestio-checkbox`, `gestio-radio-group` + `gestio-radio`, `gestio-switch`                  |
-| `/form-field`                        | `gestio-form-field` + `[gestioFieldControl]` (contrôles natifs : date, heure…)             |
-| `/card`, `/badge`, `/tabs`           | `gestio-card`, `gestio-badge`, `gestio-tabs`                                               |
-| `/table`, `/datagrid`, `/pagination` | `table[gestioTable]`, `gestio-datagrid`, `gestio-pagination`                               |
-| `/menu`                              | `[gestioMenuTriggerFor]`, `gestio-menu`, `[gestioMenuItem]`                                |
-| `/tooltip`                           | `[gestioTooltip]`                                                                          |
-| `/alert`, `/skeleton`, `/spinner`    | `gestio-alert`, `gestio-skeleton`, `gestio-spinner`                                        |
-| `/dialog`, `/toast`                  | `GestioDialogService`, `GestioToastService` + `gestio-toaster`                             |
-| `/layout`                            | `gestio-app-shell`, `gestio-container`, `gestio-stack`, `gestio-grid`, `GestioBreakpoints` |
+| Point d’entrée                       | Composants                                                                                    |
+| ------------------------------------ | --------------------------------------------------------------------------------------------- |
+| `/button`                            | `button[gestioButton]`, `a[gestioButton]`                                                     |
+| `/input`, `/textarea`, `/select`     | `gestio-input`, `gestio-textarea`, `gestio-select`                                            |
+| `/checkbox`, `/radio`, `/switch`     | `gestio-checkbox`, `gestio-radio-group` + `gestio-radio`, `gestio-switch`                     |
+| `/form-field`                        | `gestio-form-field` + `[gestioFieldControl]` (contrôles natifs : date, heure…)                |
+| `/card`, `/badge`, `/tabs`           | `gestio-card`, `gestio-badge`, `gestio-tabs`                                                  |
+| `/table`, `/datagrid`, `/pagination` | `table[gestioTable]`, `gestio-datagrid`, `gestio-pagination`                                  |
+| `/menu`                              | `[gestioMenuTriggerFor]`, `gestio-menu`, `[gestioMenuItem]`                                   |
+| `/tooltip`                           | `[gestioTooltip]`                                                                             |
+| `/alert`, `/skeleton`, `/spinner`    | `gestio-alert`, `gestio-skeleton`, `gestio-spinner`                                           |
+| `/dialog`, `/toast`                  | `GestioDialogService`, `GestioToastService` + `gestio-toaster`                                |
+| `/layout`                            | `gestio-app-shell`, `gestio-container`, `gestio-stack`, `gestio-grid`, `GestioBreakpoints`    |
+| `/accordion`, `/breadcrumb`          | `gestio-accordion` + `gestio-accordion-item`, `gestio-breadcrumb` + `gestio-breadcrumb-entry` |
+| `/avatar`, `/chips`                  | `gestio-avatar`, `gestio-avatar-group`, `gestio-chip`, `gestio-chip-input`                    |
+| `/combobox`, `/date-picker`          | `gestio-combobox` (recherche, sélection multiple), `gestio-date-picker`                       |
+| `/slider`, `/segmented-control`      | `gestio-slider` (valeur ou plage), `gestio-segmented-control` + `gestio-segment`              |
+| `/progress`, `/stepper`              | `gestio-progress-bar`, `gestio-progress-circle`, `gestio-stepper` + `gestio-step`             |
+| `/file-upload`, `/popover`           | `gestio-file-upload`, `[gestioPopoverTrigger]`                                                |
+| `/drawer`, `/ripple`                 | `gestio-drawer`, `GestioDrawerService`, `[gestioRipple]`                                      |
 
 ## Blocs
 
 Composants de plus haut niveau, chacun dans son point d’entrée `@gestiolabs336/ui/blocks/<bloc>`.
 
-| Point d’entrée                                                              | Composants                                                                          |
-| --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| `/blocks/login-form`, `/blocks/signup-form`, `/blocks/forgot-password-form` | `gestio-login-form`, `gestio-signup-form`, `gestio-forgot-password-form`            |
-| `/blocks/social-button`, `/blocks/otp-input`                                | `button[gestioSocialButton]` (Google, GitHub, Microsoft, Apple), `gestio-otp-input` |
-| `/blocks/calendar`, `/blocks/event-calendar`                                | `gestio-calendar` (date ou plage), `gestio-event-calendar` (agenda mensuel)         |
-| `/blocks/carousel`, `/blocks/product-card`                                  | `gestio-carousel` + `gestio-carousel-slide`, `gestio-product-card`                  |
-| `/blocks/rating`, `/blocks/quantity-input`                                  | `gestio-rating`, `gestio-review`, `gestio-quantity-input`                           |
-| `/blocks/cart-summary`, `/blocks/pricing-table`                             | `gestio-cart-summary`, `gestio-pricing-table` + `gestio-pricing-plan`               |
-| `/blocks/stat-card`, `/blocks/activity-feed`                                | `gestio-stat-card`, `gestio-activity-feed`                                          |
-| `/blocks/empty-state`, `/blocks/page-header`                                | `gestio-empty-state`, `gestio-page-header`                                          |
+| Point d’entrée                                                              | Composants                                                                           |
+| --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `/blocks/login-form`, `/blocks/signup-form`, `/blocks/forgot-password-form` | `gestio-login-form`, `gestio-signup-form`, `gestio-forgot-password-form`             |
+| `/blocks/social-button`, `/blocks/otp-input`                                | `button[gestioSocialButton]` (Google, GitHub, Microsoft, Apple), `gestio-otp-input`  |
+| `/blocks/calendar`, `/blocks/event-calendar`                                | `gestio-calendar` (date ou plage), `gestio-event-calendar` (agenda mensuel)          |
+| `/blocks/carousel`, `/blocks/product-card`                                  | `gestio-carousel` + `gestio-carousel-slide`, `gestio-product-card`                   |
+| `/blocks/rating`, `/blocks/quantity-input`                                  | `gestio-rating`, `gestio-review`, `gestio-quantity-input`                            |
+| `/blocks/cart-summary`, `/blocks/pricing-table`                             | `gestio-cart-summary`, `gestio-pricing-table` + `gestio-pricing-plan`                |
+| `/blocks/stat-card`, `/blocks/activity-feed`                                | `gestio-stat-card`, `gestio-activity-feed`                                           |
+| `/blocks/empty-state`, `/blocks/page-header`                                | `gestio-empty-state`, `gestio-page-header`                                           |
+| `/blocks/chart`                                                             | `gestio-bar-chart`, `gestio-line-chart`, `gestio-donut-chart` (SVG, sans dépendance) |
+| `/blocks/kanban`                                                            | `gestio-kanban` + `ng-template[gestioKanbanCard]`                                    |
+| `/blocks/command-palette`, `/blocks/notification-center`                    | `gestio-command-palette` (Ctrl+K), `gestio-notification-center`                      |
+| `/blocks/error-page`                                                        | `gestio-error-page` (404, 403, 500, maintenance, hors ligne)                         |
 
 ## Personnalisation
 
@@ -115,7 +126,7 @@ Pour changer la couleur source, surchargez la famille `--gestio-color-primary-*`
 
 Les boutons, boutons sociaux et éléments de menu affichent alors une onde de pression (directive `gestioRipple`, point d’entrée `@gestiolabs336/ui/ripple`, applicable à tout élément positionné).
 
-Tokens de composants (avec repli sur l’échelle de rayons) : `--gestio-button-radius`, `--gestio-button-press-offset`, `--gestio-field-radius`, `--gestio-dialog-radius`.
+Tokens de composants (avec repli sur l’échelle de rayons) : `--gestio-button-radius`, `--gestio-button-press-offset`, `--gestio-field-radius`, `--gestio-dialog-radius`, `--gestio-drawer-radius`, `--gestio-popover-radius`, `--gestio-chip-radius`, `--gestio-segmented-control-radius`, `--gestio-file-upload-radius`, `--gestio-kanban-card-radius`, `--gestio-notification-center-radius`… Les graphiques utilisent la palette `--gestio-chart-1` à `--gestio-chart-8` (contraste ≥ 3:1 dans chaque thème).
 
 ## Serveur MCP pour les assistants IA
 
@@ -134,8 +145,7 @@ Outils : `get_setup_guide`, `list_components`, `get_component`, `get_guide`, `se
 
 ## Limites de la version 0.x
 
-L’API peut encore évoluer. Pas encore de combobox, date picker dédié (utilisez
-`<input type="date">` dans `gestio-form-field`), sous-menus ni popover ; la datagrid travaille côté
+L’API peut encore évoluer. Pas encore de sous-menus ni de groupes d’options ; la datagrid travaille côté
 client (pour une pagination serveur, combinez `table[gestioTable]` et `gestio-pagination`).
 
 ## Licence

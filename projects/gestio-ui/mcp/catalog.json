@@ -35,7 +35,7 @@
     {
       "id": "limits",
       "title": "Limites de la version actuelle",
-      "content": "Non disponible (ne pas inventer d'API) : édition en ligne, colonnes redimensionnables ou défilement virtuel dans la datagrid, pagination côté serveur intégrée à la datagrid (utiliser gestio-pagination avec gestio-table), combobox avec recherche, sélection multiple, groupes d'options, date picker (utiliser <input type=\"date\" gestioFieldControl> dans gestio-form-field), sous-menus et éléments à cocher dans les menus, popover, avatar, accordéon, drawer, stepper, fil d'Ariane. gestio-select est un <select> natif. Les notifications au-delà de maxVisible retirent les plus anciennes (pas de file d'attente). Libellés internes en français, surchargeables par entrées (closeLabel, loadingLabel, labels…). Il n'existe pas de NgModule : importer les composants standalone individuellement."
+      "content": "Non disponible (ne pas inventer d'API) : édition en ligne, colonnes redimensionnables ou défilement virtuel dans la datagrid, pagination côté serveur intégrée à la datagrid (utiliser gestio-pagination avec gestio-table), groupes d'options, sous-menus et éléments à cocher dans les menus. Pour une liste avec recherche ou une sélection multiple, utiliser gestio-combobox ; pour une date, gestio-date-picker. gestio-select est un <select> natif. Les notifications au-delà de maxVisible retirent les plus anciennes (pas de file d'attente). Libellés internes en français, surchargeables par entrées (closeLabel, loadingLabel, labels…). Il n'existe pas de NgModule : importer les composants standalone individuellement."
     }
   ],
   "components": [
@@ -565,7 +565,7 @@
       ],
       "pitfalls": [
         "Ne pas projeter d'<option> : passer les options via [options].",
-        "Pas de recherche ni de sélection multiple (select natif)."
+        "Pas de recherche ni de sélection multiple (select natif) : utiliser gestio-combobox (@gestiolabs336/ui/combobox)."
       ],
       "entryPoint": "@gestiolabs336/ui/select"
     },
@@ -2280,6 +2280,1778 @@
         }
       ],
       "pitfalls": ["Pour un bouton, utiliser [loading] de gestioButton plutôt qu’un spinner."]
+    },
+    {
+      "id": "accordion",
+      "title": "Accordéon",
+      "kind": "component",
+      "exports": [
+        "GestioAccordion",
+        "GestioAccordionItem",
+        "GestioAccordionVariant",
+        "GestioAccordionHeadingLevel"
+      ],
+      "classes": [
+        {
+          "class": "GestioAccordion",
+          "selector": "gestio-accordion"
+        },
+        {
+          "class": "GestioAccordionItem",
+          "selector": "gestio-accordion-item"
+        }
+      ],
+      "summary": "Accordéon accessible (motif ARIA Accordion, basé sur CdkAccordion) : bouton d'en-tête dans un titre hn avec aria-expanded/aria-controls, région nommée, chevron animé, flèches haut/bas/Début/Fin entre en-têtes, une ou plusieurs sections ouvertes, openAll()/closeAll().",
+      "inputs": [
+        {
+          "name": "multi",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-accordion : autorise plusieurs sections ouvertes."
+        },
+        {
+          "name": "variant",
+          "type": "'bordered' | 'separated' | 'flush'",
+          "default": "'bordered'",
+          "description": "gestio-accordion : bloc encadré, cartes séparées ou filets sans cadre."
+        },
+        {
+          "name": "heading",
+          "type": "string (requis)",
+          "description": "gestio-accordion-item : texte de l'en-tête (nom du bouton et de la région)."
+        },
+        {
+          "name": "expanded",
+          "type": "model<boolean>",
+          "default": "false",
+          "description": "gestio-accordion-item : section ouverte ; [(expanded)] (pas d’attribut statique : [expanded]=\"true\")."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-accordion-item : section impossible à ouvrir ou fermer."
+        },
+        {
+          "name": "headingLevel",
+          "type": "2 | 3 | 4 | 5 | 6",
+          "default": "3",
+          "description": "gestio-accordion-item : niveau du titre qui contient le bouton d'en-tête."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "expandedChange",
+          "type": "boolean",
+          "description": "gestio-accordion-item : émis par le model expanded (y compris quand une autre section la referme)."
+        },
+        {
+          "name": "opened",
+          "type": "void",
+          "description": "gestio-accordion-item : émis à l'ouverture."
+        },
+        {
+          "name": "closed",
+          "type": "void",
+          "description": "gestio-accordion-item : émis à la fermeture."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "gestio-accordion : éléments <gestio-accordion-item> ; gestio-accordion-item : contenu du panneau."
+        },
+        {
+          "selector": "[gestioAccordionIcon]",
+          "description": "gestio-accordion-item : icône décorative avant le texte de l'en-tête (à marquer aria-hidden)."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Fiche fournisseur",
+          "code": "// imports: [GestioAccordion, GestioAccordionItem]\n<gestio-accordion variant=\"separated\">\n  <gestio-accordion-item heading=\"Coordonnées\" [(expanded)]=\"contactOpen\">…</gestio-accordion-item>\n  <gestio-accordion-item heading=\"Conditions de paiement\">…</gestio-accordion-item>\n  <gestio-accordion-item heading=\"Contrat-cadre\" disabled>…</gestio-accordion-item>\n</gestio-accordion>"
+        },
+        {
+          "title": "FAQ multi-ouverture avec « Tout déplier »",
+          "code": "// imports: [GestioAccordion, GestioAccordionItem, GestioButton]\n<button gestioButton variant=\"outline\" (click)=\"faq.openAll()\">Tout déplier</button>\n<gestio-accordion #faq=\"gestioAccordion\" multi>\n  <gestio-accordion-item heading=\"Comment émettre un avoir ?\" [expanded]=\"true\">…</gestio-accordion-item>\n  <gestio-accordion-item heading=\"Comment relancer un client ?\">…</gestio-accordion-item>\n</gestio-accordion>"
+        }
+      ],
+      "pitfalls": [
+        "Importer à la fois GestioAccordion et GestioAccordionItem.",
+        "expanded est un model : pas d’attribut statique « expanded », écrire [expanded]=\"true\".",
+        "Adapter headingLevel à la hiérarchie de la page (niveau du titre précédent + 1).",
+        "openAll() n’agit que si multi est actif.",
+        "Les panneaux fermés restent instanciés (masqués par hidden)."
+      ],
+      "entryPoint": "@gestiolabs336/ui/accordion"
+    },
+    {
+      "id": "avatar",
+      "title": "Avatar",
+      "kind": "component",
+      "exports": [
+        "GestioAvatar",
+        "GestioAvatarGroup",
+        "GestioAvatarSize",
+        "GestioAvatarShape",
+        "GestioAvatarStatus",
+        "GestioAvatarLabels",
+        "GESTIO_AVATAR_LABELS",
+        "gestioAvatarInitials",
+        "GestioAvatarGroupLabels",
+        "GESTIO_AVATAR_GROUP_LABELS"
+      ],
+      "classes": [
+        {
+          "class": "GestioAvatar",
+          "selector": "gestio-avatar"
+        },
+        {
+          "class": "GestioAvatarGroup",
+          "selector": "gestio-avatar-group"
+        }
+      ],
+      "summary": "Avatar de personne ou d'organisation : image (alt = nom) avec repli automatique sur les initiales puis sur une icône, couleur de fond déterministe issue du nom, tailles xs à xl, rond ou carré, statut de présence (forme distincte + texte accessible). gestio-avatar-group superpose les avatars et résume le surplus par une pastille « +N » libellée.",
+      "inputs": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "gestio-avatar : nom (texte alternatif, initiales, couleur). Sans nom, l'avatar est décoratif."
+        },
+        {
+          "name": "src",
+          "type": "string | null",
+          "description": "gestio-avatar : URL de l'image ; erreur de chargement ⇒ initiales."
+        },
+        {
+          "name": "size",
+          "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
+          "default": "'md'",
+          "description": "gestio-avatar : taille (24 à 64 px) ; gestio-avatar-group : taille imposée à tous ses avatars (aucune par défaut)."
+        },
+        {
+          "name": "shape",
+          "type": "'circle' | 'square'",
+          "default": "'circle'",
+          "description": "gestio-avatar : rond (personne) ou carré arrondi (organisation)."
+        },
+        {
+          "name": "status",
+          "type": "'online' | 'away' | 'busy' | 'offline'",
+          "description": "gestio-avatar : statut de présence."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioAvatarLabels> | Partial<GestioAvatarGroupLabels>",
+          "default": "{}",
+          "description": "gestio-avatar : textes des statuts (online, away, busy, offline) ; gestio-avatar-group : textes de la pastille (moreOne, more avec {count})."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "default": "'fr-FR'",
+          "description": "gestio-avatar : langue des majuscules des initiales ; gestio-avatar-group : formatage du nombre « +N »."
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "description": "gestio-avatar-group : nombre maximal d'avatars affichés ; les suivants sont résumés par « +N »."
+        },
+        {
+          "name": "total",
+          "type": "number",
+          "description": "gestio-avatar-group : nombre total de personnes, s'il dépasse les avatars fournis."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "gestio-avatar-group : nom accessible du groupe (role=\"group\")."
+        }
+      ],
+      "outputs": [],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "gestio-avatar-group : éléments <gestio-avatar>."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Responsable avec statut",
+          "code": "// imports: [GestioAvatar]\n<gestio-avatar name=\"Claire Moreau\" [src]=\"user.photoUrl\" status=\"online\" size=\"lg\" />\n<gestio-avatar name=\"Atelier Moreau SARL\" shape=\"square\" />"
+        },
+        {
+          "title": "Équipe d’un dossier",
+          "code": "// imports: [GestioAvatar, GestioAvatarGroup]\n<gestio-avatar-group [max]=\"3\" [total]=\"nbMembres()\" size=\"sm\" ariaLabel=\"Équipe du dossier\">\n  @for (m of membres(); track m.id) {\n    <gestio-avatar [name]=\"m.nom\" [src]=\"m.photo\" />\n  }\n</gestio-avatar-group>"
+        }
+      ],
+      "pitfalls": [
+        "Utilise un <img> natif (pas NgOptimizedImage) : URL dynamiques arbitraires, chargement différé.",
+        "Sans name, l'avatar est décoratif (alt vide) ; à côté d'un nom déjà affiché, c'est souvent préférable pour éviter une double lecture.",
+        "Dans un groupe, la taille du groupe (size) prime sur celle des avatars.",
+        "max compte les avatars affichés, la pastille « +N » vient en plus."
+      ],
+      "entryPoint": "@gestiolabs336/ui/avatar"
+    },
+    {
+      "id": "breadcrumb",
+      "title": "Fil d’Ariane",
+      "kind": "component",
+      "exports": [
+        "GestioBreadcrumb",
+        "GestioBreadcrumbEntry",
+        "GestioBreadcrumbLink",
+        "GestioBreadcrumbSeparator",
+        "GestioBreadcrumbLabels",
+        "GESTIO_BREADCRUMB_LABELS"
+      ],
+      "classes": [
+        {
+          "class": "GestioBreadcrumb",
+          "selector": "gestio-breadcrumb"
+        },
+        {
+          "class": "GestioBreadcrumbEntry",
+          "selector": "gestio-breadcrumb-entry"
+        },
+        {
+          "class": "GestioBreadcrumbLink",
+          "selector": "a[gestioBreadcrumbLink]"
+        }
+      ],
+      "summary": "Fil d’Ariane accessible : <nav> nommé « Fil d’Ariane », liste ordonnée, séparateurs décoratifs, aria-current=\"page\" sur le dernier élément, liens compatibles routerLink, repli des niveaux du milieu au-delà de maxItems derrière un bouton « … » accessible (focus déplacé sur le premier niveau révélé).",
+      "inputs": [
+        {
+          "name": "maxItems",
+          "type": "number",
+          "default": "8",
+          "description": "gestio-breadcrumb : au-delà, les éléments du milieu sont repliés ; 0 désactive le repli."
+        },
+        {
+          "name": "itemsBeforeCollapse",
+          "type": "number",
+          "default": "1",
+          "description": "gestio-breadcrumb : éléments visibles au début en cas de repli."
+        },
+        {
+          "name": "itemsAfterCollapse",
+          "type": "number",
+          "default": "1",
+          "description": "gestio-breadcrumb : éléments visibles à la fin en cas de repli."
+        },
+        {
+          "name": "separator",
+          "type": "'chevron' | 'slash'",
+          "default": "'chevron'",
+          "description": "gestio-breadcrumb : séparateur décoratif."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioBreadcrumbLabels>",
+          "default": "{}",
+          "description": "gestio-breadcrumb : libellés (navigation, showHidden avec {count})."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "gestio-breadcrumb : nom du <nav> (défaut labels.navigation) ; unique s’il y a plusieurs fils d’Ariane."
+        }
+      ],
+      "outputs": [],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "gestio-breadcrumb : éléments <gestio-breadcrumb-entry> ; gestio-breadcrumb-entry : lien a[gestioBreadcrumbLink] ou texte simple (page courante)."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Facture dans une arborescence profonde",
+          "code": "// imports: [GestioBreadcrumb, GestioBreadcrumbEntry, GestioBreadcrumbLink, RouterLink]\n<gestio-breadcrumb [maxItems]=\"4\" [itemsAfterCollapse]=\"2\">\n  <gestio-breadcrumb-entry><a gestioBreadcrumbLink routerLink=\"/\">Tableau de bord</a></gestio-breadcrumb-entry>\n  <gestio-breadcrumb-entry><a gestioBreadcrumbLink routerLink=\"/ventes\">Ventes</a></gestio-breadcrumb-entry>\n  <gestio-breadcrumb-entry><a gestioBreadcrumbLink routerLink=\"/ventes/clients\">Clients</a></gestio-breadcrumb-entry>\n  <gestio-breadcrumb-entry><a gestioBreadcrumbLink [routerLink]=\"['/ventes/clients', client.id]\">{{ client.nom }}</a></gestio-breadcrumb-entry>\n  <gestio-breadcrumb-entry><a gestioBreadcrumbLink routerLink=\"factures\">Factures</a></gestio-breadcrumb-entry>\n  <gestio-breadcrumb-entry>{{ facture.numero }}</gestio-breadcrumb-entry>\n</gestio-breadcrumb>"
+        }
+      ],
+      "pitfalls": [
+        "Importer GestioBreadcrumb, GestioBreadcrumbEntry et GestioBreadcrumbLink (et RouterLink pour routerLink).",
+        "Le dernier élément est la page courante (aria-current=\"page\") : le laisser de préférence en texte simple.",
+        "Les liens doivent porter gestioBreadcrumbLink (style, aria-current) ; gestio-breadcrumb crée lui-même les <li>.",
+        "maxItems déclenche le repli ; itemsBeforeCollapse/itemsAfterCollapse fixent ce qui reste visible. Une ellipse ne remplace jamais un seul élément."
+      ],
+      "entryPoint": "@gestiolabs336/ui/breadcrumb"
+    },
+    {
+      "id": "chips",
+      "title": "Puces",
+      "kind": "component",
+      "exports": [
+        "GestioChip",
+        "GestioChipVariant",
+        "GestioChipLabels",
+        "GESTIO_CHIP_LABELS",
+        "GestioChipInput",
+        "GestioChipInputLabels",
+        "GESTIO_CHIP_INPUT_LABELS",
+        "GestioChipInputSize"
+      ],
+      "classes": [
+        {
+          "class": "GestioChip",
+          "selector": "gestio-chip"
+        },
+        {
+          "class": "GestioChipInput",
+          "selector": "gestio-chip-input"
+        }
+      ],
+      "summary": "gestio-chip : puce (mot-clé, filtre, destinataire) avec variante de couleur, bouton de suppression nommé « Retirer X » et mode filtre bascule (aria-pressed) dès que `selected` est lié. gestio-chip-input : saisie de mots-clés en puces — Entrée ou virgule ajoute (collage « a, b, c » découpé), Retour arrière dans le champ vide retire la dernière, doublons refusés (casse ignorée), maxChips, ajouts/suppressions/refus annoncés (aria-live). Compatible gestio-form-field.",
+      "forms": "gestio-chip-input : ControlValueAccessor (Reactive Forms, ngModel, Signal Forms [formField]). Valeur : string[].",
+      "inputs": [
+        {
+          "name": "variant",
+          "type": "'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info'",
+          "default": "'neutral'",
+          "description": "gestio-chip : couleur sémantique ; gestio-chip-input : couleur des puces."
+        },
+        {
+          "name": "removable",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-chip : bouton de suppression « Retirer {texte} » qui émet (removed)."
+        },
+        {
+          "name": "selected",
+          "type": "model<boolean | undefined>",
+          "default": "undefined",
+          "description": "gestio-chip : lié à true/false, la puce devient un bouton bascule (aria-pressed) ; undefined : puce non interactive."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-chip : désactive bascule et suppression ; gestio-chip-input : désactive le champ (cumulé avec le formulaire)."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioChipLabels> | Partial<GestioChipInputLabels>",
+          "default": "{}",
+          "description": "gestio-chip : { remove: \"Retirer {label}\" } ; gestio-chip-input : instructions, list, remove, added, removed, duplicate ({label}), limit ({max})."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "gestio-chip-input : libellé visible relié au champ."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "gestio-chip-input : nom accessible sans libellé visible."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "description": "gestio-chip-input : texte indicatif."
+        },
+        {
+          "name": "hint",
+          "type": "string",
+          "description": "gestio-chip-input : aide sous le champ (aria-describedby)."
+        },
+        {
+          "name": "error",
+          "type": "string | null",
+          "description": "gestio-chip-input : message d'erreur ; active l'état invalide."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-chip-input : état invalide (lié par [formField]), affiché après interaction."
+        },
+        {
+          "name": "touched",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-chip-input : champ touché (lié par [formField])."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-chip-input : astérisque et aria-required."
+        },
+        {
+          "name": "maxChips",
+          "type": "number",
+          "description": "gestio-chip-input : nombre maximal de puces ; au-delà, refus annoncé."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "'md'",
+          "description": "gestio-chip-input : hauteur du champ."
+        },
+        {
+          "name": "inputId",
+          "type": "string",
+          "description": "gestio-chip-input : id du <input> natif (généré sinon)."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "removed",
+          "type": "void | string",
+          "description": "gestio-chip : clic sur le bouton de suppression (ou Suppr / Retour arrière sur une puce de filtre), void ; gestio-chip-input : puce retirée (string)."
+        },
+        {
+          "name": "selectedChange",
+          "type": "boolean | undefined",
+          "description": "gestio-chip : nouvel état de la puce de filtre."
+        },
+        {
+          "name": "added",
+          "type": "string",
+          "description": "gestio-chip-input : puce ajoutée."
+        },
+        {
+          "name": "touch",
+          "type": "void",
+          "description": "gestio-chip-input : le focus quitte le composant."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "(contenu)",
+          "description": "gestio-chip : texte de la puce (sert aussi au nom du bouton de suppression)."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Étiquettes d’un ticket",
+          "code": "// imports: [GestioChipInput, ReactiveFormsModule]\ntags = new FormControl<string[]>(['Facturation'], { nonNullable: true });\n\n<gestio-chip-input label=\"Étiquettes\" placeholder=\"Ajouter une étiquette\" [maxChips]=\"5\" [formControl]=\"tags\" />"
+        },
+        {
+          "title": "Puces de filtre",
+          "code": "// imports: [GestioChip]\n<div role=\"group\" aria-label=\"Filtrer par statut\">\n  <gestio-chip [(selected)]=\"showLate\">En retard</gestio-chip>\n  <gestio-chip [(selected)]=\"showOpen\">Ouverts</gestio-chip>\n</div>"
+        },
+        {
+          "title": "Filtres actifs retirables",
+          "code": "// imports: [GestioChip]\n<ul aria-label=\"Filtres actifs\">\n  @for (filter of filters(); track filter) {\n    <li><gestio-chip removable (removed)=\"remove(filter)\">{{ filter }}</gestio-chip></li>\n  }\n</ul>"
+        }
+      ],
+      "pitfalls": [
+        "gestio-chip : `selected` non lié (undefined) = puce statique ; l’attribut seul `<gestio-chip selected>` ne suffit pas, utiliser [selected]=\"true\" ou [(selected)].",
+        "gestio-chip : après (removed), le parent retire la puce et doit replacer le focus (gestio-chip-input le fait déjà).",
+        "gestio-chip-input : Entrée dans le champ vide n’est pas interceptée (soumission du formulaire).",
+        "gestio-chip-input : le texte en cours n’est pas ajouté à la perte de focus.",
+        "Avec [formField], pas d’attribut required ou disabled statique (NG8022) : passer par le schéma."
+      ],
+      "entryPoint": "@gestiolabs336/ui/chips"
+    },
+    {
+      "id": "combobox",
+      "title": "Liste avec recherche",
+      "kind": "component",
+      "exports": [
+        "GestioCombobox",
+        "GestioComboboxOption",
+        "GestioComboboxLabels",
+        "GESTIO_COMBOBOX_LABELS",
+        "GestioComboboxSize"
+      ],
+      "classes": [
+        {
+          "class": "GestioCombobox",
+          "selector": "gestio-combobox"
+        }
+      ],
+      "summary": "Combobox (motif APG, liste popup en overlay CDK) : filtrage pendant la saisie insensible à la casse et aux accents, aria-activedescendant (le focus reste dans le champ), flèches/Entrée/Échap/Début/Fin, Alt+flèche bas, « Aucun résultat », état loading, sortie search temporisée pour une recherche serveur, clearable, sélection multiple affichée en puces retirables, nombre de résultats annoncé. Compatible gestio-form-field.",
+      "forms": "ControlValueAccessor (Reactive Forms, ngModel, Signal Forms [formField]). Valeur : option[valueKey] (ou l'option elle-même si valueKey est null), type préservé ; null si vide. multiple : tableau.",
+      "inputs": [
+        {
+          "name": "options",
+          "type": "readonly T[]",
+          "default": "[]",
+          "description": "Options : chaînes, { label, value, description?, disabled? } (GestioComboboxOption) ou objets métier."
+        },
+        {
+          "name": "displayWith",
+          "type": "(option: T) => string",
+          "default": "option.label ?? String(option)",
+          "description": "Libellé affiché et filtré."
+        },
+        {
+          "name": "valueKey",
+          "type": "keyof T | null",
+          "default": "null",
+          "description": "Propriété portant la valeur ; null : la valeur est l'option elle-même."
+        },
+        {
+          "name": "descriptionWith",
+          "type": "(option: T) => string | null | undefined",
+          "default": "option.description",
+          "description": "Texte secondaire sous le libellé."
+        },
+        {
+          "name": "disabledWith",
+          "type": "(option: T) => boolean",
+          "default": "option.disabled === true",
+          "description": "Option non sélectionnable (aria-disabled, ignorée au clavier)."
+        },
+        {
+          "name": "multiple",
+          "type": "boolean",
+          "default": "false",
+          "description": "Sélection multiple (aria-multiselectable) ; valeurs en puces, Retour arrière retire la dernière."
+        },
+        {
+          "name": "filter",
+          "type": "boolean",
+          "default": "true",
+          "description": "Filtrage local ; false pour une recherche serveur via (search)."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "description": "Affiche « Chargement… » (aria-busy) à la place des options."
+        },
+        {
+          "name": "searchDebounce",
+          "type": "number",
+          "default": "300",
+          "description": "Délai (ms) avant l’émission de (search)."
+        },
+        {
+          "name": "clearable",
+          "type": "boolean",
+          "default": "false",
+          "description": "Bouton « Effacer la sélection » ; Échap liste fermée efface aussi."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Libellé visible relié au champ et à la liste."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Nom accessible sans libellé visible."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "description": "Texte indicatif."
+        },
+        {
+          "name": "hint",
+          "type": "string",
+          "description": "Aide (aria-describedby)."
+        },
+        {
+          "name": "error",
+          "type": "string | null",
+          "description": "Message d'erreur ; active l'état invalide."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "default": "false",
+          "description": "État invalide (lié par [formField]), affiché après interaction."
+        },
+        {
+          "name": "touched",
+          "type": "boolean",
+          "default": "false",
+          "description": "Champ touché (lié par [formField])."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Désactive (cumulé avec le formulaire)."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "Astérisque et aria-required."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "'md'",
+          "description": "Hauteur."
+        },
+        {
+          "name": "inputId",
+          "type": "string",
+          "description": "id du <input> natif (généré sinon)."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioComboboxLabels>",
+          "default": "{}",
+          "description": "noResults, loading, clear, toggle, remove ({label}), selectedValues, results ({count}), oneResult, added, removed ({label})."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "search",
+          "type": "string",
+          "description": "Texte saisi, émis après searchDebounce ms (recherche serveur)."
+        },
+        {
+          "name": "touch",
+          "type": "void",
+          "description": "Le focus quitte le composant."
+        }
+      ],
+      "slots": [],
+      "examples": [
+        {
+          "title": "Affecter un client (objets métier)",
+          "code": "// imports: [GestioCombobox, ReactiveFormsModule]\nclientName = (c: Client) => c.name;\nclient = new FormControl<number | null>(null);\n\n<gestio-combobox label=\"Client\" placeholder=\"Rechercher un client\" clearable valueKey=\"id\"\n  [options]=\"clients\" [displayWith]=\"clientName\" [formControl]=\"client\" />"
+        },
+        {
+          "title": "Sélection multiple",
+          "code": "// imports: [GestioCombobox, ReactiveFormsModule]\nassignees = new FormControl<string[]>([], { nonNullable: true });\n\n<gestio-combobox label=\"Techniciens\" multiple [options]=\"technicians\" [formControl]=\"assignees\" />"
+        },
+        {
+          "title": "Recherche serveur",
+          "code": "// imports: [GestioCombobox, ReactiveFormsModule]\n<gestio-combobox label=\"Article\" valueKey=\"value\" [filter]=\"false\" [loading]=\"loading()\"\n  [options]=\"results()\" (search)=\"load($event)\" [formControl]=\"article\" />"
+        },
+        {
+          "title": "Dans un gestio-form-field avec Signal Forms",
+          "code": "// imports: [GestioCombobox, GestioFormField, FormField]\n<gestio-form-field label=\"Pays\" hint=\"Pays de facturation\">\n  <gestio-combobox valueKey=\"value\" [options]=\"countries\" [formField]=\"f.country\" />\n</gestio-form-field>"
+        }
+      ],
+      "pitfalls": [
+        "Sans valueKey, la valeur est l’option elle-même (comparée par référence) : pour { label, value } passer valueKey=\"value\".",
+        "Recherche serveur : une valeur écrite par le formulaire n’affiche son libellé que si l’option correspondante est dans options (les options choisies par l’utilisateur restent mémorisées).",
+        "Pas d’options projetées : passer les options via [options] (comme gestio-select).",
+        "Début/Fin parcourent la liste quand une option est active, sinon déplacent le curseur.",
+        "Avec [formField], pas d’attribut required ou disabled statique (NG8022) : passer par le schéma.",
+        "Ne pas mettre id sur <gestio-combobox> : utiliser inputId."
+      ],
+      "entryPoint": "@gestiolabs336/ui/combobox"
+    },
+    {
+      "id": "date-picker",
+      "title": "Sélecteur de date",
+      "kind": "component",
+      "entryPoint": "@gestiolabs336/ui/date-picker",
+      "exports": [
+        "GestioDatePicker",
+        "GESTIO_DATE_PICKER_LABELS",
+        "GestioDatePickerLabels",
+        "GestioDatePickerMode",
+        "GestioDatePickerSize",
+        "GestioDatePickerError",
+        "GestioDateRange"
+      ],
+      "classes": [
+        {
+          "class": "GestioDatePicker",
+          "selector": "gestio-date-picker"
+        }
+      ],
+      "summary": "Champ de date : saisie libre au format de la locale (jj/mm/aaaa ; lecture tolérante : 5/11, 05.11.26, 05112026, 2026-11-05, 5 nov. 2026) et bouton qui ouvre le calendrier (bloc gestio-calendar) dans une fenêtre surgissante modale (motif ARIA Date Picker Dialog : focus sur la date choisie, Échap rend le focus au bouton, Alt+flèche bas depuis le champ). Mode single ou range. Label, aide et erreur intégrés.",
+      "forms": "ControlValueAccessor + Validator (Reactive Forms, ngModel, Signal Forms [formField]). Valeur : Date | null (single) ou GestioDateRange (range). Saisie non reconnue, indisponible ou plage inversée → null / plage vide et erreur { gestioDate: { reason: 'invalid' | 'unavailable' | 'range', text } }.",
+      "inputs": [
+        {
+          "name": "mode",
+          "type": "'single' | 'range'",
+          "default": "'single'",
+          "description": "Une date ou une plage début / fin."
+        },
+        {
+          "name": "value",
+          "type": "model<Date | null>",
+          "default": "null",
+          "description": "Date choisie (mode single) ; [(value)]."
+        },
+        {
+          "name": "range",
+          "type": "model<GestioDateRange>",
+          "default": "{ start: null, end: null }",
+          "description": "Plage choisie (mode range) ; [(range)]."
+        },
+        {
+          "name": "min",
+          "type": "Date | null",
+          "description": "Première date acceptée (saisie et calendrier)."
+        },
+        {
+          "name": "max",
+          "type": "Date | null",
+          "description": "Dernière date acceptée."
+        },
+        {
+          "name": "dateDisabled",
+          "type": "((date: Date) => boolean) | null",
+          "default": "null",
+          "description": "Dates refusées (week-ends, jours fériés…)."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "default": "'fr-FR'",
+          "description": "Format de saisie et d'affichage, noms du calendrier."
+        },
+        {
+          "name": "firstDayOfWeek",
+          "type": "0 | 1 | 2 | 3 | 4 | 5 | 6",
+          "default": "1",
+          "description": "Premier jour de la semaine du calendrier."
+        },
+        {
+          "name": "today",
+          "type": "Date",
+          "default": "date de création",
+          "description": "Jour courant (mis en évidence ; année utilisée si la saisie l'omet)."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Libellé visible relié au champ texte."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Nom accessible si pas de label visible."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "default": "gabarit de la locale",
+          "description": "Texte indicatif ; par défaut 'jj/mm/aaaa' (ou 'jj/mm/aaaa – jj/mm/aaaa' en range). Chaîne vide : aucun."
+        },
+        {
+          "name": "hint",
+          "type": "string",
+          "description": "Aide sous le champ (aria-describedby)."
+        },
+        {
+          "name": "error",
+          "type": "string | null",
+          "description": "Message d'erreur ; prioritaire sur l'erreur de saisie interne."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "default": "false",
+          "description": "État invalide sans message (posé automatiquement par Signal Forms)."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "Astérisque et aria-required."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Désactive champ et bouton (cumulé avec l'état du formulaire)."
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "default": "false",
+          "description": "Lecture seule : le calendrier ne s'ouvre pas."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "'md'",
+          "description": "Hauteur."
+        },
+        {
+          "name": "inputId",
+          "type": "string",
+          "description": "id du champ texte (généré sinon)."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Attribut natif name du champ texte."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioDatePickerLabels>",
+          "default": "{}",
+          "description": "Surcharge des libellés (openCalendar, openRangeCalendar, selected, dialog, rangeDialog, day, month, year, invalidDate, unavailableDate, invalidRange)."
+        },
+        {
+          "name": "calendarLabels",
+          "type": "Partial<GestioCalendarLabels>",
+          "default": "{}",
+          "description": "Surcharge des libellés du calendrier."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "valueChange",
+          "type": "Date | null",
+          "description": "Date modifiée (mode single)."
+        },
+        {
+          "name": "rangeChange",
+          "type": "GestioDateRange",
+          "description": "Plage modifiée (mode range), une fois la fin choisie ou saisie."
+        }
+      ],
+      "slots": [],
+      "examples": [
+        {
+          "title": "Date d'échéance (Reactive Forms)",
+          "code": "// imports: [GestioDatePicker, ReactiveFormsModule]\n<gestio-date-picker label=\"Date d'échéance\" hint=\"Jour ouvré\" required [min]=\"today\" [dateDisabled]=\"isWeekend\" formControlName=\"dueDate\" />\n\n// TS\nreadonly today = new Date();\nreadonly isWeekend = (d: Date) => d.getDay() === 0 || d.getDay() === 6;"
+        },
+        {
+          "title": "Période de facturation",
+          "code": "// imports: [GestioDatePicker]\n<gestio-date-picker label=\"Période\" mode=\"range\" [(range)]=\"period\" />\n\n// TS\nreadonly period = signal<GestioDateRange>({ start: null, end: null });"
+        },
+        {
+          "title": "Signal Forms",
+          "code": "// imports: [GestioDatePicker, FormField]\n<gestio-date-picker label=\"Livraison\" [formField]=\"orderForm.delivery\" />"
+        }
+      ],
+      "pitfalls": [
+        "Pas besoin de gestio-form-field : label, hint et error sont intégrés (comme gestio-input).",
+        "Une saisie incomplète n'est validée qu'à la sortie du champ ou avec Entrée ; une date complète (année sur 4 chiffres) l'est pendant la frappe.",
+        "Une saisie invalide donne null : utiliser l'erreur de formulaire gestioDate pour la distinguer d'un champ vide.",
+        "Avec [formField], ne pas poser d'attribut statique disabled / required (NG8022) : les déclarer dans le schéma.",
+        "Ne pas mettre id sur <gestio-date-picker> : utiliser inputId."
+      ]
+    },
+    {
+      "id": "drawer",
+      "title": "Panneau latéral",
+      "kind": "component",
+      "exports": [
+        "GestioDrawer",
+        "GestioDrawerContent",
+        "GestioDrawerFooter",
+        "GESTIO_DRAWER_IMPORTS",
+        "GestioDrawerService",
+        "GestioDrawerRef",
+        "GESTIO_DRAWER_DATA",
+        "GESTIO_DRAWER_LABELS",
+        "GestioDrawerConfig",
+        "GestioDrawerLabels",
+        "GestioDrawerPosition",
+        "GestioDrawerSize"
+      ],
+      "classes": [
+        {
+          "class": "GestioDrawer",
+          "selector": "gestio-drawer"
+        },
+        {
+          "class": "GestioDrawerContent",
+          "selector": "gestio-drawer-content"
+        },
+        {
+          "class": "GestioDrawerFooter",
+          "selector": "[gestioDrawerFooter]"
+        }
+      ],
+      "summary": "Panneau modal contre un bord de l'écran (drawer / sheet) sur @angular/cdk/dialog : usage déclaratif <gestio-drawer [(open)]> ou GestioDrawerService.open(composant). Rôle dialog nommé par le titre, aria-modal, piège et restauration du focus, Échap et fond configurables, défilement bloqué, entrée glissée (désactivée si reduced-motion), positions end/start/bottom (sens de lecture respecté).",
+      "api": "GestioDrawerService.open<R, D>(composantOuTemplate, config?: GestioDrawerConfig<D>): GestioDrawerRef<R>\nGestioDrawerRef<R> : close(result?: R), closed: Observable<R | undefined>, afterClosed(): Promise<R | undefined>, id, titleId, descriptionId, position\nGESTIO_DRAWER_DATA : jeton d'injection des données\nGESTIO_DRAWER_IMPORTS = [GestioDrawer, GestioDrawerContent, GestioDrawerFooter]\nToken CSS : --gestio-drawer-radius (bord intérieur, repli --gestio-radius-xl).",
+      "configOptions": [
+        {
+          "name": "data",
+          "type": "D",
+          "description": "Données injectées via GESTIO_DRAWER_DATA."
+        },
+        {
+          "name": "position",
+          "type": "'end' | 'start' | 'bottom'",
+          "default": "'end'",
+          "description": "Bord d'ouverture (start/end suivent le sens de lecture)."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "'md'",
+          "description": "Côtés : largeur 320 / 420 / 640 px. Bas : hauteur max. 40 / 60 / 85 dvh."
+        },
+        {
+          "name": "closeOnEscape",
+          "type": "boolean",
+          "default": "true",
+          "description": "Fermeture par Échap (résultat undefined)."
+        },
+        {
+          "name": "closeOnBackdropClick",
+          "type": "boolean",
+          "default": "true",
+          "description": "Fermeture au clic sur le fond (résultat undefined)."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Nom accessible si <gestio-drawer-content> n'est pas utilisé."
+        },
+        {
+          "name": "autoFocus",
+          "type": "'first-tabbable' | 'dialog' | 'first-heading' | string",
+          "default": "'first-tabbable'",
+          "description": "Focus initial ; [cdkFocusInitial] prioritaire."
+        },
+        {
+          "name": "restoreFocus",
+          "type": "boolean",
+          "default": "true",
+          "description": "Rend le focus au déclencheur."
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "description": "Identifiant du panneau (généré par défaut)."
+        },
+        {
+          "name": "panelClass",
+          "type": "string | string[]",
+          "description": "Classes du panneau."
+        },
+        {
+          "name": "injector",
+          "type": "Injector",
+          "description": "Injecteur parent."
+        },
+        {
+          "name": "viewContainerRef",
+          "type": "ViewContainerRef",
+          "description": "Position logique du contenu."
+        }
+      ],
+      "inputs": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-drawer : ouverture, liaison bidirectionnelle [(open)]."
+        },
+        {
+          "name": "position",
+          "type": "'end' | 'start' | 'bottom'",
+          "default": "'end'",
+          "description": "gestio-drawer : bord d'ouverture (start/end suivent le sens de lecture)."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "'md'",
+          "description": "gestio-drawer : largeur 320 / 420 / 640 px (côtés) ou hauteur max. 40 / 60 / 85 dvh (bas)."
+        },
+        {
+          "name": "heading",
+          "type": "string (requis)",
+          "description": "gestio-drawer, gestio-drawer-content : titre, nom accessible du panneau."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "gestio-drawer, gestio-drawer-content : description (aria-describedby)."
+        },
+        {
+          "name": "showClose",
+          "type": "boolean",
+          "default": "true",
+          "description": "gestio-drawer, gestio-drawer-content : bouton de fermeture en haut, en fin de ligne."
+        },
+        {
+          "name": "closeOnEscape",
+          "type": "boolean",
+          "default": "true",
+          "description": "gestio-drawer : fermeture par Échap."
+        },
+        {
+          "name": "closeOnBackdropClick",
+          "type": "boolean",
+          "default": "true",
+          "description": "gestio-drawer : fermeture au clic sur le fond."
+        },
+        {
+          "name": "restoreFocus",
+          "type": "boolean",
+          "default": "true",
+          "description": "gestio-drawer : rend le focus au déclencheur à la fermeture."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioDrawerLabels>",
+          "default": "{}",
+          "description": "gestio-drawer, gestio-drawer-content : libellés ({ close: 'Fermer le panneau' })."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "openChange",
+          "type": "boolean",
+          "description": "gestio-drawer : émis à la fermeture par Échap, fond ou bouton (liaison [(open)])."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "Corps défilant du panneau."
+        },
+        {
+          "selector": "[gestioDrawerHeader]",
+          "description": "Zone libre sous le titre (badge, filtres…)."
+        },
+        {
+          "selector": "[gestioDrawerFooter]",
+          "description": "Pied d'actions (composant GestioDrawerFooter : boutons en fin de ligne, empilés sur mobile)."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Détail d'une facture (déclaratif)",
+          "code": "// imports: [GESTIO_DRAWER_IMPORTS, GestioButton, GestioBadge]\n<button gestioButton (click)=\"detailOpen.set(true)\">Voir la facture</button>\n\n<gestio-drawer [(open)]=\"detailOpen\" heading=\"Facture F-2024-0042\" description=\"Atelier Moreau SARL\" position=\"end\" size=\"md\">\n  <gestio-badge gestioDrawerHeader variant=\"warning\">En attente</gestio-badge>\n  <dl>…</dl>\n  <div gestioDrawerFooter>\n    <button gestioButton variant=\"outline\" (click)=\"detailOpen.set(false)\">Fermer</button>\n    <button gestioButton (click)=\"markPaid()\">Marquer comme payée</button>\n  </div>\n</gestio-drawer>"
+        },
+        {
+          "title": "Composant ouvert par le service, avec résultat",
+          "code": "// imports: [GESTIO_DRAWER_IMPORTS, GestioButton]\n@Component({\n  imports: [GESTIO_DRAWER_IMPORTS, GestioButton],\n  template: `\n    <gestio-drawer-content heading=\"Filtrer les factures\">\n      …\n      <div gestioDrawerFooter>\n        <button gestioButton variant=\"outline\" (click)=\"ref.close()\">Annuler</button>\n        <button gestioButton (click)=\"ref.close(filters)\">Appliquer</button>\n      </div>\n    </gestio-drawer-content>\n  `,\n})\nexport class FiltersDrawer {\n  protected readonly ref = inject<GestioDrawerRef<Filters>>(GestioDrawerRef);\n  protected readonly filters = inject<Filters>(GESTIO_DRAWER_DATA);\n}\n\n// Appelant\nthis.drawers.open<Filters, Filters>(FiltersDrawer, { data: filters, position: 'start', size: 'sm' })\n  .closed.subscribe((result) => { if (result) this.filters.set(result); });"
+        }
+      ],
+      "pitfalls": [
+        "Le contenu de <gestio-drawer> n'est rendu qu'à l'ouverture (et jamais côté serveur) : ne pas y conserver d'état entre deux ouvertures.",
+        "Avec GestioDrawerService, utiliser <gestio-drawer-content heading=\"…\"> dans le composant ouvert (sinon passer ariaLabel) ; position, size et options de fermeture se passent dans la config, pas sur gestio-drawer-content.",
+        "Importer GestioDrawerFooter (ou GESTIO_DRAWER_IMPORTS) pour la mise en page de [gestioDrawerFooter].",
+        "Échap, fond et bouton de fermeture renvoient undefined avec le service et remettent open à false en déclaratif."
+      ],
+      "entryPoint": "@gestiolabs336/ui/drawer"
+    },
+    {
+      "id": "file-upload",
+      "title": "Dépôt de fichiers",
+      "kind": "component",
+      "exports": [
+        "GestioFileUpload",
+        "GestioFileRejection",
+        "GestioFileRejectionReason",
+        "GestioFileUploadLabels",
+        "GESTIO_FILE_UPLOAD_LABELS"
+      ],
+      "classes": [
+        {
+          "class": "GestioFileUpload",
+          "selector": "gestio-file-upload"
+        }
+      ],
+      "summary": "Zone de glisser-déposer et bouton « Parcourir » sur un <input type=\"file\"> natif visuellement masqué mais focalisable : validation (accept, maxSize, maxFiles, doublons) avec messages annoncés (aria-live), liste des fichiers (nom, taille formatée Intl, bouton retirer), progression optionnelle par fichier. ControlValueAccessor sur File[].",
+      "forms": "ControlValueAccessor (Reactive Forms, ngModel, Signal Forms [formField]) ou [(files)]. Valeur : File[] (tableau vide si aucun fichier).",
+      "api": "Méthodes publiques : addFiles(files: readonly File[]) (même validation qu'un dépôt), removeFile(index).\nGestioFileRejection = { file: File; reason: 'type' | 'size' | 'count' | 'duplicate'; message: string }.\nDoublon : même nom, taille et date de modification. Sans multiple, un nouveau fichier remplace le précédent.\nTailles en base 1024 formatées avec Intl (ko, Mo, Go). Après un retrait, le focus passe au fichier voisin ou au champ natif.",
+      "inputs": [
+        {
+          "name": "files",
+          "type": "model<File[]>",
+          "default": "[]",
+          "description": "Fichiers sélectionnés ; [(files)] hors formulaire."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Libellé visible (nomme l'input natif avec « Parcourir »)."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Nom accessible sans libellé visible."
+        },
+        {
+          "name": "hint",
+          "type": "string",
+          "description": "Aide sous la zone (aria-describedby)."
+        },
+        {
+          "name": "error",
+          "type": "string | null",
+          "description": "Erreur externe (validation du formulaire) ; active aria-invalid."
+        },
+        {
+          "name": "accept",
+          "type": "string",
+          "default": "''",
+          "description": "Types acceptés comme l'attribut natif (.pdf, application/pdf, image/*) ; filtre aussi les fichiers déposés."
+        },
+        {
+          "name": "multiple",
+          "type": "boolean",
+          "default": "false",
+          "description": "Plusieurs fichiers ; sinon le nouveau remplace l'ancien."
+        },
+        {
+          "name": "maxSize",
+          "type": "number | null",
+          "default": "null",
+          "description": "Taille maximale par fichier, en octets."
+        },
+        {
+          "name": "maxFiles",
+          "type": "number | null",
+          "default": "null",
+          "description": "Nombre maximal de fichiers (avec multiple)."
+        },
+        {
+          "name": "progress",
+          "type": "Record<string, number>",
+          "default": "{}",
+          "description": "Avancement 0–100 par nom de fichier ; affiche une barre role=\"progressbar\"."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "Astérisque visuel (aucune validation native)."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Désactive (cumulé avec l'état du formulaire)."
+        },
+        {
+          "name": "inputId",
+          "type": "string",
+          "description": "id de l'<input type=\"file\"> natif (généré sinon)."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "default": "'fr-FR'",
+          "description": "Locale Intl des tailles et pourcentages."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioFileUploadLabels>",
+          "default": "{}",
+          "description": "Libellés (dropzone, dropzoneSingle, dragActive, browse, maxSize, maxFiles, fileList, remove, progress, errorType, errorSize, errorCount, errorSingle, errorDuplicate, addedOne, addedMany, removed)."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "filesChange",
+          "type": "File[]",
+          "description": "Émis à chaque ajout ou retrait (model files)."
+        },
+        {
+          "name": "rejected",
+          "type": "GestioFileRejection[]",
+          "description": "Fichiers refusés lors d'un ajout (type, taille, nombre, doublon)."
+        }
+      ],
+      "slots": [],
+      "examples": [
+        {
+          "title": "Import de factures PDF",
+          "code": "// imports: [GestioFileUpload]\ninvoices = signal<File[]>([]);\nprogress = signal<Record<string, number>>({});\n\n<gestio-file-upload\n  label=\"Factures fournisseurs\"\n  accept=\".pdf,application/pdf\"\n  multiple\n  [maxSize]=\"10 * 1024 * 1024\"\n  [maxFiles]=\"5\"\n  [progress]=\"progress()\"\n  [(files)]=\"invoices\"\n  (rejected)=\"onRejected($event)\"\n/>"
+        },
+        {
+          "title": "Avec Reactive Forms",
+          "code": "// imports: [GestioFileUpload, ReactiveFormsModule]\nlogo = new FormControl<File[]>([], { nonNullable: true });\n\n<gestio-file-upload label=\"Logo\" accept=\"image/png,image/jpeg\" [maxSize]=\"512 * 1024\" [formControl]=\"logo\" />"
+        }
+      ],
+      "pitfalls": [
+        "Le composant n'envoie rien : l'upload et la validation côté serveur restent à la charge de l'application.",
+        "progress est indexé par nom de fichier : deux fichiers de même nom partagent la même barre.",
+        "La valeur est toujours un tableau, même sans multiple.",
+        "Avec [formField], ne pas lier [disabled] en parallèle (NG8022) : passer par le schéma (disabled()).",
+        "accept est indicatif côté navigateur : ne jamais s'y fier pour la sécurité."
+      ],
+      "entryPoint": "@gestiolabs336/ui/file-upload"
+    },
+    {
+      "id": "popover",
+      "title": "Fenêtre surgissante (popover)",
+      "kind": "component",
+      "entryPoint": "@gestiolabs336/ui/popover",
+      "exports": [
+        "GestioPopoverTrigger",
+        "GestioPopoverPosition",
+        "GestioPopoverAlign",
+        "GestioPopoverAutoFocus",
+        "GestioPopoverContext"
+      ],
+      "classes": [
+        {
+          "class": "GestioPopoverTrigger",
+          "selector": "[gestioPopoverTrigger]"
+        }
+      ],
+      "summary": "Fenêtre surgissante non modale (role=dialog) ancrée à un déclencheur, en overlay CDK rendu juste après le déclencheur. Contenu interactif dans un <ng-template>. Déclencheur : aria-haspopup=\"dialog\", aria-expanded, aria-controls. Focus piégé dans la fenêtre ; Échap, clic extérieur ou close() ferment et rendent le focus au déclencheur. Positions top/bottom/start/end avec repli, flèche optionnelle.",
+      "api": "exportAs 'gestioPopoverTrigger' : open(), close(), toggle(), isOpen(). Contexte du template : let-close=\"close\".",
+      "inputs": [
+        {
+          "name": "gestioPopoverTrigger",
+          "type": "TemplateRef<GestioPopoverContext> (requis)",
+          "description": "Contenu de la fenêtre (<ng-template>, contexte let-close=\"close\")."
+        },
+        {
+          "name": "popoverPosition",
+          "type": "'top' | 'bottom' | 'start' | 'end'",
+          "default": "'bottom'",
+          "description": "Côté préféré, repli automatique si la place manque."
+        },
+        {
+          "name": "popoverAlign",
+          "type": "'center' | 'start' | 'end'",
+          "default": "'center'",
+          "description": "Alignement sur le déclencheur pour les positions top et bottom."
+        },
+        {
+          "name": "popoverArrow",
+          "type": "boolean",
+          "default": "true",
+          "description": "Flèche pointant vers le déclencheur."
+        },
+        {
+          "name": "popoverAriaLabel",
+          "type": "string",
+          "description": "Nom accessible de la fenêtre."
+        },
+        {
+          "name": "popoverAriaLabelledBy",
+          "type": "string",
+          "description": "Id d'un titre du contenu utilisé comme nom accessible."
+        },
+        {
+          "name": "popoverAutoFocus",
+          "type": "'first-tabbable' | 'dialog' | string",
+          "default": "'first-tabbable'",
+          "description": "Élément focalisé à l'ouverture : premier élément focalisable (cdkFocusInitial prioritaire), la fenêtre elle-même, ou un sélecteur CSS évalué dans la fenêtre."
+        },
+        {
+          "name": "popoverModal",
+          "type": "boolean",
+          "default": "false",
+          "description": "Pose aria-modal=\"true\"."
+        },
+        {
+          "name": "popoverDisabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Empêche l'ouverture."
+        },
+        {
+          "name": "popoverOpen",
+          "type": "model<boolean>",
+          "default": "false",
+          "description": "État ouvert ; [(popoverOpen)]."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "popoverOpenChange",
+          "type": "boolean",
+          "description": "État ouvert modifié."
+        },
+        {
+          "name": "opened",
+          "type": "void",
+          "description": "Émis après l'ouverture."
+        },
+        {
+          "name": "closed",
+          "type": "void",
+          "description": "Émis après la fermeture."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "<ng-template>",
+          "description": "Contenu de la fenêtre, passé à gestioPopoverTrigger ; let-close=\"close\" pour fermer depuis le contenu."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Filtres rapides",
+          "code": "// imports: [GestioPopoverTrigger, GestioButton, GestioCheckbox]\n<button gestioButton variant=\"outline\" [gestioPopoverTrigger]=\"filters\" popoverAriaLabelledBy=\"filters-title\" popoverAlign=\"start\">Filtres</button>\n<ng-template #filters let-close=\"close\">\n  <p id=\"filters-title\">Filtrer les factures</p>\n  <gestio-checkbox label=\"En retard de paiement\" [(checked)]=\"late\" />\n  <button gestioButton variant=\"ghost\" size=\"sm\" (click)=\"close()\">Annuler</button>\n  <button gestioButton size=\"sm\" (click)=\"apply(); close()\">Appliquer</button>\n</ng-template>"
+        },
+        {
+          "title": "Ouverture pilotée",
+          "code": "// imports: [GestioPopoverTrigger, GestioButton]\n<button gestioButton variant=\"ghost\" [gestioPopoverTrigger]=\"contact\" popoverAriaLabel=\"Contact du client\" popoverPosition=\"end\" [popoverArrow]=\"false\" [(popoverOpen)]=\"contactOpen\" (closed)=\"onClosed()\">Atelier Moreau</button>\n<ng-template #contact>\n  <p>Claire Moreau — <a href=\"tel:+33478000000\">04 78 00 00 00</a></p>\n</ng-template>"
+        }
+      ],
+      "pitfalls": [
+        "Toujours nommer la fenêtre : popoverAriaLabel ou popoverAriaLabelledBy.",
+        "Contenu court non interactif : préférer gestioTooltip ; liste d'actions : gestioMenuTriggerFor.",
+        "Le déclencheur doit être focalisable (un <button>) : le focus y revient à la fermeture.",
+        "Le modèle s'appelle popoverOpen (open est la méthode)."
+      ]
+    },
+    {
+      "id": "progress",
+      "title": "Progression",
+      "kind": "component",
+      "entryPoint": "@gestiolabs336/ui/progress",
+      "exports": [
+        "GestioProgressBar",
+        "GestioProgressCircle",
+        "GestioProgressVariant",
+        "GestioProgressSize",
+        "GestioProgressLabels",
+        "GESTIO_PROGRESS_LABELS"
+      ],
+      "classes": [
+        {
+          "class": "GestioProgressBar",
+          "selector": "gestio-progress-bar"
+        },
+        {
+          "class": "GestioProgressCircle",
+          "selector": "gestio-progress-circle"
+        }
+      ],
+      "summary": "Indicateurs de progression en barre ou en cercle (role=\"progressbar\", aria-valuemin/max/now, aria-valuetext = pourcentage formaté par Intl). Mode indéterminé sans aria-valuenow, variantes de couleur, tailles ; animations coupées si l'utilisateur réduit les animations.",
+      "inputs": [
+        {
+          "name": "value",
+          "type": "number",
+          "default": "0",
+          "description": "gestio-progress-bar et gestio-progress-circle : avancement, borné entre 0 et max ; ignoré en mode indéterminé."
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "default": "100",
+          "description": "gestio-progress-bar et gestio-progress-circle : valeur correspondant à 100 %."
+        },
+        {
+          "name": "indeterminate",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-progress-bar et gestio-progress-circle : durée inconnue : animation continue, sans aria-valuenow."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "gestio-progress-bar et gestio-progress-circle : libellé visible et nom accessible (au-dessus de la barre, sous le cercle)."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "gestio-progress-bar et gestio-progress-circle : nom accessible sans libellé visible (label ou ariaLabel est requis)."
+        },
+        {
+          "name": "variant",
+          "type": "'primary' | 'success' | 'warning' | 'danger'",
+          "default": "'primary'",
+          "description": "gestio-progress-bar et gestio-progress-circle : couleur de l'indicateur."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "'md'",
+          "description": "gestio-progress-bar et gestio-progress-circle : épaisseur de la barre ou diamètre du cercle."
+        },
+        {
+          "name": "showValue",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-progress-bar et gestio-progress-circle : affiche le pourcentage (ou valueText) ; masqué visuellement sur un cercle sm."
+        },
+        {
+          "name": "valueText",
+          "type": "string",
+          "description": "gestio-progress-bar et gestio-progress-circle : texte affiché et annoncé à la place du pourcentage, ex. « 12 sur 40 »."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "default": "'fr-FR'",
+          "description": "gestio-progress-bar et gestio-progress-circle : locale Intl du pourcentage."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioProgressLabels>",
+          "default": "{}",
+          "description": "gestio-progress-bar et gestio-progress-circle : surcharge des libellés (indeterminate : « En cours », annoncé en mode indéterminé)."
+        }
+      ],
+      "outputs": [],
+      "slots": [],
+      "examples": [
+        {
+          "title": "Import de factures",
+          "code": "// imports: [GestioProgressBar]\n<gestio-progress-bar label=\"Import des factures\" [value]=\"imported()\" [max]=\"total()\" showValue />"
+        },
+        {
+          "title": "Cercle et mode indéterminé",
+          "code": "// imports: [GestioProgressCircle, GestioProgressBar]\n<gestio-progress-circle label=\"Devis signés\" [value]=\"18\" [max]=\"24\" variant=\"success\" showValue size=\"lg\" />\n<gestio-progress-bar label=\"Synchronisation bancaire\" indeterminate />"
+        }
+      ],
+      "pitfalls": [
+        "Fournir label ou ariaLabel : sans nom, la barre de progression n'est pas accessible.",
+        "valueText remplace le pourcentage à l'affichage ET dans aria-valuetext.",
+        "Ce n'est pas une région live : annoncer les étapes clés (fin d'import…) avec un aria-live séparé.",
+        "Pour un simple chargement sans avancement, gestio-spinner (role=\"status\") est plus adapté."
+      ]
+    },
+    {
+      "id": "segmented-control",
+      "title": "Contrôle segmenté",
+      "kind": "component",
+      "entryPoint": "@gestiolabs336/ui/segmented-control",
+      "exports": [
+        "GestioSegmentedControl",
+        "GestioSegment",
+        "GESTIO_SEGMENTED_CONTROL_IMPORTS",
+        "GestioSegmentedControlSize"
+      ],
+      "classes": [
+        {
+          "class": "GestioSegmentedControl",
+          "selector": "gestio-segmented-control"
+        },
+        {
+          "class": "GestioSegment",
+          "selector": "gestio-segment"
+        }
+      ],
+      "summary": "Choix unique parmi quelques options côte à côte (motif ARIA Radio Group : role=\"radiogroup\" / role=\"radio\" + aria-checked). Tabulation itinérante (un seul arrêt), flèches qui déplacent le focus et sélectionnent (sens RTL respecté), Début/Fin, Espace ; segments désactivés ignorés. Icônes projetées, tailles, pleine largeur, onde de pression en style Material.",
+      "forms": "gestio-segmented-control : ControlValueAccessor (formControlName, ngModel, Signal Forms [formField]) ou [(value)]. Valeur de n'importe quel type (comparaison Object.is), null si rien n'est choisi.",
+      "inputs": [
+        {
+          "name": "value",
+          "type": "model<T | null> | unknown",
+          "default": "null",
+          "description": "gestio-segmented-control : valeur sélectionnée ; [(value)] hors formulaire. gestio-segment : valeur transmise au groupe (à renseigner)."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "gestio-segmented-control : nom accessible du groupe. gestio-segment : nom d'un segment à icône seule."
+        },
+        {
+          "name": "ariaLabelledby",
+          "type": "string",
+          "description": "gestio-segmented-control : identifiant d'un libellé visible externe."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "'md'",
+          "description": "gestio-segmented-control : taille des segments."
+        },
+        {
+          "name": "fullWidth",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-segmented-control : toute la largeur, segments de largeur égale."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-segmented-control : tout le groupe ; gestio-segment : ce segment (ignoré par les flèches)."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "gestio-segment : libellé visible (sinon contenu projeté)."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "valueChange",
+          "type": "T | null",
+          "description": "gestio-segmented-control : émis par le model value."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "gestio-segmented-control : les gestio-segment ; gestio-segment : libellé (si pas de label)."
+        },
+        {
+          "selector": "[gestioSegmentIcon]",
+          "description": "gestio-segment : icône affichée avant le libellé (masquée aux lecteurs d'écran)."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Période",
+          "code": "// imports: [GESTIO_SEGMENTED_CONTROL_IMPORTS]\n<gestio-segmented-control ariaLabel=\"Période\" [(value)]=\"period\">\n  <gestio-segment value=\"day\" label=\"Jour\" />\n  <gestio-segment value=\"week\" label=\"Semaine\" />\n  <gestio-segment value=\"month\" label=\"Mois\" />\n</gestio-segmented-control>"
+        },
+        {
+          "title": "Icônes seules",
+          "code": "// imports: [GESTIO_SEGMENTED_CONTROL_IMPORTS]\n<gestio-segmented-control ariaLabel=\"Affichage\" size=\"sm\" [(value)]=\"layout\">\n  <gestio-segment value=\"list\" ariaLabel=\"Liste\"><svg gestioSegmentIcon aria-hidden=\"true\">…</svg></gestio-segment>\n  <gestio-segment value=\"grid\" ariaLabel=\"Grille\"><svg gestioSegmentIcon aria-hidden=\"true\">…</svg></gestio-segment>\n</gestio-segmented-control>"
+        },
+        {
+          "title": "Filtre pleine largeur (Reactive Forms)",
+          "code": "// imports: [GESTIO_SEGMENTED_CONTROL_IMPORTS, ReactiveFormsModule]\n<gestio-segmented-control ariaLabel=\"Statut des factures\" fullWidth formControlName=\"status\">\n  <gestio-segment value=\"all\" label=\"Toutes\" />\n  <gestio-segment value=\"paid\" label=\"Payées\" />\n  <gestio-segment value=\"late\" label=\"En retard\" disabled />\n</gestio-segmented-control>"
+        }
+      ],
+      "pitfalls": [
+        "Importer à la fois GestioSegmentedControl et GestioSegment (ou GESTIO_SEGMENTED_CONTROL_IMPORTS).",
+        "Donner un nom au groupe (ariaLabel ou ariaLabelledby) et un ariaLabel aux segments à icône seule.",
+        "Valeurs objet : comparées par référence (Object.is) ; réutiliser les mêmes instances.",
+        "Avec [formField], ne pas poser d'attribut statique disabled sur le groupe (NG8022).",
+        "Pour afficher des panneaux différents, utiliser gestio-tabs ; au-delà de cinq options, gestio-radio-group ou gestio-select."
+      ]
+    },
+    {
+      "id": "slider",
+      "title": "Curseur",
+      "kind": "component",
+      "entryPoint": "@gestiolabs336/ui/slider",
+      "exports": [
+        "GestioSlider",
+        "GestioSliderValue",
+        "GestioSliderLabels",
+        "GESTIO_SLIDER_LABELS"
+      ],
+      "classes": [
+        {
+          "class": "GestioSlider",
+          "selector": "gestio-slider"
+        }
+      ],
+      "summary": "Curseur de valeur numérique, ou de plage avec deux poignées (range ⇒ [début, fin], poignées qui ne se croisent pas). Chaque poignée est un <input type=\"range\"> natif (role slider implicite, flèches, Début/Fin, gestes des lecteurs d'écran) ; Page préc./suiv. avancent d'un dixième de l'étendue ; aria-valuetext formaté par Intl (devise, unité…). Pointeur : clic sur la piste et glisser déplacent la poignée la plus proche. Graduations optionnelles, valeur affichée à côté du libellé.",
+      "forms": "ControlValueAccessor (formControlName, ngModel, Signal Forms [formField]). Valeur : number, ou readonly [number, number] avec range. Une valeur null ou invalide affiche min (ou [min, max]) sans rien émettre.",
+      "inputs": [
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Libellé visible et nom accessible (<label for> ; en mode plage, nom du groupe et des poignées)."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Nom accessible sans libellé visible."
+        },
+        {
+          "name": "hint",
+          "type": "string",
+          "description": "Aide sous le curseur (aria-describedby)."
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "default": "0",
+          "description": "Borne basse."
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "default": "100",
+          "description": "Borne haute."
+        },
+        {
+          "name": "step",
+          "type": "number",
+          "default": "1",
+          "description": "Pas entre deux valeurs (les valeurs reçues sont alignées dessus)."
+        },
+        {
+          "name": "range",
+          "type": "boolean",
+          "default": "false",
+          "description": "Deux poignées ; valeur [début, fin]."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Désactive le curseur (aussi piloté par le formulaire)."
+        },
+        {
+          "name": "showTicks",
+          "type": "boolean",
+          "default": "false",
+          "description": "Graduation à chaque pas (au plus 50, sinon une sur n) et bornes sous la piste."
+        },
+        {
+          "name": "showValue",
+          "type": "boolean",
+          "default": "true",
+          "description": "Affiche la valeur formatée à côté du libellé."
+        },
+        {
+          "name": "formatOptions",
+          "type": "Intl.NumberFormatOptions",
+          "default": "{}",
+          "description": "Format de la valeur affichée et annoncée (aria-valuetext), ex. { style: 'currency', currency: 'EUR' }."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "default": "'fr-FR'",
+          "description": "Locale Intl."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Attribut name des champs natifs."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioSliderLabels>",
+          "default": "{}",
+          "description": "Surcharge des libellés : lowerThumb « {label} minimum », upperThumb « {label} maximum », range « {start} – {end} »."
+        }
+      ],
+      "outputs": [],
+      "slots": [],
+      "examples": [
+        {
+          "title": "Remise avec Reactive Forms",
+          "code": "// imports: [GestioSlider, ReactiveFormsModule]\n<gestio-slider label=\"Remise\" [min]=\"0\" [max]=\"50\" [step]=\"5\" showTicks\n  [formatOptions]=\"{ style: 'unit', unit: 'percent' }\" formControlName=\"discount\" />"
+        },
+        {
+          "title": "Plage de montants",
+          "code": "// imports: [GestioSlider, FormsModule]\n<gestio-slider label=\"Montant des factures\" range [min]=\"0\" [max]=\"10000\" [step]=\"100\"\n  [formatOptions]=\"{ style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }\"\n  [(ngModel)]=\"amounts\" />\n// amounts = signal<GestioSliderValue>([1500, 6000]);"
+        },
+        {
+          "title": "Signal Forms",
+          "code": "// imports: [GestioSlider, FormField]\n<gestio-slider label=\"Seuil d’alerte\" [min]=\"0\" [max]=\"200\" [step]=\"10\" [formField]=\"f.threshold\" />"
+        }
+      ],
+      "pitfalls": [
+        "Pas de [(value)] : lier la valeur par formControl/formControlName, [(ngModel)] (accepte un signal) ou [formField].",
+        "Avec range, la valeur est un tableau [début, fin] ; une valeur number est ignorée (affiche [min, max]).",
+        "Avec [formField], ne pas poser d'attribut statique disabled ou name (piloté par le formulaire) ; min, max et step restent des entrées du composant.",
+        "Fournir label ou ariaLabel : chaque poignée en tire son nom accessible."
+      ]
+    },
+    {
+      "id": "stepper",
+      "title": "Stepper (assistant en étapes)",
+      "kind": "component",
+      "exports": [
+        "GestioStepper",
+        "GestioStep",
+        "GestioStepperNext",
+        "GestioStepperPrevious",
+        "GestioStepperOrientation",
+        "GestioStepperLabels",
+        "GESTIO_STEPPER_LABELS"
+      ],
+      "classes": [
+        {
+          "class": "GestioStepper",
+          "selector": "gestio-stepper"
+        },
+        {
+          "class": "GestioStep",
+          "selector": "gestio-step"
+        },
+        {
+          "class": "GestioStepperNext",
+          "selector": "button[gestioStepperNext]"
+        },
+        {
+          "class": "GestioStepperPrevious",
+          "selector": "button[gestioStepperPrevious]"
+        }
+      ],
+      "summary": "Assistant en plusieurs étapes, horizontal ou vertical : en-têtes en liste ordonnée navigable au clavier (focus itinérant, flèches, Début/Fin), aria-current=\"step\", position et état annoncés (« Étape 2 sur 4, terminée »), mode linear, étapes facultatives / en erreur / non modifiables, boutons gestioStepperNext / gestioStepperPrevious.",
+      "api": "exportAs 'gestioStepper' : next(): boolean, previous(): boolean, select(index): boolean (false si l'étape n'est pas accessible), reset() (retour à l'étape 0, oublie les étapes parcourues), isCompleted(index), canSelect(index), steps (Signal<readonly GestioStep[]>), activeIndex (Signal<number>).\nUne étape sans [completed] est terminée dès qu'on la quitte vers l'avant. linear : toutes les étapes précédant la cible doivent être terminées ou facultatives.\ngestioStepperNext / gestioStepperPrevious placent le focus sur l'en-tête de la nouvelle étape ; next() / previous() / select() annoncent le changement dans une zone live.",
+      "inputs": [
+        {
+          "name": "selectedIndex",
+          "type": "model<number>",
+          "default": "0",
+          "description": "gestio-stepper : étape active, à partir de 0 ; [(selectedIndex)]."
+        },
+        {
+          "name": "orientation",
+          "type": "'horizontal' | 'vertical'",
+          "default": "'horizontal'",
+          "description": "gestio-stepper : disposition ; en vertical, chaque panneau suit son en-tête."
+        },
+        {
+          "name": "linear",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-stepper : interdit d'aller au-delà d'une étape non terminée (hors facultatives)."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "gestio-stepper : nom de la liste des étapes (défaut : labels.steps, « Étapes »)."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioStepperLabels>",
+          "default": "{}",
+          "description": "gestio-stepper : libellés (steps, position, completed, error, optional, stepChanged, blocked)."
+        },
+        {
+          "name": "label",
+          "type": "string (requis)",
+          "description": "gestio-step : libellé de l'étape."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "gestio-step : texte secondaire sous le libellé (aria-describedby)."
+        },
+        {
+          "name": "completed",
+          "type": "boolean | undefined",
+          "default": "undefined",
+          "description": "gestio-step : étape terminée ; non renseigné : terminée une fois quittée. En linear, false bloque la progression."
+        },
+        {
+          "name": "optional",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-step : facultative (mention visible ; ne bloque pas le mode linear)."
+        },
+        {
+          "name": "hasError",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-step : état d'erreur (icône, « erreur » annoncé dans l'en-tête)."
+        },
+        {
+          "name": "editable",
+          "type": "boolean",
+          "default": "true",
+          "description": "gestio-step : false empêche de revenir sur l'étape."
+        },
+        {
+          "name": "type",
+          "type": "'button' | 'submit'",
+          "default": "'button'",
+          "description": "button[gestioStepperNext] / button[gestioStepperPrevious] : type natif du bouton."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "selectedIndexChange",
+          "type": "number",
+          "description": "gestio-stepper : émis au changement d'étape (model selectedIndex)."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "gestio-stepper : éléments <gestio-step> ; gestio-step : contenu du panneau (formulaire, boutons gestioStepperNext / gestioStepperPrevious)."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Création de fournisseur en 3 étapes (linear)",
+          "code": "// imports: [GestioStepper, GestioStep, GestioStepperNext, GestioStepperPrevious, GestioButton, GestioInput, ReactiveFormsModule]\n<form [formGroup]=\"supplier\" (ngSubmit)=\"create()\">\n  <gestio-stepper #wizard linear ariaLabel=\"Création du fournisseur\" [(selectedIndex)]=\"step\">\n    <gestio-step label=\"Identité\" description=\"Raison sociale et SIRET\" [completed]=\"supplier.controls.identity.valid\">\n      <div formGroupName=\"identity\">…</div>\n      <button gestioButton gestioStepperNext (click)=\"supplier.controls.identity.markAllAsTouched()\">Suivant</button>\n    </gestio-step>\n    <gestio-step label=\"Coordonnées\" [completed]=\"supplier.controls.contact.valid\">\n      …\n      <button gestioButton variant=\"outline\" gestioStepperPrevious>Précédent</button>\n      <button gestioButton gestioStepperNext>Suivant</button>\n    </gestio-step>\n    <gestio-step label=\"Conditions\" optional>\n      …\n      <button gestioButton type=\"submit\">Créer le fournisseur</button>\n    </gestio-step>\n  </gestio-stepper>\n</form>"
+        },
+        {
+          "title": "Vertical avec états",
+          "code": "// imports: [GestioStepper, GestioStep]\n<gestio-stepper orientation=\"vertical\" ariaLabel=\"Clôture d'octobre\">\n  <gestio-step label=\"Rapprochement bancaire\" [completed]=\"true\">…</gestio-step>\n  <gestio-step label=\"Factures fournisseurs\" hasError>…</gestio-step>\n  <gestio-step label=\"Notes de frais\" optional>…</gestio-step>\n  <gestio-step label=\"Export comptable\" [editable]=\"false\">…</gestio-step>\n</gestio-stepper>"
+        }
+      ],
+      "pitfalls": [
+        "Importer GestioStepper et GestioStep (et GestioStepperNext / GestioStepperPrevious si utilisés).",
+        "En mode linear, lier [completed] à la validité du formulaire de l'étape : sans [completed], une étape est terminée dès qu'on la quitte.",
+        "gestioStepperNext ne marque pas le formulaire comme touché : ajouter un (click) pour afficher les erreurs.",
+        "Le contenu de toutes les étapes reste instancié (panneaux masqués par hidden) : la saisie est conservée d'une étape à l'autre.",
+        "selectedIndex hors limites est borné à l'affichage, sans modifier le model."
+      ],
+      "entryPoint": "@gestiolabs336/ui/stepper"
     },
     {
       "id": "empty-state",
@@ -4286,6 +6058,585 @@
         "L'événement s'appelle planSelect (et non select) et est émis par gestio-pricing-table.",
         "Importer GestioPricingTable et GestioPricingPlan (ou GESTIO_PRICING_TABLE_IMPORTS)."
       ]
+    },
+    {
+      "id": "chart",
+      "title": "Graphiques",
+      "kind": "block",
+      "entryPoint": "@gestiolabs336/ui/blocks/chart",
+      "exports": [
+        "GestioBarChart",
+        "GestioLineChart",
+        "GestioDonutChart",
+        "GestioChartSeries",
+        "GestioChartLabels",
+        "GESTIO_CHART_LABELS"
+      ],
+      "classes": [
+        {
+          "class": "GestioBarChart",
+          "selector": "gestio-bar-chart"
+        },
+        {
+          "class": "GestioLineChart",
+          "selector": "gestio-line-chart"
+        },
+        {
+          "class": "GestioDonutChart",
+          "selector": "gestio-donut-chart"
+        }
+      ],
+      "summary": "Graphiques SVG sans dépendance pour tableaux de bord : barres (groupées ou empilées), courbes (aire optionnelle) et anneau. Graduations « jolies », valeurs formatées avec Intl, largeur responsive (ResizeObserver, sûr en SSR), palette --gestio-chart-1…8 avec repli sur les couleurs sémantiques, motifs/traits/marqueurs en plus des couleurs, info-bulle au survol et au focus clavier (tabulation unique puis flèches), image role=img nommée et résumée, tableau de données équivalent (masqué visuellement, bouton « Afficher le tableau »), animations désactivées avec prefers-reduced-motion.",
+      "inputs": [
+        {
+          "name": "heading",
+          "type": "string (requis)",
+          "description": "Toutes : titre ; nomme l'image (role=img) et légende le tableau de données."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "Toutes : texte lu avant le résumé automatique."
+        },
+        {
+          "name": "valueFormat",
+          "type": "Intl.NumberFormatOptions",
+          "default": "{}",
+          "description": "Toutes : format des valeurs (devise, pourcentage…)."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "default": "'fr-FR'",
+          "description": "Toutes : langue de formatage."
+        },
+        {
+          "name": "legend",
+          "type": "boolean",
+          "default": "true",
+          "description": "Toutes : affiche la légende."
+        },
+        {
+          "name": "tableToggle",
+          "type": "boolean",
+          "default": "true",
+          "description": "Toutes : bouton « Afficher le tableau » (le tableau reste lu par les lecteurs d'écran)."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioChartLabels>",
+          "default": "{}",
+          "description": "Toutes : surcharge des textes (résumés, points, tableau)."
+        },
+        {
+          "name": "categories",
+          "type": "readonly string[] (requis)",
+          "description": "Toutes : libellés de l'axe horizontal (barres, courbes) ou noms des parts (anneau)."
+        },
+        {
+          "name": "series",
+          "type": "readonly GestioChartSeries[] (requis)",
+          "description": "gestio-bar-chart, gestio-line-chart : séries { name, data, color? } ; null = valeur absente."
+        },
+        {
+          "name": "height",
+          "type": "number",
+          "default": "280",
+          "description": "gestio-bar-chart, gestio-line-chart : hauteur en px ; la largeur suit le conteneur."
+        },
+        {
+          "name": "grid",
+          "type": "boolean",
+          "default": "true",
+          "description": "gestio-bar-chart, gestio-line-chart : lignes horizontales de repère."
+        },
+        {
+          "name": "axisFormat",
+          "type": "Intl.NumberFormatOptions | null",
+          "default": "null",
+          "description": "gestio-bar-chart, gestio-line-chart : format des graduations (sinon valueFormat)."
+        },
+        {
+          "name": "stacked",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-bar-chart : empile les séries."
+        },
+        {
+          "name": "patterns",
+          "type": "boolean",
+          "default": "true",
+          "description": "gestio-bar-chart, gestio-donut-chart : motif par série/part en plus de la couleur."
+        },
+        {
+          "name": "area",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-line-chart : remplit l'aire sous les courbes."
+        },
+        {
+          "name": "markers",
+          "type": "boolean",
+          "default": "true",
+          "description": "gestio-line-chart : marqueur (forme propre à la série) sur chaque point."
+        },
+        {
+          "name": "beginAtZero",
+          "type": "boolean",
+          "default": "true",
+          "description": "gestio-line-chart : l'axe vertical part de zéro."
+        },
+        {
+          "name": "values",
+          "type": "readonly (number | null)[] (requis)",
+          "description": "gestio-donut-chart : valeur de chaque part (négatif ou null = 0)."
+        },
+        {
+          "name": "colors",
+          "type": "readonly (string | undefined)[]",
+          "default": "[]",
+          "description": "gestio-donut-chart : couleurs CSS par part."
+        },
+        {
+          "name": "size",
+          "type": "number",
+          "default": "240",
+          "description": "gestio-donut-chart : diamètre maximal en px."
+        },
+        {
+          "name": "thickness",
+          "type": "number",
+          "default": "0.38",
+          "description": "gestio-donut-chart : épaisseur en fraction du rayon (1 = camembert)."
+        },
+        {
+          "name": "showTotal",
+          "type": "boolean",
+          "default": "true",
+          "description": "gestio-donut-chart : total au centre."
+        }
+      ],
+      "outputs": [],
+      "slots": [],
+      "examples": [
+        {
+          "title": "CA mensuel comparé",
+          "code": "// imports: [GestioBarChart]\n<gestio-bar-chart\n  heading=\"Chiffre d'affaires mensuel\"\n  [categories]=\"['Janv.', 'Févr.', 'Mars']\"\n  [series]=\"[\n    { name: '2025', data: [32100, 35400, 31800] },\n    { name: '2026', data: [35800, 38900, 41200] },\n  ]\"\n  [valueFormat]=\"{ style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }\"\n  [axisFormat]=\"{ style: 'currency', currency: 'EUR', notation: 'compact' }\"\n/>"
+        },
+        {
+          "title": "Trésorerie avec aire",
+          "code": "// imports: [GestioLineChart]\n<gestio-line-chart\n  heading=\"Solde de trésorerie\"\n  [categories]=\"mois\"\n  [series]=\"[{ name: 'Réel', data: reel }, { name: 'Prévision', data: prevision }]\"\n  [valueFormat]=\"{ style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }\"\n  area\n/>"
+        },
+        {
+          "title": "Répartition des dépenses",
+          "code": "// imports: [GestioDonutChart]\n<gestio-donut-chart\n  heading=\"Répartition des dépenses\"\n  [categories]=\"['Salaires', 'Loyers', 'Logiciels']\"\n  [values]=\"[18400, 4200, 1350]\"\n  [valueFormat]=\"{ style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }\"\n/>"
+        }
+      ],
+      "pitfalls": [
+        "Les libellés de l'axe s'appellent categories (labels est réservé aux textes d'interface).",
+        "heading n'est pas affiché : placer un titre visible au-dessus (ex. en-tête de gestio-card).",
+        "series[i].data suit l'ordre de categories ; utiliser null (pas 0) pour une valeur absente.",
+        "Palette : définir --gestio-chart-1 à --gestio-chart-8 pour des couleurs de données distinctes ; sinon repli sur primary/info/warning/success/danger…",
+        "Clavier : tabulation unique puis flèches (gauche/droite : catégories, haut/bas : séries ; anneau : parts), Échap masque l'info-bulle."
+      ]
+    },
+    {
+      "id": "kanban",
+      "title": "Tableau Kanban",
+      "kind": "block",
+      "entryPoint": "@gestiolabs336/ui/blocks/kanban",
+      "exports": [
+        "GestioKanban",
+        "GestioKanbanCard",
+        "GestioKanbanColumn",
+        "GestioKanbanMoveEvent",
+        "GestioKanbanCardContext",
+        "GestioKanbanLabels",
+        "GESTIO_KANBAN_LABELS"
+      ],
+      "classes": [
+        {
+          "class": "GestioKanban",
+          "selector": "gestio-kanban"
+        },
+        {
+          "class": "GestioKanbanCard",
+          "selector": "ng-template[gestioKanbanCard]"
+        }
+      ],
+      "summary": "Tableau Kanban basé sur @angular/cdk/drag-drop : colonnes de cartes déplaçables et réordonnables, gabarit de carte personnalisable, compteur par colonne et limite WIP (signalée, ou bloquante avec enforceWip). Alternative clavier (WCAG 2.5.7) : tabulation unique puis flèches, Maj + flèches pour déplacer, bouton « Déplacer » avec menu ; annonce aria-live de chaque déplacement. columns est un model mis à jour de façon immuable.",
+      "inputs": [
+        {
+          "name": "columns",
+          "type": "readonly GestioKanbanColumn<T>[] (requis)",
+          "description": "gestio-kanban : colonnes { id, title, items, wipLimit? } ; model, liaison [(columns)]."
+        },
+        {
+          "name": "itemLabel",
+          "type": "(item: T) => string",
+          "default": "title ?? name ?? label ?? String(item)",
+          "description": "gestio-kanban : nom d'une carte (annonces, bouton Déplacer, rendu par défaut)."
+        },
+        {
+          "name": "trackBy",
+          "type": "(item: T) => unknown",
+          "default": "(item) => item",
+          "description": "gestio-kanban : identité d'une carte pour le suivi du DOM."
+        },
+        {
+          "name": "enforceWip",
+          "type": "boolean",
+          "default": "false",
+          "description": "gestio-kanban : refuse l'entrée d'une carte dans une colonne ayant atteint wipLimit."
+        },
+        {
+          "name": "headingLevel",
+          "type": "number",
+          "default": "3",
+          "description": "gestio-kanban : niveau de titre des colonnes (aria-level)."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioKanbanLabels>",
+          "default": "{}",
+          "description": "gestio-kanban : surcharge des textes."
+        },
+        {
+          "name": "gestioKanbanCardOf",
+          "type": "readonly GestioKanbanColumn<T>[]",
+          "description": "gestioKanbanCard : colonnes, pour typer la variable de la carte (facultatif)."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "columnsChange",
+          "type": "readonly GestioKanbanColumn<T>[]",
+          "description": "gestio-kanban : nouvelles colonnes après un déplacement."
+        },
+        {
+          "name": "moved",
+          "type": "GestioKanbanMoveEvent<T>",
+          "description": "gestio-kanban : { item, from, to, previousIndex, currentIndex } (ids de colonnes) après un déplacement."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "ng-template[gestioKanbanCard]",
+          "description": "Gabarit de carte ; contexte : $implicit/item, column, index."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Suivi de tickets",
+          "code": "// imports: [GestioKanban, GestioKanbanCard]\n<gestio-kanban [(columns)]=\"columns\" (moved)=\"api.updateStatus($event)\">\n  <ng-template gestioKanbanCard [gestioKanbanCardOf]=\"columns()\" let-ticket>\n    <strong>{{ ticket.title }}</strong>\n    <span>{{ ticket.customer }}</span>\n  </ng-template>\n</gestio-kanban>\n\ncolumns = signal<readonly GestioKanbanColumn<Ticket>[]>([\n  { id: 'new', title: 'Nouveaux', items: [] },\n  { id: 'doing', title: 'En cours', wipLimit: 3, items: [] },\n  { id: 'done', title: 'Résolus', items: [] },\n]);"
+        },
+        {
+          "title": "Limite WIP bloquante",
+          "code": "// imports: [GestioKanban]\n<gestio-kanban [(columns)]=\"pipeline\" enforceWip />"
+        }
+      ],
+      "pitfalls": [
+        "moved.from/to sont les id des colonnes ; columns est déjà mis à jour quand moved est émis.",
+        "Les touches saisies dans le contenu de la carte (lien, bouton) ne sont pas interceptées : seuls les événements sur la carte elle-même naviguent ou déplacent.",
+        "Sans [gestioKanbanCardOf], la variable de la carte est typée any.",
+        "Fournir itemLabel si les éléments n'ont ni title, ni name, ni label (annonces lisibles)."
+      ]
+    },
+    {
+      "id": "command-palette",
+      "title": "Palette de commandes",
+      "kind": "block",
+      "exports": [
+        "GestioCommandPalette",
+        "gestioFilterCommands",
+        "GESTIO_COMMAND_PALETTE_LABELS",
+        "GestioCommand",
+        "GestioCommandPaletteLabels"
+      ],
+      "classes": [
+        {
+          "class": "GestioCommandPalette",
+          "selector": "gestio-command-palette"
+        }
+      ],
+      "summary": "Palette de commandes type Ctrl+K / ⌘K dans une modale (@gestiolabs336/ui/dialog) : raccourci global configurable (SSR-safe), recherche floue insensible à la casse et aux accents (libellé, mots-clés, groupe, lettres dans l'ordre), commandes groupées, motif combobox + listbox avec aria-activedescendant, flèches (boucle, commandes désactivées ignorées), Entrée pour exécuter, Échap pour fermer, état vide et annonce du nombre de résultats.",
+      "api": "gestioFilterCommands(commands: readonly GestioCommand[], query: string): GestioCommand[] — filtre et trie (recherche vide = ordre d'origine).\nGestioCommand : { id: string; label: string; group?: string; keywords?: readonly string[]; shortcut?: string (affiché seulement); icon?: string (caractère/emoji décoratif); disabled?: boolean }",
+      "inputs": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "description": "Ouverture, liaison bidirectionnelle [(open)]."
+        },
+        {
+          "name": "commands",
+          "type": "readonly GestioCommand[]",
+          "default": "[]",
+          "description": "Commandes { id, label, group?, keywords?, shortcut?, icon?, disabled? } ; groupes affichés dans l'ordre de première apparition."
+        },
+        {
+          "name": "hotkey",
+          "type": "string | null",
+          "default": "'mod+k'",
+          "description": "Raccourci global qui ouvre/ferme la palette : mod (Ctrl ou ⌘), ctrl, meta, alt, shift + touche. null ou '' le désactive."
+        },
+        {
+          "name": "closeOnRun",
+          "type": "boolean",
+          "default": "true",
+          "description": "Ferme la palette après l'exécution d'une commande."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioCommandPaletteLabels>",
+          "default": "{}",
+          "description": "Libellés (dialog, input, placeholder, list, empty {query}, results {count}, oneResult, noResults, navigateHint, runHint, closeHint, escapeKey)."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "run",
+          "type": "GestioCommand",
+          "description": "Commande choisie (clic ou Entrée) ; jamais émise pour une commande désactivée."
+        },
+        {
+          "name": "openChange",
+          "type": "boolean",
+          "description": "Liaison [(open)] : raccourci, Échap, fond ou exécution."
+        }
+      ],
+      "slots": [],
+      "examples": [
+        {
+          "title": "Palette d'un logiciel de gestion",
+          "code": "// imports: [GestioCommandPalette, GestioButton]\n<button gestioButton variant=\"outline\" (click)=\"paletteOpen.set(true)\">Rechercher une commande</button>\n<gestio-command-palette [(open)]=\"paletteOpen\" [commands]=\"commands\" (run)=\"execute($event)\" />\n\n// Composant\nprotected readonly paletteOpen = signal(false);\nprotected readonly commands: readonly GestioCommand[] = [\n  { id: 'new-invoice', label: 'Créer une facture', group: 'Créer', shortcut: 'Ctrl+Alt+F', icon: '🧾' },\n  { id: 'new-quote', label: 'Créer un devis', group: 'Créer', keywords: ['proposition'] },\n  { id: 'settings', label: 'Paramètres de l’entreprise', group: 'Navigation' },\n  { id: 'export', label: 'Exporter la comptabilité', group: 'Actions', disabled: true },\n];\nexecute(command: GestioCommand) { if (command.id === 'new-invoice') this.router.navigate(['/factures/nouvelle']); }"
+        },
+        {
+          "title": "Raccourci et libellés personnalisés",
+          "code": "// imports: [GestioCommandPalette]\n<gestio-command-palette\n  [(open)]=\"open\"\n  [commands]=\"commands\"\n  hotkey=\"alt+shift+p\"\n  [closeOnRun]=\"false\"\n  [labels]=\"{ dialog: 'Actions rapides', placeholder: 'Que voulez-vous faire ?' }\"\n  (run)=\"execute($event)\"\n/>"
+        }
+      ],
+      "pitfalls": [
+        "Le champ shortcut d'une commande est seulement affiché : brancher soi-même le raccourci correspondant.",
+        "Une seule palette par raccourci global (deux palettes avec le même hotkey s'ouvriraient ensemble) ; hotkey=\"\" ou [hotkey]=\"null\" pour le désactiver.",
+        "La recherche est réinitialisée à chaque ouverture ; les id de commande doivent être uniques (clé de suivi).",
+        "icon est un texte décoratif (caractère, emoji), pas un nom d'icône ni du HTML."
+      ],
+      "entryPoint": "@gestiolabs336/ui/blocks/command-palette"
+    },
+    {
+      "id": "notification-center",
+      "title": "Centre de notifications",
+      "kind": "block",
+      "exports": [
+        "GestioNotificationCenter",
+        "GestioNotification",
+        "GestioNotificationTone",
+        "GestioNotificationFilter",
+        "GestioNotificationCenterPlacement",
+        "GestioNotificationCenterLabels",
+        "GESTIO_NOTIFICATION_CENTER_LABELS"
+      ],
+      "classes": [
+        {
+          "class": "GestioNotificationCenter",
+          "selector": "gestio-notification-center"
+        }
+      ],
+      "summary": "Cloche de notifications avec pastille du nombre de non lues (nom accessible « Notifications, 3 non lues ») ouvrant un panneau en overlay CDK (role=\"dialog\", focus piégé puis rendu à la cloche, Échap) : groupes « Aujourd'hui » / « Plus tôt », dates relatives Intl.RelativeTimeFormat dans <time datetime>, filtre Toutes / Non lues, marquage lu individuel ou global, état vide et chargement.",
+      "inputs": [
+        {
+          "name": "notifications",
+          "type": "readonly GestioNotification[] (requis)",
+          "description": "Notifications { id, title, body?, date: Date, read, tone?, href? }, affichées dans l'ordre fourni ; avec href, l'élément est un lien <a>."
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "description": "Panneau ouvert (model, [(open)])."
+        },
+        {
+          "name": "filter",
+          "type": "'all' | 'unread'",
+          "default": "'all'",
+          "description": "Filtre de la liste (model, [(filter)])."
+        },
+        {
+          "name": "now",
+          "type": "Date",
+          "default": "heure de création du composant",
+          "description": "Référence des dates relatives et du groupe « Aujourd'hui » ; à fournir pour rafraîchir les durées ou en SSR/tests."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "default": "'fr-FR'",
+          "description": "Langue des dates et des nombres."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "description": "Indicateur de chargement (aria-busy) à la place de la liste."
+        },
+        {
+          "name": "markReadOnSelect",
+          "type": "boolean",
+          "default": "true",
+          "description": "Émet aussi markRead quand une notification non lue est choisie."
+        },
+        {
+          "name": "placement",
+          "type": "'bottom-end' | 'bottom-start'",
+          "default": "'bottom-end'",
+          "description": "Position préférée du panneau (repli automatique si la place manque)."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioNotificationCenterLabels>",
+          "default": "{}",
+          "description": "Libellés (title, triggerUnreadOne, triggerUnreadOther, markAllRead, markRead, unread, filter, filterAll, filterUnread, today, earlier, empty, emptyDescription, emptyUnread, loading, close)."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "markRead",
+          "type": "GestioNotification",
+          "description": "Marquer cette notification comme lue (mettre à jour notifications)."
+        },
+        {
+          "name": "markAllRead",
+          "type": "void",
+          "description": "Marquer toutes les notifications comme lues."
+        },
+        {
+          "name": "select",
+          "type": "GestioNotification",
+          "description": "Notification choisie (clic ou Entrée) ; le panneau se ferme et le focus revient à la cloche."
+        },
+        {
+          "name": "openChange",
+          "type": "boolean",
+          "description": "Ouverture ou fermeture du panneau."
+        },
+        {
+          "name": "filterChange",
+          "type": "'all' | 'unread'",
+          "description": "Changement de filtre."
+        }
+      ],
+      "slots": [],
+      "examples": [
+        {
+          "title": "Dans la barre d'application",
+          "code": "// imports: [GestioNotificationCenter]\nnotifications = signal<GestioNotification[]>([\n  { id: 1, title: 'Facture F-2026-0142 payée', body: 'Atelier Moreau a réglé 1 250,00 €.', date: new Date('2026-10-28T13:55:00'), read: false, tone: 'success' },\n  { id: 2, title: 'Stock bas : cartouches A4', date: new Date('2026-10-28T09:00:00'), read: false, tone: 'warning', href: '/stock' },\n]);\n\nmarquerLue(n: GestioNotification) {\n  this.notifications.update((list) => list.map((x) => (x.id === n.id ? { ...x, read: true } : x)));\n}\n\n<gestio-notification-center\n  [notifications]=\"notifications()\"\n  [loading]=\"chargement()\"\n  (markRead)=\"marquerLue($event)\"\n  (markAllRead)=\"toutMarquerLu()\"\n  (select)=\"ouvrir($event)\"\n/>"
+        },
+        {
+          "title": "Ouverture contrôlée et dates rafraîchies",
+          "code": "// imports: [GestioNotificationCenter]\nmaintenant = signal(new Date()); // mis à jour chaque minute côté navigateur\nouvert = signal(false);\n\n<gestio-notification-center\n  [notifications]=\"notifications()\"\n  [now]=\"maintenant()\"\n  [(open)]=\"ouvert\"\n  placement=\"bottom-start\"\n/>"
+        }
+      ],
+      "pitfalls": [
+        "Le composant ne modifie jamais la liste : mettre à jour notifications (read: true) en réponse à markRead, markAllRead et select, sinon la pastille ne change pas.",
+        "Par défaut, choisir une notification non lue émet aussi markRead (markReadOnSelect) : ne pas la marquer une seconde fois dans le gestionnaire de select.",
+        "Les dates relatives et le groupe « Aujourd'hui » sont calculés par rapport à now, figé à la création du composant : passer un signal mis à jour périodiquement.",
+        "date doit être un objet Date (convertir les chaînes ISO de l'API avant de les passer).",
+        "href produit un lien natif <a href> : avec le routeur Angular, ne pas fournir href et naviguer dans (select).",
+        "Les notifications ne sont pas triées : les fournir du plus récent au plus ancien."
+      ],
+      "entryPoint": "@gestiolabs336/ui/blocks/notification-center"
+    },
+    {
+      "id": "error-page",
+      "title": "Page d'erreur",
+      "kind": "block",
+      "exports": [
+        "GestioErrorPage",
+        "GestioErrorPageActions",
+        "GESTIO_ERROR_PAGE_IMPORTS",
+        "GestioErrorPageCode",
+        "GestioErrorPageVariant",
+        "GestioErrorPageHeadingLevel",
+        "GestioErrorPageLabels",
+        "GESTIO_ERROR_PAGE_LABELS"
+      ],
+      "classes": [
+        {
+          "class": "GestioErrorPage",
+          "selector": "gestio-error-page"
+        },
+        {
+          "class": "GestioErrorPageActions",
+          "selector": "[gestioErrorPageActions]"
+        }
+      ],
+      "summary": "Page d'erreur 404, 403, 500, maintenance ou hors ligne : illustration SVG décorative par type (couleurs du thème), surtitre (« Erreur 404 »), titre de niveau réglable, message par défaut selon le code (surchargeables), contenu projeté et actions ; plein écran centré ou intégré.",
+      "inputs": [
+        {
+          "name": "code",
+          "type": "404 | 403 | 500 | 'maintenance' | 'offline'",
+          "default": "404",
+          "description": "gestio-error-page — Type d'erreur : illustration, surtitre et textes par défaut ; code=\"404\" accepté en attribut statique."
+        },
+        {
+          "name": "heading",
+          "type": "string",
+          "description": "gestio-error-page — Remplace le titre par défaut du code."
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "description": "gestio-error-page — Remplace le message par défaut du code (chaîne vide : aucun message)."
+        },
+        {
+          "name": "headingLevel",
+          "type": "1 | 2 | 3 | 4 | 5 | 6",
+          "default": "1",
+          "description": "gestio-error-page — Niveau du titre (borné à 1–6) : 1 pour une page dédiée, 2 ou 3 en variante intégrée."
+        },
+        {
+          "name": "variant",
+          "type": "'fullscreen' | 'inline'",
+          "default": "'fullscreen'",
+          "description": "gestio-error-page — fullscreen : centré sur toute la hauteur de l'écran avec le fond de l'application ; inline : intégré dans une zone de contenu."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<GestioErrorPageLabels>",
+          "default": "{}",
+          "description": "gestio-error-page — Libellés (codeEyebrow avec {code}, maintenanceEyebrow, offlineEyebrow, et pour notFound, forbidden, serverError, maintenance, offline : <type>Heading et <type>Message)."
+        }
+      ],
+      "outputs": [],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "Contenu sous le message (référence d'incident, détail)."
+        },
+        {
+          "selector": "[gestioErrorPageActions]",
+          "description": "Actions centrées (composant GestioErrorPageActions), ex. bouton « Retour à l'accueil »."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Route « page introuvable »",
+          "code": "// imports: [GESTIO_ERROR_PAGE_IMPORTS, GestioButton, RouterLink]\n<gestio-error-page code=\"404\">\n  <div gestioErrorPageActions>\n    <a gestioButton routerLink=\"/\">Retour à l'accueil</a>\n  </div>\n</gestio-error-page>\n\n// app.routes.ts\n{ path: '**', title: 'Page introuvable', loadComponent: () => import('./not-found.page').then((m) => m.NotFoundPage) }"
+        },
+        {
+          "title": "Erreur serveur intégrée avec référence",
+          "code": "// imports: [GESTIO_ERROR_PAGE_IMPORTS, GestioButton]\n<gestio-error-page\n  [code]=\"500\"\n  variant=\"inline\"\n  headingLevel=\"2\"\n  heading=\"Impossible d'enregistrer la facture\"\n>\n  <p>Référence de l'incident : <code>{{ incidentId }}</code></p>\n  <div gestioErrorPageActions>\n    <button gestioButton (click)=\"reessayer()\">Réessayer</button>\n  </div>\n</gestio-error-page>"
+        }
+      ],
+      "pitfalls": [
+        "Importer GESTIO_ERROR_PAGE_IMPORTS (ou GestioErrorPageActions), sinon les actions ne sont ni centrées ni espacées.",
+        "gestioErrorPageActions est un composant : le poser sur un <div>, jamais sur un autre composant.",
+        "Un seul h1 par page : en variante inline sous un titre de page, régler headingLevel à 2 ou 3.",
+        "La variante fullscreen occupe 100dvh : à l'intérieur d'une mise en page qui a déjà un en-tête, préférer inline.",
+        "Mettre à jour le titre du document (title de la route) pour que l'erreur soit aussi annoncée par l'onglet."
+      ],
+      "entryPoint": "@gestiolabs336/ui/blocks/error-page"
     }
   ]
 }

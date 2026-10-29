@@ -1,0 +1,285 @@
+@use '../core/field' as field;
+
+@include field.field;
+
+.gestio-combobox__control {
+  gap: var(--gestio-space-1);
+  padding-inline-end: var(--gestio-space-1);
+
+  &.is-multiple {
+    flex-wrap: wrap;
+    padding-block: 0.1875rem;
+  }
+
+  &.is-sm {
+    padding-inline-end: 0.125rem;
+  }
+}
+
+.gestio-combobox__native {
+  .is-multiple > & {
+    flex: 1 1 6rem;
+    padding-block: 0.3125rem;
+  }
+}
+
+/* Boutons effacer / ouvrir */
+.gestio-combobox__icon-button {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--gestio-radius-sm);
+  background: transparent;
+  color: var(--gestio-color-text-muted);
+  cursor: pointer;
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  &:hover:not(:disabled) {
+    background: var(--gestio-color-surface-hover);
+    color: var(--gestio-color-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: 0;
+  }
+
+  &:disabled {
+    color: var(--gestio-color-text-disabled);
+    cursor: not-allowed;
+  }
+
+  .is-multiple > & {
+    align-self: center;
+  }
+}
+
+.gestio-combobox__toggle svg {
+  transition: transform var(--gestio-duration-fast) var(--gestio-easing-standard);
+}
+
+.gestio-combobox__toggle[aria-expanded='true'] svg {
+  transform: rotate(180deg);
+}
+
+/* Valeurs choisies (mode multiple) */
+.gestio-combobox__values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gestio-space-1);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gestio-combobox__chip {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: 1.75rem;
+  padding-inline-start: var(--gestio-space-3);
+  border: var(--gestio-border-width) solid var(--gestio-color-neutral-border);
+  border-radius: var(--gestio-chip-radius, var(--gestio-radius-full));
+  background: var(--gestio-color-neutral-subtle);
+  color: var(--gestio-color-neutral-text);
+  font-size: var(--gestio-font-size-sm);
+  font-weight: var(--gestio-font-weight-medium);
+  line-height: var(--gestio-line-height-tight);
+}
+
+.gestio-combobox__chip-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gestio-combobox__chip-remove {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 0 0.125rem 0 var(--gestio-space-1);
+  padding: 0;
+  border: 0;
+  border-radius: var(--gestio-radius-full);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+
+  svg {
+    width: 0.875rem;
+    height: 0.875rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+  }
+
+  &:hover:not(:disabled) {
+    background: var(--gestio-color-neutral-subtle-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: 0;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+/* Liste popup */
+.gestio-combobox__listbox {
+  box-sizing: border-box;
+  max-height: min(18rem, calc(100dvh - 2rem));
+  margin: 0;
+  padding: var(--gestio-space-1);
+  overflow-y: auto;
+  list-style: none;
+  border: var(--gestio-border-width) solid var(--gestio-color-border);
+  border-radius: var(--gestio-radius-lg);
+  background: var(--gestio-color-surface);
+  box-shadow: var(--gestio-shadow-lg);
+  color: var(--gestio-color-text);
+  font-family: var(--gestio-font-sans);
+  font-size: var(--gestio-font-size-md);
+  overscroll-behavior: contain;
+  animation: gestio-combobox-in var(--gestio-duration-fast) var(--gestio-easing-standard);
+}
+
+.gestio-combobox__option {
+  display: flex;
+  gap: var(--gestio-space-2);
+  align-items: flex-start;
+  padding: var(--gestio-space-2) var(--gestio-space-3) var(--gestio-space-2) var(--gestio-space-2);
+  border-radius: var(--gestio-radius-md);
+  line-height: var(--gestio-line-height-tight);
+  cursor: pointer;
+  user-select: none;
+
+  &.is-active {
+    background: var(--gestio-color-surface-hover);
+    /* Repère visible de l'option active (focus « virtuel »). */
+    box-shadow: inset 2px 0 0 var(--gestio-color-focus-ring);
+  }
+
+  &[aria-selected='true'] {
+    color: var(--gestio-color-primary-text);
+    font-weight: var(--gestio-font-weight-medium);
+  }
+
+  &[aria-disabled='true'] {
+    color: var(--gestio-color-text-disabled);
+    cursor: not-allowed;
+  }
+}
+
+.gestio-combobox__check {
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  margin-block-start: 0.0625rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  visibility: hidden;
+
+  [aria-selected='true'] > & {
+    visibility: visible;
+  }
+}
+
+.gestio-combobox__option-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.gestio-combobox__option-description {
+  color: var(--gestio-color-text-muted);
+  font-size: var(--gestio-font-size-sm);
+  font-weight: var(--gestio-font-weight-regular);
+
+  [aria-disabled='true'] & {
+    color: inherit;
+  }
+}
+
+.gestio-combobox__status {
+  display: flex;
+  gap: var(--gestio-space-2);
+  align-items: center;
+  padding: var(--gestio-space-2) var(--gestio-space-3);
+  color: var(--gestio-color-text-muted);
+  cursor: default;
+}
+
+.gestio-combobox__spinner {
+  flex: none;
+  width: 0.875rem;
+  height: 0.875rem;
+  border: 2px solid var(--gestio-color-border);
+  border-top-color: var(--gestio-color-primary);
+  border-radius: 50%;
+  animation: gestio-combobox-spin 0.8s linear infinite;
+}
+
+@keyframes gestio-combobox-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.25rem);
+  }
+}
+
+@keyframes gestio-combobox-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gestio-combobox__listbox,
+  .gestio-combobox__toggle svg {
+    animation: none;
+    transition: none;
+  }
+
+  .gestio-combobox__spinner {
+    animation-duration: 2.4s;
+  }
+}
+
+@media (forced-colors: active) {
+  .gestio-combobox__listbox {
+    border-color: CanvasText;
+  }
+
+  .gestio-combobox__option.is-active {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+}

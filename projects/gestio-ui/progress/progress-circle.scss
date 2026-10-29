@@ -1,0 +1,121 @@
+:host {
+  --_color: var(--gestio-color-primary);
+  --_size: 3rem;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gestio-space-2);
+  vertical-align: middle;
+  font-family: var(--gestio-font-sans);
+  color: var(--gestio-color-text);
+}
+
+:host(.gestio-progress-circle--success) {
+  --_color: var(--gestio-color-success);
+}
+
+:host(.gestio-progress-circle--warning) {
+  --_color: var(--gestio-color-warning);
+}
+
+:host(.gestio-progress-circle--danger) {
+  --_color: var(--gestio-color-danger);
+}
+
+:host(.gestio-progress-circle--sm) {
+  --_size: 2rem;
+}
+
+:host(.gestio-progress-circle--lg) {
+  --_size: 4.5rem;
+}
+
+.gestio-progress-circle__indicator {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: var(--_size);
+  block-size: var(--_size);
+}
+
+.gestio-progress-circle__svg {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  transform: rotate(-90deg);
+}
+
+.gestio-progress-circle__track,
+.gestio-progress-circle__fill {
+  fill: none;
+  stroke-width: 4;
+}
+
+.gestio-progress-circle__track {
+  stroke: color-mix(in srgb, var(--_color) 18%, var(--gestio-color-surface-muted));
+}
+
+.gestio-progress-circle__fill {
+  stroke: var(--_color);
+  transition: stroke-dasharray var(--gestio-duration-normal) var(--gestio-easing-standard);
+}
+
+:host(.gestio-progress-circle--indeterminate) .gestio-progress-circle__svg {
+  animation: gestio-progress-circle-spin 1s linear infinite;
+}
+
+.gestio-progress-circle__value {
+  position: relative;
+  font-size: var(--gestio-font-size-xs);
+  font-weight: var(--gestio-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+:host(.gestio-progress-circle--sm) .gestio-progress-circle__value {
+  /* Trop petit pour un texte lisible : la valeur reste annoncée par aria-valuetext. */
+  display: none;
+}
+
+:host(.gestio-progress-circle--lg) .gestio-progress-circle__value {
+  font-size: var(--gestio-font-size-md);
+}
+
+.gestio-progress-circle__label {
+  font-size: var(--gestio-font-size-sm);
+  font-weight: var(--gestio-font-weight-medium);
+  line-height: var(--gestio-line-height-tight);
+  text-align: center;
+}
+
+@keyframes gestio-progress-circle-spin {
+  from {
+    transform: rotate(-90deg);
+  }
+
+  to {
+    transform: rotate(270deg);
+  }
+}
+
+/* Moins d'animations : arc immobile en mode indéterminé, pas de transition. */
+@media (prefers-reduced-motion: reduce) {
+  .gestio-progress-circle__fill {
+    transition: none;
+  }
+
+  :host(.gestio-progress-circle--indeterminate) .gestio-progress-circle__svg {
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .gestio-progress-circle__track {
+    stroke: GrayText;
+  }
+
+  .gestio-progress-circle__fill {
+    stroke: Highlight;
+  }
+}

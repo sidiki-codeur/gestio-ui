@@ -1,0 +1,51 @@
+<nav [attr.aria-label]="ariaLabel() ?? text().navigation">
+  <ol class="gestio-breadcrumb__list">
+    @for (
+      entry of entries();
+      track entry.kind === 'item' ? entry.item : 'ellipsis';
+      let first = $first
+    ) {
+      <li #listItem class="gestio-breadcrumb__item">
+        @if (!first) {
+          @if (separator() === 'slash') {
+            <span class="gestio-breadcrumb__separator" aria-hidden="true">/</span>
+          } @else {
+            <svg
+              class="gestio-breadcrumb__separator"
+              viewBox="0 0 16 16"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path d="M6 3.5L10.5 8 6 12.5" />
+            </svg>
+          }
+        }
+        @if (entry.kind === 'item') {
+          @if (entry.item.link()) {
+            <ng-container [ngTemplateOutlet]="entry.item.content()" />
+          } @else {
+            <span
+              class="gestio-breadcrumb__text"
+              [class.is-current]="entry.item.current()"
+              [attr.aria-current]="entry.item.current() ? 'page' : null"
+              ><ng-container [ngTemplateOutlet]="entry.item.content()"
+            /></span>
+          }
+        } @else {
+          <button
+            type="button"
+            class="gestio-breadcrumb__ellipsis"
+            [attr.aria-label]="showHiddenLabel(entry.count)"
+            (click)="expand()"
+          >
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <circle cx="3.5" cy="8" r="1.25" />
+              <circle cx="8" cy="8" r="1.25" />
+              <circle cx="12.5" cy="8" r="1.25" />
+            </svg>
+          </button>
+        }
+      </li>
+    }
+  </ol>
+</nav>

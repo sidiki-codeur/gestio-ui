@@ -1,0 +1,76 @@
+<ol class="gestio-stepper__list" [attr.aria-label]="ariaLabel() ?? text().steps">
+  @for (step of steps(); track step; let i = $index, last = $last) {
+    <li
+      class="gestio-stepper__item"
+      [class.is-active]="i === activeIndex()"
+      [class.is-completed]="isCompleted(i)"
+      [class.is-error]="step.hasError()"
+      [class.is-last]="last"
+    >
+      <button
+        #header
+        type="button"
+        class="gestio-stepper__header"
+        gestioRipple
+        [id]="headerId(i)"
+        [attr.aria-current]="i === activeIndex() ? 'step' : null"
+        [attr.aria-disabled]="canSelect(i) ? null : 'true'"
+        [attr.aria-describedby]="step.description() ? descriptionId(i) : null"
+        [attr.tabindex]="i === focusIndex() ? 0 : -1"
+        (focus)="focusIndex.set(i)"
+        (keydown)="handleKeydown($event)"
+        (click)="onHeaderClick(i)"
+      >
+        <span class="gestio-stepper__indicator" aria-hidden="true">
+          @if (step.hasError()) {
+            <svg viewBox="0 0 16 16" focusable="false">
+              <path d="M8 3.5v5.5M8 11.75v.5" />
+            </svg>
+          } @else if (isCompleted(i) && i !== activeIndex()) {
+            <svg viewBox="0 0 16 16" focusable="false">
+              <path d="M3.5 8.5l3 3 6-7" />
+            </svg>
+          } @else {
+            {{ i + 1 }}
+          }
+        </span>
+        <span class="gestio-stepper__text">
+          <span class="gestio-sr-only">{{ status(i) }} : </span>
+          <span class="gestio-stepper__label">{{ step.label() }}</span>
+          @if (step.optional()) {
+            <span class="gestio-stepper__optional">{{ text().optional }}</span>
+          }
+          @if (step.description()) {
+            <span class="gestio-stepper__description" aria-hidden="true" [id]="descriptionId(i)">{{
+              step.description()
+            }}</span>
+          }
+        </span>
+      </button>
+
+      @if (orientation() === 'vertical') {
+        <ng-container *ngTemplateOutlet="panel; context: { $implicit: step, index: i }" />
+      }
+    </li>
+  }
+</ol>
+
+@if (orientation() === 'horizontal') {
+  @for (step of steps(); track step; let i = $index) {
+    <ng-container *ngTemplateOutlet="panel; context: { $implicit: step, index: i }" />
+  }
+}
+
+<ng-template #panel let-step let-i="index">
+  <div
+    role="region"
+    class="gestio-stepper__panel"
+    [id]="panelId(i)"
+    [attr.aria-labelledby]="headerId(i)"
+    [hidden]="i !== activeIndex()"
+  >
+    <ng-container *ngTemplateOutlet="step.content()" />
+  </div>
+</ng-template>
+
+<span class="gestio-sr-only" aria-live="polite" aria-atomic="true">{{ announcement() }}</span>

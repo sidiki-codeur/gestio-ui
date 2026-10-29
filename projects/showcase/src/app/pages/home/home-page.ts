@@ -20,7 +20,7 @@ import { PageHeader } from '../../shared/page-header';
     PageHeader,
   ],
   template: `
-    <sc-page-header heading="Gestio UI" eyebrow="Version 0.4">
+    <sc-page-header heading="Gestio UI" eyebrow="Version 0.5">
       Une bibliothèque de composants Angular sobre et accessible, pensée pour les tableaux de bord,
       les logiciels de gestion et les interfaces d’administration.
     </sc-page-header>
@@ -97,7 +97,7 @@ import { PageHeader } from '../../shared/page-header';
     </section>
 
     <section class="sc-section" aria-labelledby="home-contenu">
-      <h2 id="home-contenu">Contenu de la version 0.4</h2>
+      <h2 id="home-contenu">Contenu de la version 0.5</h2>
       <div class="sc-row">
         @for (name of components; track name) {
           <gestio-badge variant="primary">{{ name }}</gestio-badge>
@@ -106,8 +106,7 @@ import { PageHeader } from '../../shared/page-header';
       <div class="sc-note sc-note--warning" role="note">
         <strong>Limites</strong>
         <p>
-          Pas encore de combobox avec recherche, de sélection multiple, de date picker en fenêtre
-          surgissante, de sous-menus ni d’édition en ligne dans la datagrid (traitements côté client
+          Pas encore de sous-menus ni d’édition en ligne dans la datagrid (traitements côté client
           uniquement). Les libellés internes (fermer, afficher le mot de passe…) sont en français
           par défaut et se surchargent par des entrées dédiées.
         </p>
@@ -160,9 +159,22 @@ export class HomePage {
     'Info-bulle',
     'Skeleton et spinner',
     'Onglets',
+    'Accordéon',
+    'Fil d’Ariane',
+    'Avatar',
+    'Progression',
+    'Curseur',
+    'Contrôle segmenté',
+    'Assistant en étapes',
+    'Dépôt de fichiers',
+    'Puces',
+    'Liste avec recherche',
+    'Sélecteur de date',
+    'Fenêtre surgissante',
+    'Panneau latéral',
     'Mises en page',
     'Onde de pression (ripple)',
-    'Blocs : authentification, calendrier, e-commerce, tableau de bord',
+    'Blocs : authentification, calendrier, e-commerce, tableau de bord, graphiques, kanban, palette de commandes, notifications, pages d’erreur',
     'Style Material 3',
   ];
 

@@ -1,0 +1,67 @@
+@use '../core/field' as field;
+
+@include field.field;
+
+.gestio-date-picker__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin-inline-end: calc(var(--gestio-space-1) * -1);
+  padding: 0;
+  border: 0;
+  border-radius: var(--gestio-radius-sm);
+  background: transparent;
+  color: var(--gestio-color-text-muted);
+  cursor: pointer;
+  transition:
+    background-color var(--gestio-duration-fast) var(--gestio-easing-standard),
+    color var(--gestio-duration-fast) var(--gestio-easing-standard);
+
+  svg {
+    width: 1.125rem;
+    height: 1.125rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  &:hover:not(:disabled),
+  &[aria-expanded='true'] {
+    background: var(--gestio-color-surface-hover);
+    color: var(--gestio-color-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: 1px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .is-readonly > & {
+    cursor: default;
+  }
+}
+
+/* Le calendrier est déjà encadré par la fenêtre surgissante. */
+.gestio-date-picker__calendar {
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gestio-date-picker__toggle {
+    transition: none;
+  }
+}

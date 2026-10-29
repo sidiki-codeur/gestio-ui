@@ -1,0 +1,79 @@
+<div
+  class="gestio-slider__field"
+  [attr.role]="range() ? 'group' : null"
+  [attr.aria-labelledby]="range() && label() ? labelId : null"
+  [attr.aria-label]="range() && !label() ? (ariaLabel() ?? null) : null"
+>
+  @if (label() || showValue()) {
+    <div class="gestio-slider__header">
+      @if (label()) {
+        @if (range()) {
+          <span class="gestio-slider__label" [id]="labelId">{{ label() }}</span>
+        } @else {
+          <label class="gestio-slider__label" [id]="labelId" [for]="inputId(0)">{{
+            label()
+          }}</label>
+        }
+      }
+      @if (showValue()) {
+        <span class="gestio-slider__value" aria-hidden="true">{{ displayValue() }}</span>
+      }
+    </div>
+  }
+
+  <div
+    class="gestio-slider__control"
+    (pointerdown)="handlePointerDown($event)"
+    (pointermove)="handlePointerMove($event)"
+    (pointerup)="handlePointerEnd()"
+    (pointercancel)="handlePointerEnd()"
+    (lostpointercapture)="handlePointerEnd()"
+  >
+    <div #track class="gestio-slider__track" aria-hidden="true">
+      <div
+        class="gestio-slider__fill"
+        [style.inset-inline-start.%]="fill().start"
+        [style.inline-size.%]="fill().size"
+      ></div>
+      @for (tick of ticks(); track $index) {
+        <span
+          class="gestio-slider__tick"
+          [class.is-active]="tick.active"
+          [style.inset-inline-start.%]="tick.percent"
+        ></span>
+      }
+    </div>
+
+    @for (thumb of thumbs(); track $index; let i = $index) {
+      <input
+        #thumbInput
+        type="range"
+        class="gestio-slider__input"
+        [id]="inputId(i)"
+        [min]="min()"
+        [max]="max()"
+        [step]="step()"
+        [attr.value]="thumb"
+        [disabled]="isDisabled()"
+        [attr.name]="name() ?? null"
+        [attr.aria-label]="thumbLabels()[i]"
+        [attr.aria-valuetext]="valueTexts()[i]"
+        [attr.aria-describedby]="describedBy()"
+        (input)="handleInput(i, thumbInput)"
+        (keydown)="handleKeydown(i, $event)"
+        (blur)="onTouched()"
+      />
+    }
+  </div>
+
+  @if (showTicks()) {
+    <div class="gestio-slider__scale" aria-hidden="true">
+      <span>{{ scale()[0] }}</span>
+      <span>{{ scale()[1] }}</span>
+    </div>
+  }
+
+  @if (hint()) {
+    <p class="gestio-slider__hint" [id]="hintId">{{ hint() }}</p>
+  }
+</div>

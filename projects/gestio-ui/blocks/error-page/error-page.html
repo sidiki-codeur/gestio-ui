@@ -1,0 +1,116 @@
+<div class="gestio-error-page__inner">
+  <svg
+    class="gestio-error-page__art"
+    viewBox="0 0 240 180"
+    fill="none"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <ellipse class="gestio-error-page__art-bg" cx="120" cy="92" rx="104" ry="76" />
+    <ellipse class="gestio-error-page__art-shadow" cx="120" cy="160" rx="64" ry="6" />
+    @switch (kind()) {
+      @case ('forbidden') {
+        <path
+          class="gestio-error-page__art-line"
+          d="M92 82V62a28 28 0 0 1 56 0v20"
+          stroke-width="8"
+        />
+        <rect class="gestio-error-page__art-surface" x="72" y="80" width="96" height="74" rx="12" />
+        <circle class="gestio-error-page__art-fill" cx="120" cy="110" r="9" />
+        <path class="gestio-error-page__art-accent" d="M120 116v18" stroke-width="7" />
+      }
+      @case ('server-error') {
+        <rect class="gestio-error-page__art-surface" x="60" y="50" width="120" height="40" rx="8" />
+        <rect
+          class="gestio-error-page__art-surface"
+          x="60"
+          y="100"
+          width="120"
+          height="40"
+          rx="8"
+        />
+        <path class="gestio-error-page__art-line" d="M76 70h40M76 120h40" stroke-width="4" />
+        <circle class="gestio-error-page__art-fill" cx="160" cy="70" r="4" />
+        <circle class="gestio-error-page__art-fill" cx="160" cy="120" r="4" />
+        <path class="gestio-error-page__art-badge" d="M178 22 204 66h-52z" stroke-width="3" />
+        <path class="gestio-error-page__art-mark" d="M178 38v12M178 58h.01" stroke-width="4" />
+      }
+      @case ('maintenance') {
+        <path class="gestio-error-page__art-line" d="M78 92v62M162 92v62" stroke-width="6" />
+        <rect class="gestio-error-page__art-surface" x="56" y="64" width="128" height="34" rx="6" />
+        <path
+          class="gestio-error-page__art-accent"
+          d="M74 98l30-34M106 98l30-34M138 98l30-34"
+          stroke-width="9"
+        />
+        <path class="gestio-error-page__art-line" d="M64 154h28M148 154h28" stroke-width="6" />
+        <circle class="gestio-error-page__art-fill" cx="78" cy="52" r="7" />
+        <circle class="gestio-error-page__art-fill" cx="162" cy="52" r="7" />
+      }
+      @case ('offline') {
+        <path
+          class="gestio-error-page__art-surface"
+          d="M80 132a28 28 0 0 1-2-56 40 40 0 0 1 76-8 30 30 0 0 1 8 64Z"
+        />
+        <path class="gestio-error-page__art-line" d="M104 112a24 24 0 0 1 32 0" stroke-width="5" />
+        <circle class="gestio-error-page__art-fill" cx="120" cy="124" r="4" />
+        <path class="gestio-error-page__art-accent" d="M70 40l100 110" stroke-width="7" />
+      }
+      @default {
+        <rect
+          class="gestio-error-page__art-surface"
+          x="64"
+          y="34"
+          width="92"
+          height="118"
+          rx="10"
+        />
+        <path
+          class="gestio-error-page__art-line"
+          d="M80 60h52M80 76h60M80 92h40"
+          stroke-width="5"
+        />
+        <circle class="gestio-error-page__art-glass" cx="150" cy="108" r="28" stroke-width="7" />
+        <path class="gestio-error-page__art-accent" d="m170 128 22 22" stroke-width="10" />
+        <path
+          class="gestio-error-page__art-mark"
+          d="M142 101a8 8 0 1 1 11 7.5c-2 .8-3 2.5-3 4.5M150 121h.01"
+          stroke-width="4"
+        />
+      }
+    }
+  </svg>
+
+  <p class="gestio-error-page__eyebrow">{{ eyebrow() }}</p>
+
+  @switch (level()) {
+    @case (2) {
+      <h2 class="gestio-error-page__heading">{{ resolvedHeading() }}</h2>
+    }
+    @case (3) {
+      <h3 class="gestio-error-page__heading">{{ resolvedHeading() }}</h3>
+    }
+    @case (4) {
+      <h4 class="gestio-error-page__heading">{{ resolvedHeading() }}</h4>
+    }
+    @case (5) {
+      <h5 class="gestio-error-page__heading">{{ resolvedHeading() }}</h5>
+    }
+    @case (6) {
+      <h6 class="gestio-error-page__heading">{{ resolvedHeading() }}</h6>
+    }
+    @default {
+      <h1 class="gestio-error-page__heading">{{ resolvedHeading() }}</h1>
+    }
+  }
+
+  @if (resolvedMessage()) {
+    <p class="gestio-error-page__message">{{ resolvedMessage() }}</p>
+  }
+  <div class="gestio-error-page__body"><ng-content /></div>
+  <div class="gestio-error-page__actions">
+    <ng-content select="[gestioErrorPageActions]" />
+  </div>
+</div>

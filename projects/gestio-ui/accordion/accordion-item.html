@@ -1,0 +1,63 @@
+<ng-template #headerButton>
+  <button
+    #trigger
+    type="button"
+    class="gestio-accordion-item__trigger"
+    [id]="triggerId"
+    [attr.aria-expanded]="expanded()"
+    [attr.aria-controls]="panelId"
+    [disabled]="disabled()"
+    (click)="toggle()"
+  >
+    <span class="gestio-accordion-item__icon"><ng-content select="[gestioAccordionIcon]" /></span>
+    <span class="gestio-accordion-item__heading">{{ heading() }}</span>
+    <svg
+      class="gestio-accordion-item__chevron"
+      viewBox="0 0 16 16"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M3.5 6l4.5 4.5L12.5 6" />
+    </svg>
+  </button>
+</ng-template>
+
+@switch (headingLevel()) {
+  @case (2) {
+    <h2 class="gestio-accordion-item__header">
+      <ng-container [ngTemplateOutlet]="headerButton" />
+    </h2>
+  }
+  @case (4) {
+    <h4 class="gestio-accordion-item__header">
+      <ng-container [ngTemplateOutlet]="headerButton" />
+    </h4>
+  }
+  @case (5) {
+    <h5 class="gestio-accordion-item__header">
+      <ng-container [ngTemplateOutlet]="headerButton" />
+    </h5>
+  }
+  @case (6) {
+    <h6 class="gestio-accordion-item__header">
+      <ng-container [ngTemplateOutlet]="headerButton" />
+    </h6>
+  }
+  @default {
+    <h3 class="gestio-accordion-item__header">
+      <ng-container [ngTemplateOutlet]="headerButton" />
+    </h3>
+  }
+}
+
+<div
+  role="region"
+  class="gestio-accordion-item__panel"
+  [id]="panelId"
+  [attr.aria-labelledby]="triggerId"
+  [hidden]="!expanded()"
+>
+  <div class="gestio-accordion-item__body">
+    <ng-content />
+  </div>
+</div>

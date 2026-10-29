@@ -1,0 +1,139 @@
+@if (hasData()) {
+  <div class="gestio-chart__donut">
+    <div class="gestio-chart__plot" [style.width]="'min(100%, ' + viewWidth() + 'px)'">
+      <svg
+        class="gestio-chart__svg"
+        role="img"
+        [attr.aria-labelledby]="titleId"
+        [attr.aria-describedby]="descId"
+        [attr.viewBox]="'0 0 ' + viewWidth() + ' ' + viewHeight()"
+        width="100%"
+        focusable="false"
+      >
+        <title [attr.id]="titleId">{{ heading() }}</title>
+        <desc [attr.id]="descId">{{ description() }} {{ summary() }}</desc>
+        <defs>
+          @for (pattern of patternDefs(); track pattern.id) {
+            <pattern [attr.id]="pattern.id" width="8" height="8" patternUnits="userSpaceOnUse">
+              <rect width="8" height="8" [style.fill]="pattern.color" />
+              <path class="gestio-chart__hatch" [attr.d]="pattern.d" />
+            </pattern>
+          }
+        </defs>
+        @for (slice of slices(); track slice.key) {
+          <path
+            class="gestio-chart__slice"
+            [class.gestio-chart__mark--dim]="activeKey() && activeKey() !== slice.key"
+            [attr.d]="slice.d"
+            [style.fill]="slice.fill"
+            fill-rule="evenodd"
+          />
+        }
+        @if (focusedSlice(); as slice) {
+          <path class="gestio-chart__focus" [attr.d]="slice.d" />
+        }
+        @if (showTotal() && geometry().inner > 0) {
+          <text
+            class="gestio-chart__center-value"
+            text-anchor="middle"
+            [attr.x]="geometry().center"
+            [attr.y]="geometry().center"
+            [attr.font-size]="viewWidth() * 0.09"
+          >
+            {{ formattedTotal() }}
+          </text>
+          <text
+            class="gestio-chart__center-label"
+            text-anchor="middle"
+            [attr.x]="geometry().center"
+            [attr.y]="geometry().center + viewWidth() * 0.09"
+            [attr.font-size]="viewWidth() * 0.055"
+          >
+            {{ text().total }}
+          </text>
+        }
+      </svg>
+
+      <svg
+        class="gestio-chart__hits"
+        role="group"
+        [attr.aria-label]="text().points"
+        [attr.viewBox]="'0 0 ' + viewWidth() + ' ' + viewHeight()"
+        width="100%"
+        (keydown)="onPointsKeydown($event)"
+      >
+        @for (point of points(); track point.key; let i = $index) {
+          <path
+            class="gestio-chart__hit"
+            role="img"
+            fill-rule="evenodd"
+            [attr.d]="slices()[i].d"
+            [attr.data-point]="point.key"
+            [attr.aria-label]="point.ariaLabel"
+            [attr.tabindex]="point.key === rovingKey() ? 0 : -1"
+            (mouseenter)="pointEnter(point.key)"
+            (mouseleave)="pointLeave()"
+            (mousedown)="$event.preventDefault()"
+            (focus)="pointFocus(point.key)"
+            (blur)="pointBlur()"
+          />
+        }
+      </svg>
+
+      @if (tooltip(); as tip) {
+        <div
+          class="gestio-chart__tooltip"
+          aria-hidden="true"
+          [style.left.%]="tip.left"
+          [style.top.%]="tip.top"
+        >
+          <span class="gestio-chart__tooltip-row">
+            <svg class="gestio-chart__swatch" viewBox="0 0 12 12" focusable="false">
+              <rect width="12" height="12" rx="2" [style.fill]="tip.point.fill" />
+            </svg>
+            <span class="gestio-chart__tooltip-title">{{ tip.point.category }}</span>
+          </span>
+          <span class="gestio-chart__tooltip-row">
+            <strong>{{ tip.point.value }}</strong> ({{ tip.point.seriesName }})
+          </span>
+        </div>
+      }
+    </div>
+
+    @if (legend()) {
+      <ul class="gestio-chart__legend">
+        @for (item of legendItems(); track item.index) {
+          <li class="gestio-chart__legend-item">
+            <svg
+              class="gestio-chart__swatch"
+              viewBox="0 0 12 12"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <rect width="12" height="12" rx="2" [style.fill]="item.fill" />
+            </svg>
+            <span>{{ item.name }}</span>
+            <span class="gestio-chart__sr-only">&nbsp;: </span>
+            <span class="gestio-chart__legend-detail">{{ item.detail }}</span>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+
+  <gestio-chart-table
+    [caption]="heading()"
+    [columns]="tableColumns()"
+    [rows]="tableRows()"
+    [footer]="tableFooter()"
+    [tableId]="tableId"
+    [toggle]="tableToggle()"
+    [showLabel]="text().showTable"
+    [hideLabel]="text().hideTable"
+    [(visible)]="tableVisible"
+  />
+} @else {
+  <p class="gestio-chart__empty">
+    <span class="gestio-chart__sr-only">{{ heading() }}&nbsp;: </span>{{ text().noData }}
+  </p>
+}

@@ -1,0 +1,169 @@
+@if (hasData()) {
+  <div class="gestio-chart__plot">
+    <svg
+      class="gestio-chart__svg"
+      role="img"
+      [attr.aria-labelledby]="titleId"
+      [attr.aria-describedby]="descId"
+      [attr.viewBox]="'0 0 ' + viewWidth() + ' ' + viewHeight()"
+      [attr.height]="viewHeight()"
+      width="100%"
+      focusable="false"
+    >
+      <title [attr.id]="titleId">{{ heading() }}</title>
+      <desc [attr.id]="descId">{{ description() }} {{ summary() }}</desc>
+      <defs>
+        @for (pattern of patternDefs(); track pattern.id) {
+          <pattern [attr.id]="pattern.id" width="8" height="8" patternUnits="userSpaceOnUse">
+            <rect width="8" height="8" [style.fill]="pattern.color" />
+            <path class="gestio-chart__hatch" [attr.d]="pattern.d" />
+          </pattern>
+        }
+      </defs>
+
+      <g class="gestio-chart__axis">
+        @for (tick of yTicks(); track tick.value) {
+          @if (grid()) {
+            <line
+              class="gestio-chart__grid-line"
+              [attr.x1]="plot().left"
+              [attr.x2]="plot().right"
+              [attr.y1]="tick.y"
+              [attr.y2]="tick.y"
+            />
+          }
+          <text
+            class="gestio-chart__tick"
+            [attr.x]="plot().left - 8"
+            [attr.y]="tick.y"
+            text-anchor="end"
+            dominant-baseline="middle"
+          >
+            {{ tick.label }}
+          </text>
+        }
+        @for (label of xLabels(); track label.index) {
+          <text
+            class="gestio-chart__tick"
+            [attr.x]="label.x"
+            [attr.y]="plot().bottom + 18"
+            text-anchor="middle"
+          >
+            {{ label.label }}
+          </text>
+        }
+      </g>
+
+      <g class="gestio-chart__marks">
+        @for (bar of bars(); track bar.key) {
+          <rect
+            class="gestio-chart__bar"
+            [class.gestio-chart__bar--negative]="bar.value < 0"
+            [class.gestio-chart__mark--dim]="activeKey() && activeKey() !== bar.key"
+            [attr.x]="bar.x"
+            [attr.y]="bar.y"
+            [attr.width]="bar.width"
+            [attr.height]="bar.height"
+            [style.fill]="bar.fill"
+          />
+        }
+      </g>
+      <line
+        class="gestio-chart__baseline"
+        [attr.x1]="plot().left"
+        [attr.x2]="plot().right"
+        [attr.y1]="baselineY()"
+        [attr.y2]="baselineY()"
+      />
+      @if (focusedBar(); as bar) {
+        <rect
+          class="gestio-chart__focus"
+          [attr.x]="bar.x - 3"
+          [attr.y]="bar.y - 3"
+          [attr.width]="bar.width + 6"
+          [attr.height]="bar.height + 6"
+          rx="3"
+        />
+      }
+    </svg>
+
+    <svg
+      class="gestio-chart__hits"
+      role="group"
+      [attr.aria-label]="text().points"
+      [attr.viewBox]="'0 0 ' + viewWidth() + ' ' + viewHeight()"
+      [attr.height]="viewHeight()"
+      width="100%"
+      (keydown)="onPointsKeydown($event)"
+    >
+      @for (point of points(); track point.key; let i = $index) {
+        <rect
+          class="gestio-chart__hit"
+          role="img"
+          [attr.data-point]="point.key"
+          [attr.aria-label]="point.ariaLabel"
+          [attr.tabindex]="point.key === rovingKey() ? 0 : -1"
+          [attr.x]="bars()[i].hit.x"
+          [attr.y]="bars()[i].hit.y"
+          [attr.width]="bars()[i].hit.width"
+          [attr.height]="bars()[i].hit.height"
+          (mouseenter)="pointEnter(point.key)"
+          (mouseleave)="pointLeave()"
+          (mousedown)="$event.preventDefault()"
+          (focus)="pointFocus(point.key)"
+          (blur)="pointBlur()"
+        />
+      }
+    </svg>
+
+    @if (tooltip(); as tip) {
+      <div
+        class="gestio-chart__tooltip"
+        aria-hidden="true"
+        [style.left.%]="tip.left"
+        [style.top.%]="tip.top"
+      >
+        <span class="gestio-chart__tooltip-title">{{ tip.point.category }}</span>
+        <span class="gestio-chart__tooltip-row">
+          <svg class="gestio-chart__swatch" viewBox="0 0 12 12" focusable="false">
+            <rect width="12" height="12" rx="2" [style.fill]="tip.point.fill" />
+          </svg>
+          {{ tip.point.seriesName }}&nbsp;: <strong>{{ tip.point.value }}</strong>
+        </span>
+      </div>
+    }
+  </div>
+
+  @if (legend()) {
+    <ul class="gestio-chart__legend">
+      @for (item of legendItems(); track item.index) {
+        <li class="gestio-chart__legend-item">
+          <svg
+            class="gestio-chart__swatch"
+            viewBox="0 0 12 12"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <rect width="12" height="12" rx="2" [style.fill]="item.fill" />
+          </svg>
+          {{ item.name }}
+        </li>
+      }
+    </ul>
+  }
+
+  <gestio-chart-table
+    [caption]="heading()"
+    [columns]="tableColumns()"
+    [rows]="tableRows()"
+    [tableId]="tableId"
+    [toggle]="tableToggle()"
+    [showLabel]="text().showTable"
+    [hideLabel]="text().hideTable"
+    [(visible)]="tableVisible"
+  />
+} @else {
+  <p class="gestio-chart__empty">
+    <span class="gestio-chart__sr-only">{{ heading() }}&nbsp;: </span>{{ text().noData }}
+  </p>
+}

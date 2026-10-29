@@ -106,6 +106,13 @@ describe('GestioEventCalendar', () => {
     expect(titles(cell(23))).toEqual([]);
   });
 
+  it('nomme un événement horaire par son texte visible (heure · titre)', async () => {
+    const { cell } = await setup();
+    const timed = cell(27).querySelector<HTMLButtonElement>('.gestio-event-calendar__event')!;
+    expect(timed.hasAttribute('aria-label')).toBe(false);
+    expect(timed.textContent!.replace(/\s+/g, ' ').trim()).toBe('10:00 · Clôture');
+  });
+
   it('émet eventClick et dayClick', async () => {
     const { fixture, host, cell } = await setup();
     const event = cell(15).querySelector<HTMLButtonElement>('.gestio-event-calendar__event')!;

@@ -1,0 +1,141 @@
+<div class="gestio-kanban__board" role="group" [attr.aria-label]="text().board" cdkDropListGroup>
+  @for (column of columns(); track column.id; let c = $index) {
+    <div
+      class="gestio-kanban__column"
+      role="group"
+      [class.gestio-kanban__column--over]="isOver(column)"
+      [attr.aria-labelledby]="headingId(c)"
+    >
+      <div class="gestio-kanban__header">
+        <span
+          class="gestio-kanban__title"
+          role="heading"
+          [attr.aria-level]="headingLevel()"
+          [attr.id]="headingId(c)"
+        >
+          {{ column.title }}
+        </span>
+        <span class="gestio-kanban__count">
+          <span aria-hidden="true">
+            {{ column.items.length }}
+            @if (column.wipLimit != null) {
+              / {{ column.wipLimit }}
+            }
+          </span>
+          <span class="gestio-kanban__sr-only">{{ countLabel(column) }}</span>
+        </span>
+        @if (isOver(column)) {
+          <span class="gestio-kanban__over">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M8 1.5 15 14H1z" fill="currentColor" />
+              <path class="gestio-kanban__over-mark" d="M8 6v3.5M8 11.5v.5" />
+            </svg>
+            {{ text().overLimit }}
+          </span>
+        }
+      </div>
+
+      <div class="gestio-kanban__body">
+        @if (!column.items.length) {
+          <p class="gestio-kanban__empty">{{ text().empty }}</p>
+        }
+        <ul
+          class="gestio-kanban__list"
+          cdkDropList
+          [cdkDropListData]="c"
+          [cdkDropListEnterPredicate]="enterPredicates()[c]"
+          [attr.aria-labelledby]="headingId(c)"
+          (cdkDropListDropped)="onDrop($event)"
+        >
+          @for (item of column.items; track trackItem(item); let i = $index) {
+            <li
+              class="gestio-kanban__card"
+              cdkDrag
+              [cdkDragData]="item"
+              [attr.data-card]="c + '-' + i"
+              [attr.tabindex]="isActive(c, i) ? 0 : -1"
+              [attr.aria-describedby]="id + '-instructions'"
+              aria-keyshortcuts="Shift+ArrowUp Shift+ArrowDown Shift+ArrowLeft Shift+ArrowRight"
+              (focus)="onCardFocus(c, i)"
+              (keydown)="onCardKeydown($event, c, i)"
+            >
+              <div class="gestio-kanban__card-content">
+                @if (cardTemplate(); as card) {
+                  <ng-container
+                    [ngTemplateOutlet]="card.template"
+                    [ngTemplateOutletContext]="{ $implicit: item, item, column, index: i }"
+                  />
+                } @else {
+                  {{ itemLabel()(item) }}
+                }
+              </div>
+              <button
+                gestioButton
+                variant="ghost"
+                size="sm"
+                class="gestio-kanban__move"
+                [attr.tabindex]="isActive(c, i) ? 0 : -1"
+                [attr.aria-label]="moveMenuLabel(item)"
+                [gestioMenuTriggerFor]="moveMenu"
+                menuPlacement="bottom-end"
+              >
+                <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                  <circle cx="6" cy="3.5" r="1.25" fill="currentColor" />
+                  <circle cx="10" cy="3.5" r="1.25" fill="currentColor" />
+                  <circle cx="6" cy="8" r="1.25" fill="currentColor" />
+                  <circle cx="10" cy="8" r="1.25" fill="currentColor" />
+                  <circle cx="6" cy="12.5" r="1.25" fill="currentColor" />
+                  <circle cx="10" cy="12.5" r="1.25" fill="currentColor" />
+                </svg>
+              </button>
+              <ng-template #moveMenu>
+                <gestio-menu>
+                  <button
+                    gestioMenuItem
+                    [hint]="text().shortcutUp"
+                    [disabled]="i === 0"
+                    (triggered)="moveWithin(c, i, i - 1)"
+                  >
+                    {{ text().moveUp }}
+                  </button>
+                  <button
+                    gestioMenuItem
+                    [hint]="text().shortcutDown"
+                    [disabled]="i === column.items.length - 1"
+                    (triggered)="moveWithin(c, i, i + 1)"
+                  >
+                    {{ text().moveDown }}
+                  </button>
+                  @if (columns().length > 1) {
+                    <gestio-menu-divider />
+                  }
+                  @for (target of columns(); track target.id; let t = $index) {
+                    @if (t !== c) {
+                      <button
+                        gestioMenuItem
+                        [hint]="
+                          t === c - 1
+                            ? text().shortcutLeft
+                            : t === c + 1
+                              ? text().shortcutRight
+                              : ''
+                        "
+                        [disabled]="isFull(t)"
+                        (triggered)="moveToColumn(c, i, t)"
+                      >
+                        {{ moveToLabel(target) }}
+                      </button>
+                    }
+                  }
+                </gestio-menu>
+              </ng-template>
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+  }
+</div>
+
+<p class="gestio-kanban__sr-only" [attr.id]="id + '-instructions'">{{ text().instructions }}</p>
+<div class="gestio-kanban__sr-only" role="status">{{ announcement() }}</div>

@@ -1,0 +1,113 @@
+:host {
+  --_arrow-size: 0.75rem;
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  max-width: min(22rem, calc(100vw - 1rem));
+  border: var(--gestio-border-width) solid var(--gestio-color-border);
+  border-radius: var(--gestio-popover-radius, var(--gestio-radius-lg));
+  background: var(--gestio-color-surface);
+  box-shadow: var(--gestio-shadow-lg);
+  color: var(--gestio-color-text);
+  font-family: var(--gestio-font-sans);
+  font-size: var(--gestio-font-size-md);
+  line-height: var(--gestio-line-height-normal);
+  animation: gestio-popover-in var(--gestio-duration-fast) var(--gestio-easing-standard);
+}
+
+:host(:focus-visible) {
+  outline: 2px solid var(--gestio-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.gestio-popover__body {
+  box-sizing: border-box;
+  max-height: min(32rem, calc(100dvh - 2rem));
+  overflow: auto;
+  padding: var(--gestio-popover-padding, var(--gestio-space-3));
+  border-radius: inherit;
+}
+
+/* Flèche : carré pivoté dont seules deux bordures sont visibles. */
+.gestio-popover__arrow {
+  position: absolute;
+  box-sizing: border-box;
+  width: var(--_arrow-size);
+  height: var(--_arrow-size);
+  border: var(--gestio-border-width) solid transparent;
+  background: var(--gestio-color-surface);
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+/* `data-placement` est physique (gauche / droite résolues selon le sens de lecture). */
+:host([data-placement='bottom']) .gestio-popover__arrow {
+  top: calc(var(--_arrow-size) / -2);
+  left: calc(50% - var(--_arrow-size) / 2);
+  border-top-color: var(--gestio-color-border);
+  border-left-color: var(--gestio-color-border);
+}
+
+:host([data-placement='top']) .gestio-popover__arrow {
+  bottom: calc(var(--_arrow-size) / -2);
+  left: calc(50% - var(--_arrow-size) / 2);
+  border-right-color: var(--gestio-color-border);
+  border-bottom-color: var(--gestio-color-border);
+}
+
+/* Fenêtre à gauche du déclencheur : flèche à droite. */
+:host([data-placement='left']) .gestio-popover__arrow {
+  top: calc(50% - var(--_arrow-size) / 2);
+  right: calc(var(--_arrow-size) / -2);
+  border-top-color: var(--gestio-color-border);
+  border-right-color: var(--gestio-color-border);
+}
+
+:host([data-placement='right']) .gestio-popover__arrow {
+  top: calc(50% - var(--_arrow-size) / 2);
+  left: calc(var(--_arrow-size) / -2);
+  border-bottom-color: var(--gestio-color-border);
+  border-left-color: var(--gestio-color-border);
+}
+
+/* Fenêtre alignée sur un bord du déclencheur : la flèche vise son milieu. */
+:host([data-placement='top'][data-align='start']) .gestio-popover__arrow,
+:host([data-placement='bottom'][data-align='start']) .gestio-popover__arrow {
+  left: auto;
+  inset-inline-start: max(
+    var(--gestio-space-3),
+    calc(var(--gestio-popover-arrow-inset, 0px) - var(--_arrow-size) / 2)
+  );
+}
+
+:host([data-placement='top'][data-align='end']) .gestio-popover__arrow,
+:host([data-placement='bottom'][data-align='end']) .gestio-popover__arrow {
+  left: auto;
+  inset-inline-end: max(
+    var(--gestio-space-3),
+    calc(var(--gestio-popover-arrow-inset, 0px) - var(--_arrow-size) / 2)
+  );
+}
+
+@keyframes gestio-popover-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host {
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  :host {
+    border-color: CanvasText;
+  }
+
+  .gestio-popover__arrow {
+    display: none;
+  }
+}

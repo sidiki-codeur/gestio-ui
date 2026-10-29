@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { GestioSelect, GestioSelectOption } from '@gestiolabs336/ui/select';
 import { ApiRow, ApiTable } from '../../shared/api-table';
 import { Example } from '../../shared/example';
@@ -7,7 +8,7 @@ import { PageHeader } from '../../shared/page-header';
 
 @Component({
   selector: 'sc-select-page',
-  imports: [GestioSelect, ReactiveFormsModule, Example, ApiTable, PageHeader],
+  imports: [GestioSelect, ReactiveFormsModule, RouterLink, Example, ApiTable, PageHeader],
   template: `
     <sc-page-header heading="Sélecteur" eyebrow="Composants">
       <code>gestio-select</code> stylise un <code>&lt;select&gt;</code> natif : navigation au
@@ -64,8 +65,9 @@ import { PageHeader } from '../../shared/page-header';
       <div class="sc-note" role="note">
         <strong>Limite</strong>
         <p>
-          Version native uniquement : pas de recherche, de sélection multiple ni de groupes
-          d’options dans cette version.
+          Version native uniquement, sans groupes d’options. Pour une recherche ou une sélection
+          multiple, utilisez la
+          <a routerLink="/composants/liste-avec-recherche">liste avec recherche</a>.
         </p>
       </div>
     </section>

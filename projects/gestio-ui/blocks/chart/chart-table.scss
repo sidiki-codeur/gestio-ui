@@ -1,0 +1,62 @@
+@use '../../core/field' as field;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gestio-space-2);
+  min-width: 0;
+}
+
+.gestio-chart-table__wrap {
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow-x: auto;
+  border: var(--gestio-border-width) solid var(--gestio-color-border);
+  border-radius: var(--gestio-chart-radius, var(--gestio-radius-md));
+
+  &:focus-visible {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+.gestio-chart-table__wrap--hidden {
+  @include field.sr-only;
+}
+
+.gestio-chart-table__table {
+  border-collapse: collapse;
+  font-size: var(--gestio-font-size-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--gestio-color-text);
+
+  caption {
+    padding: var(--gestio-space-2) var(--gestio-space-3);
+    text-align: start;
+    font-weight: var(--gestio-font-weight-semibold);
+  }
+
+  th,
+  td {
+    padding: var(--gestio-space-1) var(--gestio-space-3);
+    border-top: var(--gestio-border-width) solid var(--gestio-color-border);
+    text-align: end;
+    white-space: nowrap;
+  }
+
+  th[scope='row'],
+  thead th:first-child {
+    text-align: start;
+  }
+
+  thead th {
+    background: var(--gestio-color-surface-muted);
+    font-weight: var(--gestio-font-weight-semibold);
+  }
+
+  tfoot th,
+  tfoot td {
+    font-weight: var(--gestio-font-weight-semibold);
+  }
+}

@@ -1,0 +1,97 @@
+<ng-template #palette>
+  <div class="gestio-command-palette__panel">
+    <div class="gestio-command-palette__search">
+      <svg
+        class="gestio-command-palette__search-icon"
+        viewBox="0 0 20 20"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <circle cx="9" cy="9" r="5.5" />
+        <path d="M13 13l4 4" />
+      </svg>
+      <input
+        class="gestio-command-palette__input"
+        type="text"
+        role="combobox"
+        autocomplete="off"
+        spellcheck="false"
+        aria-autocomplete="list"
+        [id]="inputId"
+        [attr.aria-label]="text().input"
+        [attr.aria-expanded]="hasResults()"
+        [attr.aria-controls]="hasResults() ? listId : null"
+        [attr.aria-activedescendant]="activeId()"
+        [placeholder]="text().placeholder"
+        [value]="query()"
+        (input)="onInput($event)"
+        (keydown)="onKeydown($event)"
+      />
+    </div>
+
+    @if (hasResults()) {
+      <div
+        class="gestio-command-palette__list"
+        role="listbox"
+        [id]="listId"
+        [attr.aria-label]="text().list"
+      >
+        @for (section of sections(); track section.key) {
+          <div
+            class="gestio-command-palette__group"
+            [attr.role]="section.label ? 'group' : 'presentation'"
+            [attr.aria-labelledby]="section.label ? section.headingId : null"
+          >
+            @if (section.label) {
+              <div
+                class="gestio-command-palette__group-heading"
+                aria-hidden="true"
+                [id]="section.headingId"
+              >
+                {{ section.label }}
+              </div>
+            }
+            @for (item of section.items; track item.command.id) {
+              <div
+                class="gestio-command-palette__option"
+                role="option"
+                [id]="item.id"
+                [class.is-active]="item.index === activeIndex()"
+                [class.is-disabled]="item.command.disabled"
+                [attr.aria-selected]="item.index === activeIndex()"
+                [attr.aria-disabled]="item.command.disabled ? 'true' : null"
+                (pointermove)="activate(item)"
+                (mousedown)="$event.preventDefault()"
+                (click)="select(item)"
+              >
+                @if (item.command.icon) {
+                  <span class="gestio-command-palette__icon" aria-hidden="true">{{
+                    item.command.icon
+                  }}</span>
+                }
+                <span class="gestio-command-palette__label">{{ item.command.label }}</span>
+                @if (item.command.shortcut) {
+                  <kbd class="gestio-command-palette__shortcut">{{ item.command.shortcut }}</kbd>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    } @else {
+      <p class="gestio-command-palette__empty">
+        {{ query().trim() ? emptyText() : text().noResults }}
+      </p>
+    }
+
+    <div class="gestio-command-palette__status" role="status">{{ status() }}</div>
+
+    <div class="gestio-command-palette__footer" aria-hidden="true">
+      <span><kbd>↑</kbd><kbd>↓</kbd> {{ text().navigateHint }}</span>
+      <span><kbd>↵</kbd> {{ text().runHint }}</span>
+      <span
+        ><kbd>{{ text().escapeKey }}</kbd> {{ text().closeHint }}</span
+      >
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,189 @@
+<div class="gestio-field" (focusout)="handleFocusOut($event)">
+  @if (label()) {
+    <label class="gestio-field__label" [id]="labelId" [for]="controlId()">
+      {{ label() }}
+      @if (isRequired()) {
+        <span class="gestio-field__required" aria-hidden="true">*</span>
+      }
+    </label>
+  }
+
+  <div
+    #origin="cdkOverlayOrigin"
+    cdkOverlayOrigin
+    class="gestio-field__control gestio-combobox__control"
+    [class.is-sm]="size() === 'sm'"
+    [class.is-lg]="size() === 'lg'"
+    [class.is-invalid]="showInvalid()"
+    [class.is-disabled]="isDisabled()"
+    [class.is-multiple]="multiple()"
+  >
+    @if (multiple() && hasValue()) {
+      <ul class="gestio-combobox__values" [attr.aria-label]="text().selectedValues">
+        @for (item of selectedItems(); track $index) {
+          <li class="gestio-combobox__chip">
+            <span class="gestio-combobox__chip-label">{{ item.label }}</span>
+            <button
+              type="button"
+              class="gestio-combobox__chip-remove"
+              [attr.aria-label]="removeLabel(item.label)"
+              [disabled]="isDisabled()"
+              (click)="removeAt($index)"
+            >
+              <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                <path d="M4.5 4.5l7 7M11.5 4.5l-7 7" />
+              </svg>
+            </button>
+          </li>
+        }
+      </ul>
+    }
+
+    <input
+      #control
+      class="gestio-field__native gestio-combobox__native"
+      type="text"
+      role="combobox"
+      autocomplete="off"
+      aria-autocomplete="list"
+      [id]="controlId()"
+      [value]="inputText()"
+      [disabled]="isDisabled()"
+      [attr.placeholder]="placeholder() ?? null"
+      [attr.aria-expanded]="open() ? 'true' : 'false'"
+      [attr.aria-controls]="open() ? listboxId : null"
+      [attr.aria-activedescendant]="activeId()"
+      [attr.aria-label]="label() || formField?.hasLabel() ? null : (ariaLabel() ?? null)"
+      [attr.aria-invalid]="showInvalid() ? 'true' : null"
+      [attr.aria-required]="isRequired() ? 'true' : null"
+      [attr.aria-describedby]="describedBy()"
+      (input)="handleInput(control)"
+      (keydown)="handleKeydown($event)"
+      (click)="handleInputClick()"
+    />
+
+    @if (clearable() && hasValue() && !isDisabled()) {
+      <button
+        type="button"
+        class="gestio-combobox__icon-button gestio-combobox__clear"
+        [attr.aria-label]="text().clear"
+        (click)="clear()"
+      >
+        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <path d="M4.5 4.5l7 7M11.5 4.5l-7 7" />
+        </svg>
+      </button>
+    }
+
+    <button
+      type="button"
+      class="gestio-combobox__icon-button gestio-combobox__toggle"
+      tabindex="-1"
+      [attr.aria-label]="text().toggle"
+      [attr.aria-expanded]="open() ? 'true' : 'false'"
+      [attr.aria-controls]="open() ? listboxId : null"
+      [disabled]="isDisabled()"
+      (mousedown)="$event.preventDefault()"
+      (click)="toggleList()"
+    >
+      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M4 6l4 4 4-4" />
+      </svg>
+    </button>
+  </div>
+
+  <ng-template
+    cdkConnectedOverlay
+    cdkConnectedOverlayUsePopover="inline"
+    cdkConnectedOverlayMatchWidth
+    cdkConnectedOverlayPanelClass="gestio-combobox-pane"
+    [cdkConnectedOverlayOrigin]="origin"
+    [cdkConnectedOverlayOpen]="open()"
+    [cdkConnectedOverlayPositions]="positions"
+    [cdkConnectedOverlayDisableClose]="true"
+    (overlayOutsideClick)="handleOutsideClick($event)"
+    (detach)="open.set(false)"
+  >
+    <!-- mousedown annulé : le focus reste dans le champ. -->
+    <ul
+      class="gestio-combobox__listbox"
+      role="listbox"
+      [id]="listboxId"
+      [attr.aria-labelledby]="listLabelledBy()"
+      [attr.aria-label]="listLabelledBy() ? null : (ariaLabel() ?? null)"
+      [attr.aria-multiselectable]="multiple() ? 'true' : null"
+      [attr.aria-busy]="loading() ? 'true' : null"
+      (mousedown)="$event.preventDefault()"
+    >
+      @if (loading()) {
+        <li
+          class="gestio-combobox__status"
+          role="option"
+          aria-disabled="true"
+          aria-selected="false"
+        >
+          <span class="gestio-combobox__spinner" aria-hidden="true"></span>
+          {{ text().loading }}
+        </li>
+      } @else {
+        @for (option of visibleOptions(); track $index) {
+          <li
+            #option
+            class="gestio-combobox__option"
+            role="option"
+            [id]="optionId($index)"
+            [class.is-active]="$index === activeIndex()"
+            [attr.aria-selected]="isSelected(option) ? 'true' : 'false'"
+            [attr.aria-disabled]="isOptionDisabled(option) ? 'true' : null"
+            (click)="handleOptionClick(option)"
+            (mousemove)="hover($index, option)"
+          >
+            <svg
+              class="gestio-combobox__check"
+              viewBox="0 0 16 16"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path d="M3.5 8.5l3 3 6-7" />
+            </svg>
+            <span class="gestio-combobox__option-text">
+              <span class="gestio-combobox__option-label">{{ display(option) }}</span>
+              @if (describe(option); as description) {
+                <span class="gestio-combobox__option-description">{{ description }}</span>
+              }
+            </span>
+          </li>
+        } @empty {
+          <li
+            class="gestio-combobox__status"
+            role="option"
+            aria-disabled="true"
+            aria-selected="false"
+          >
+            {{ text().noResults }}
+          </li>
+        }
+      }
+    </ul>
+  </ng-template>
+
+  @if (hint()) {
+    <p class="gestio-field__hint" [id]="hintId">{{ hint() }}</p>
+  }
+  @if (error()) {
+    <p class="gestio-field__error" [id]="errorId">
+      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5" />
+        <path
+          d="M8 4.5v4.2M8 11v.5"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+        />
+      </svg>
+      <span>{{ error() }}</span>
+    </p>
+  }
+
+  <span class="gestio-sr-only" aria-live="polite" aria-atomic="true">{{ announcement() }}</span>
+</div>
