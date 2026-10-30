@@ -1,0 +1,299 @@
+@use '../core/field' as field;
+
+// Composants non encapsulés : toutes les règles restent sous les classes gestio-nav*.
+
+.gestio-navmenu {
+  display: flex;
+  gap: 2px;
+  min-width: 0;
+  font-family: var(--gestio-font-sans);
+  font-size: var(--gestio-font-size-md);
+}
+
+.gestio-navmenu--vertical {
+  flex-direction: column;
+}
+
+.gestio-navmenu--horizontal {
+  flex-direction: row;
+  gap: var(--gestio-space-1);
+  align-items: center;
+}
+
+/* ---- Lien ---- */
+.gestio-nav-item {
+  position: relative;
+  display: flex;
+  gap: var(--gestio-space-3);
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 2.5rem;
+  margin: 0;
+  padding: var(--gestio-space-2) var(--gestio-space-3);
+  border: 0;
+  border-radius: var(--gestio-radius-md);
+  background: transparent;
+  color: var(--gestio-color-text-muted);
+  font: inherit;
+  font-weight: var(--gestio-font-weight-medium);
+  line-height: var(--gestio-line-height-tight);
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--gestio-duration-fast) var(--gestio-easing-standard),
+    color var(--gestio-duration-fast) var(--gestio-easing-standard);
+
+  &:hover {
+    background: var(--gestio-color-surface-hover);
+    color: var(--gestio-color-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: -2px;
+  }
+
+  &[aria-current='page'],
+  &.is-active {
+    background: var(--gestio-color-primary-subtle);
+    color: var(--gestio-color-primary-text);
+    font-weight: var(--gestio-font-weight-semibold);
+  }
+
+  &.has-active {
+    color: var(--gestio-color-primary-text);
+  }
+}
+
+/* Indicateur de la page courante dans un menu vertical. */
+.gestio-navmenu--vertical .gestio-nav-item:is([aria-current='page'], .is-active)::before {
+  content: '';
+  position: absolute;
+  inset-block: var(--gestio-space-2);
+  inset-inline-start: 0;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--gestio-color-primary);
+}
+
+.gestio-navmenu--horizontal .gestio-nav-item {
+  width: auto;
+  white-space: nowrap;
+}
+
+.gestio-nav-item__icon {
+  display: inline-flex;
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+
+  &:empty {
+    display: none;
+  }
+
+  > * {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.gestio-nav-item__label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gestio-nav-item__badge {
+  display: inline-flex;
+  flex: none;
+
+  &:empty {
+    display: none;
+  }
+}
+
+/* ---- Rail : icônes seules ---- */
+.gestio-nav-item--icon-only {
+  justify-content: center;
+  gap: 0;
+  padding-inline: 0;
+
+  .gestio-nav-item__label:not(.is-tip) {
+    @include field.sr-only;
+  }
+
+  .gestio-nav-item__badge {
+    position: absolute;
+    top: 0;
+    inset-inline-end: 0.125rem;
+    transform: scale(0.85);
+  }
+
+  .gestio-nav-submenu__chevron {
+    display: none;
+  }
+}
+
+/* Bulle du libellé : position fixe calculée, bord transparent pour rester survolable (WCAG 1.4.13). */
+.gestio-nav-item__label.is-tip {
+  position: fixed;
+  z-index: var(--gestio-z-overlay);
+  flex: none;
+  max-width: 16rem;
+  padding: var(--gestio-space-1) var(--gestio-space-2);
+  border-inline-start: 0.5rem solid transparent;
+  border-radius: var(--gestio-radius-md);
+  background: var(--gestio-color-text);
+  background-clip: padding-box;
+  color: var(--gestio-color-text-inverse);
+  font-size: var(--gestio-font-size-sm);
+  font-weight: var(--gestio-font-weight-medium);
+  transform: translateY(-50%);
+  cursor: default;
+}
+
+/* ---- Groupe ---- */
+.gestio-nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gestio-navmenu--vertical > .gestio-nav-group:not(:first-child) {
+  margin-block-start: var(--gestio-space-4);
+}
+
+.gestio-nav-group__title {
+  padding: var(--gestio-space-1) var(--gestio-space-3);
+  color: var(--gestio-color-text-subtle);
+  font-size: var(--gestio-font-size-xs);
+  font-weight: var(--gestio-font-weight-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Rail : le titre devient un séparateur ; menu horizontal : groupe en ligne. */
+.gestio-navmenu--collapsed > .gestio-nav-group:not(:first-child) {
+  margin-block-start: var(--gestio-space-2);
+  padding-block-start: var(--gestio-space-2);
+  border-block-start: var(--gestio-border-width) solid var(--gestio-color-border);
+}
+
+.gestio-navmenu--collapsed .gestio-nav-group__title,
+.gestio-navmenu--horizontal .gestio-nav-group__title {
+  @include field.sr-only;
+}
+
+.gestio-navmenu--horizontal .gestio-nav-group {
+  flex-direction: row;
+  gap: var(--gestio-space-1);
+  align-items: center;
+}
+
+/* ---- Sous-menu ---- */
+.gestio-nav-submenu {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gestio-nav-submenu__chevron {
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  margin-inline-start: auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform var(--gestio-duration-fast) var(--gestio-easing-standard);
+
+  .is-expanded > .gestio-nav-submenu__trigger > & {
+    transform: rotate(180deg);
+  }
+}
+
+.gestio-nav-submenu__panel[hidden] {
+  display: none;
+}
+
+.gestio-nav-submenu__panel--inline {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  /* Libellés alignés sur celui du bouton (marge + icône + espacement). */
+  .gestio-nav-item {
+    padding-inline-start: calc(var(--gestio-space-3) * 2 + 1.25rem);
+    font-weight: var(--gestio-font-weight-regular);
+  }
+}
+
+.gestio-nav-submenu__panel--dropdown,
+.gestio-nav-submenu__panel--flyout {
+  z-index: var(--gestio-z-dropdown);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-sizing: border-box;
+  min-width: 13rem;
+  padding: var(--gestio-space-1);
+  border: var(--gestio-border-width) solid var(--gestio-color-border);
+  border-radius: var(--gestio-radius-lg);
+  background: var(--gestio-color-surface);
+  box-shadow: var(--gestio-shadow-lg);
+
+  .gestio-nav-item {
+    width: 100%;
+    white-space: nowrap;
+  }
+}
+
+.gestio-nav-submenu__panel--dropdown {
+  position: absolute;
+  top: calc(100% + var(--gestio-space-1));
+  inset-inline-start: 0;
+}
+
+.gestio-nav-submenu__panel--dropdown.is-end {
+  inset-inline: auto 0;
+}
+
+.gestio-nav-submenu__panel--flyout {
+  position: fixed;
+  z-index: var(--gestio-z-overlay);
+}
+
+.gestio-nav-submenu__title {
+  padding: var(--gestio-space-2) var(--gestio-space-3);
+  border-block-end: var(--gestio-border-width) solid var(--gestio-color-border);
+  color: var(--gestio-color-text);
+  font-weight: var(--gestio-font-weight-semibold);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gestio-nav-item,
+  .gestio-nav-submenu__chevron {
+    transition: none;
+  }
+}
+
+/* Contraste élevé : les fonds ne sont pas rendus, un contour marque la page courante. */
+@media (forced-colors: active) {
+  .gestio-nav-item:is([aria-current='page'], .is-active) {
+    outline: 2px solid LinkText;
+    outline-offset: -2px;
+  }
+
+  .gestio-nav-item__label.is-tip,
+  .gestio-nav-submenu__panel--dropdown,
+  .gestio-nav-submenu__panel--flyout {
+    border: 1px solid CanvasText;
+  }
+}

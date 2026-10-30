@@ -52,26 +52,28 @@ Les champs fonctionnent avec Reactive Forms, `ngModel` et Signal Forms (`[formFi
 
 ## Composants
 
-| Point d’entrée                       | Composants                                                                                    |
-| ------------------------------------ | --------------------------------------------------------------------------------------------- |
-| `/button`                            | `button[gestioButton]`, `a[gestioButton]`                                                     |
-| `/input`, `/textarea`, `/select`     | `gestio-input`, `gestio-textarea`, `gestio-select`                                            |
-| `/checkbox`, `/radio`, `/switch`     | `gestio-checkbox`, `gestio-radio-group` + `gestio-radio`, `gestio-switch`                     |
-| `/form-field`                        | `gestio-form-field` + `[gestioFieldControl]` (contrôles natifs : date, heure…)                |
-| `/card`, `/badge`, `/tabs`           | `gestio-card`, `gestio-badge`, `gestio-tabs`                                                  |
-| `/table`, `/datagrid`, `/pagination` | `table[gestioTable]`, `gestio-datagrid`, `gestio-pagination`                                  |
-| `/menu`                              | `[gestioMenuTriggerFor]`, `gestio-menu`, `[gestioMenuItem]`                                   |
-| `/tooltip`                           | `[gestioTooltip]`                                                                             |
-| `/alert`, `/skeleton`, `/spinner`    | `gestio-alert`, `gestio-skeleton`, `gestio-spinner`                                           |
-| `/dialog`, `/toast`                  | `GestioDialogService`, `GestioToastService` + `gestio-toaster`                                |
-| `/layout`                            | `gestio-app-shell`, `gestio-container`, `gestio-stack`, `gestio-grid`, `GestioBreakpoints`    |
-| `/accordion`, `/breadcrumb`          | `gestio-accordion` + `gestio-accordion-item`, `gestio-breadcrumb` + `gestio-breadcrumb-entry` |
-| `/avatar`, `/chips`                  | `gestio-avatar`, `gestio-avatar-group`, `gestio-chip`, `gestio-chip-input`                    |
-| `/combobox`, `/date-picker`          | `gestio-combobox` (recherche, sélection multiple), `gestio-date-picker`                       |
-| `/slider`, `/segmented-control`      | `gestio-slider` (valeur ou plage), `gestio-segmented-control` + `gestio-segment`              |
-| `/progress`, `/stepper`              | `gestio-progress-bar`, `gestio-progress-circle`, `gestio-stepper` + `gestio-step`             |
-| `/file-upload`, `/popover`           | `gestio-file-upload`, `[gestioPopoverTrigger]`                                                |
-| `/drawer`, `/ripple`                 | `gestio-drawer`, `GestioDrawerService`, `[gestioRipple]`                                      |
+| Point d’entrée                       | Composants                                                                                          |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------- |
+| `/button`                            | `button[gestioButton]`, `a[gestioButton]`                                                           |
+| `/input`, `/textarea`, `/select`     | `gestio-input`, `gestio-textarea`, `gestio-select`                                                  |
+| `/checkbox`, `/radio`, `/switch`     | `gestio-checkbox`, `gestio-radio-group` + `gestio-radio`, `gestio-switch`                           |
+| `/form-field`                        | `gestio-form-field` + `[gestioFieldControl]` (contrôles natifs : date, heure…)                      |
+| `/card`, `/badge`, `/tabs`           | `gestio-card`, `gestio-badge`, `gestio-tabs`                                                        |
+| `/table`, `/datagrid`, `/pagination` | `table[gestioTable]`, `gestio-datagrid`, `gestio-pagination`                                        |
+| `/menu`                              | `[gestioMenuTriggerFor]`, `gestio-menu`, `[gestioMenuItem]`                                         |
+| `/tooltip`                           | `[gestioTooltip]`                                                                                   |
+| `/alert`, `/skeleton`, `/spinner`    | `gestio-alert`, `gestio-skeleton`, `gestio-spinner`                                                 |
+| `/dialog`, `/toast`                  | `GestioDialogService`, `GestioToastService` + `gestio-toaster`                                      |
+| `/layout`                            | `gestio-app-shell`, `gestio-container`, `gestio-stack`, `gestio-grid`, `GestioBreakpoints`          |
+| `/layout` (navigation)               | `gestio-sidebar-layout`, `gestio-rail-layout`, `gestio-topnav-layout`                               |
+| `/navigation`                        | `gestio-navbar`, `nav[gestioNavmenu]`, `a[gestioNavItem]`, `gestio-nav-group`, `gestio-nav-submenu` |
+| `/accordion`, `/breadcrumb`          | `gestio-accordion` + `gestio-accordion-item`, `gestio-breadcrumb` + `gestio-breadcrumb-entry`       |
+| `/avatar`, `/chips`                  | `gestio-avatar`, `gestio-avatar-group`, `gestio-chip`, `gestio-chip-input`                          |
+| `/combobox`, `/date-picker`          | `gestio-combobox` (recherche, sélection multiple), `gestio-date-picker`                             |
+| `/slider`, `/segmented-control`      | `gestio-slider` (valeur ou plage), `gestio-segmented-control` + `gestio-segment`                    |
+| `/progress`, `/stepper`              | `gestio-progress-bar`, `gestio-progress-circle`, `gestio-stepper` + `gestio-step`                   |
+| `/file-upload`, `/popover`           | `gestio-file-upload`, `[gestioPopoverTrigger]`                                                      |
+| `/drawer`, `/ripple`                 | `gestio-drawer`, `GestioDrawerService`, `[gestioRipple]`                                            |
 
 ## Blocs
 

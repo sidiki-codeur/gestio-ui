@@ -1,0 +1,68 @@
+<a class="gestio-nav-layout__skip" [href]="'#' + mainId" (click)="skipToMain($event, main)">{{
+  skipLinkLabel()
+}}</a>
+
+<aside
+  #side
+  class="gestio-nav-layout__side"
+  [attr.aria-label]="menuLabel()"
+  tabindex="-1"
+  [id]="sideId"
+  (click)="onSideClick($event)"
+>
+  <div class="gestio-nav-layout__brand"><ng-content select="[gestioLayoutBrand]" /></div>
+  <div class="gestio-nav-layout__nav"><ng-content select="[gestioLayoutNav]" /></div>
+  <div class="gestio-nav-layout__side-footer">
+    <ng-content select="[gestioLayoutSidebarFooter]" />
+    @if (showCollapseToggle()) {
+      <button
+        type="button"
+        class="gestio-nav-layout__collapse"
+        [attr.aria-label]="collapsed() ? expandLabel() : null"
+        (click)="toggleCollapsed()"
+      >
+        <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+          @if (collapsed()) {
+            <path d="M8 5l5 5-5 5" />
+          } @else {
+            <path d="M12 5l-5 5 5 5" />
+          }
+        </svg>
+        @if (!collapsed()) {
+          <span>{{ collapseLabel() }}</span>
+        }
+      </button>
+    }
+  </div>
+</aside>
+
+@if (drawerOpen()) {
+  <div class="gestio-nav-layout__backdrop" aria-hidden="true" (click)="closeMenu(true)"></div>
+}
+
+<div class="gestio-nav-layout__body">
+  <header class="gestio-nav-layout__header">
+    @if (!isDesktop() && !externalToggle()) {
+      <button
+        type="button"
+        class="gestio-nav-layout__toggle"
+        [attr.aria-expanded]="drawerOpen()"
+        [attr.aria-controls]="sideId"
+        (click)="toggleMenu()"
+      >
+        <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+          <path d="M3 6h14M3 10h14M3 14h14" />
+        </svg>
+        <span class="gestio-nav-layout__sr-only">{{ menuLabel() }}</span>
+      </button>
+    }
+    <div class="gestio-nav-layout__header-content">
+      <ng-content select="[gestioLayoutHeader]" />
+    </div>
+  </header>
+
+  <main #main class="gestio-nav-layout__main" tabindex="-1" [id]="mainId" [inert]="drawerOpen()">
+    <ng-content />
+  </main>
+  <ng-content select="[gestioLayoutFooter]" />
+</div>

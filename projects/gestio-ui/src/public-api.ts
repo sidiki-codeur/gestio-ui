@@ -26,6 +26,7 @@ export * from '@gestiolabs336/ui/form-field';
 export * from '@gestiolabs336/ui/input';
 export * from '@gestiolabs336/ui/layout';
 export * from '@gestiolabs336/ui/menu';
+export * from '@gestiolabs336/ui/navigation';
 export * from '@gestiolabs336/ui/pagination';
 export * from '@gestiolabs336/ui/popover';
 export * from '@gestiolabs336/ui/progress';

@@ -12,6 +12,7 @@ import * as formField from '@gestiolabs336/ui/form-field';
 import * as input from '@gestiolabs336/ui/input';
 import * as layout from '@gestiolabs336/ui/layout';
 import * as menu from '@gestiolabs336/ui/menu';
+import * as navigation from '@gestiolabs336/ui/navigation';
 import * as pagination from '@gestiolabs336/ui/pagination';
 import * as radio from '@gestiolabs336/ui/radio';
 import * as ripple from '@gestiolabs336/ui/ripple';
@@ -95,6 +96,7 @@ const ENTRY_POINTS: Record<string, Record<string, unknown>> = {
   '@gestiolabs336/ui/input': input,
   '@gestiolabs336/ui/layout': layout,
   '@gestiolabs336/ui/menu': menu,
+  '@gestiolabs336/ui/navigation': navigation,
   '@gestiolabs336/ui/pagination': pagination,
   '@gestiolabs336/ui/radio': radio,
   '@gestiolabs336/ui/ripple': ripple,

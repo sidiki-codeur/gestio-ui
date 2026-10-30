@@ -31,25 +31,29 @@ export class App {
   protected readonly navigation = NAVIGATION;
   /** Tiroir de navigation (petits écrans), géré par gestio-app-shell. */
   protected readonly menuOpen = signal(false);
+  /** Route marquée `data: { fullPage: true }` : affichée sans la coque du catalogue. */
+  protected readonly fullPage = signal(false);
 
   constructor() {
     let firstNavigation = true;
-    inject(Router)
-      .events.pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => {
-        this.menuOpen.set(false);
-        if (firstNavigation) {
-          firstNavigation = false;
-          return;
-        }
-        // Après une navigation, le focus est placé sur le titre de la nouvelle page.
-        afterNextRender(
-          () => {
-            const heading = this.document.querySelector<HTMLElement>('main h1');
-            heading?.focus({ preventScroll: true });
-          },
-          { injector: this.injector },
-        );
-      });
+    const router = inject(Router);
+    router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+      let route = router.routerState.snapshot.root;
+      while (route.firstChild) route = route.firstChild;
+      this.fullPage.set(route.data['fullPage'] === true);
+      this.menuOpen.set(false);
+      if (firstNavigation) {
+        firstNavigation = false;
+        return;
+      }
+      // Après une navigation, le focus est placé sur le titre de la nouvelle page.
+      afterNextRender(
+        () => {
+          const heading = this.document.querySelector<HTMLElement>('main h1');
+          heading?.focus({ preventScroll: true });
+        },
+        { injector: this.injector },
+      );
+    });
   }
 }

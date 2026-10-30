@@ -15,7 +15,7 @@
     {
       "id": "responsive",
       "title": "Mise en page responsive",
-      "content": "Points de rupture (largeur minimale) : sm 640 px, md 768 px, lg 1024 px, xl 1280 px (constante GESTIO_BREAKPOINTS). Approche mobile first.\n\nValeurs responsives (type GestioResponsive<T>) : une valeur fixe (ex. [columns]=\"3\") ou un objet par point de rupture (ex. [columns]=\"{ base: 1, md: 2, xl: 4 }\") ; chaque point hérite du précédent.\n\ngestio-grid et gestio-stack réagissent à la largeur de LEUR CONTENEUR (container queries), pas à celle de l'écran : une grille { base: 1, md: 2 } dans une carte de 500 px reste sur 1 colonne même sur grand écran. gestio-app-shell et le service GestioBreakpoints réagissent à la largeur de la fenêtre.\n\nChoix rapide :\n- page complète d'application (en-tête + menu latéral) : gestio-app-shell ;\n- largeur maximale centrée avec marges : gestio-container ;\n- éléments empilés ou en ligne, avec espacement : gestio-stack ;\n- cartes, indicateurs, champs de formulaire en colonnes : gestio-grid ;\n- logique TypeScript selon l'écran : inject(GestioBreakpoints).md() etc.\n\nEspacements (type GestioSpace) : 0, 1, 2, 3, 4, 5, 6, 8, 10, 12 → var(--gestio-space-N).\n\nTableau de bord type :\n<gestio-container>\n  <gestio-stack [gap]=\"6\">\n    <gestio-stack [direction]=\"{ base: 'column', md: 'row' }\" justify=\"between\" align=\"center\">\n      <h1>Tableau de bord</h1>\n      <button gestioButton>Nouvelle facture</button>\n    </gestio-stack>\n    <gestio-grid [columns]=\"{ base: 1, sm: 2, lg: 4 }\">…4 indicateurs…</gestio-grid>\n    <gestio-grid [columns]=\"{ base: 1, lg: 3 }\">\n      <gestio-card [gestioGridSpan]=\"{ base: 1, lg: 2 }\">…</gestio-card>\n      <gestio-card>…</gestio-card>\n    </gestio-grid>\n  </gestio-stack>\n</gestio-container>"
+      "content": "Points de rupture (largeur minimale) : sm 640 px, md 768 px, lg 1024 px, xl 1280 px (constante GESTIO_BREAKPOINTS). Approche mobile first.\n\nValeurs responsives (type GestioResponsive<T>) : une valeur fixe (ex. [columns]=\"3\") ou un objet par point de rupture (ex. [columns]=\"{ base: 1, md: 2, xl: 4 }\") ; chaque point hérite du précédent.\n\ngestio-grid et gestio-stack réagissent à la largeur de LEUR CONTENEUR (container queries), pas à celle de l'écran : une grille { base: 1, md: 2 } dans une carte de 500 px reste sur 1 colonne même sur grand écran. gestio-app-shell et le service GestioBreakpoints réagissent à la largeur de la fenêtre.\n\nChoix rapide :\n- page complète d'application (en-tête + menu latéral) : gestio-app-shell ;\n- largeur maximale centrée avec marges : gestio-container ;\n- éléments empilés ou en ligne, avec espacement : gestio-stack ;\n- cartes, indicateurs, champs de formulaire en colonnes : gestio-grid ;\n- logique TypeScript selon l'écran : inject(GestioBreakpoints).md() etc.\n\nEspacements (type GestioSpace) : 0, 1, 2, 3, 4, 5, 6, 8, 10, 12 → var(--gestio-space-N).\n\nTableau de bord type :\n<gestio-container>\n  <gestio-stack [gap]=\"6\">\n    <gestio-stack [direction]=\"{ base: 'column', md: 'row' }\" justify=\"between\" align=\"center\">\n      <h1>Tableau de bord</h1>\n      <button gestioButton>Nouvelle facture</button>\n    </gestio-stack>\n    <gestio-grid [columns]=\"{ base: 1, sm: 2, lg: 4 }\">…4 indicateurs…</gestio-grid>\n    <gestio-grid [columns]=\"{ base: 1, lg: 3 }\">\n      <gestio-card [gestioGridSpan]=\"{ base: 1, lg: 2 }\">…</gestio-card>\n      <gestio-card>…</gestio-card>\n    </gestio-grid>\n  </gestio-stack>\n</gestio-container>\n\nLayouts de navigation : gestio-sidebar-layout (menu latéral large, réductible en rail), gestio-rail-layout (rail vertical d'icônes), gestio-topnav-layout (menu horizontal dans gestio-navbar). Menus : nav[gestioNavmenu] avec gestioNavItem, gestio-nav-group, gestio-nav-submenu (@gestiolabs336/ui/navigation)."
     },
     {
       "id": "forms",
@@ -1059,9 +1059,291 @@
       "pitfalls": [
         "La coque contient déjà <main> : ne pas en imbriquer un second dans les pages.",
         "Les styles des liens de la barre latérale sont à la charge de l'application.",
-        "Après une navigation, déplacer le focus sur le titre de la nouvelle page (bonne pratique d'accessibilité)."
+        "Après une navigation, déplacer le focus sur le titre de la nouvelle page (bonne pratique d'accessibilité).",
+        "Pour un menu réductible en rail, un rail d'icônes ou un menu horizontal : gestio-sidebar-layout, gestio-rail-layout ou gestio-topnav-layout avec gestio-navbar et nav[gestioNavmenu]."
       ],
       "entryPoint": "@gestiolabs336/ui/layout"
+    },
+    {
+      "id": "sidebar-layout",
+      "title": "Layout à menu latéral",
+      "kind": "component",
+      "entryPoint": "@gestiolabs336/ui/layout",
+      "exports": ["GestioSidebarLayout", "GestioNavLayoutBreakpoint"],
+      "classes": [
+        {
+          "class": "GestioSidebarLayout",
+          "selector": "gestio-sidebar-layout"
+        }
+      ],
+      "summary": "Page avec barre latérale large (marque, menu, pied) et en-tête au-dessus du contenu. Sur grand écran, le menu se réduit en rail d'icônes (bouton « Réduire le menu », [(collapsed)]) ; sous le point de rupture, il devient un tiroir.",
+      "api": "Méthodes : openMenu(), closeMenu(restoreFocus = false), toggleMenu(). Signaux : isDesktop, railMode.\nFournit <aside aria-label> (barre latérale), <header>, <main> et un lien d'évitement ; tiroir sous le point de rupture : focus sur la page courante, Échap, clic sur le fond, contenu inerte, retour du focus.",
+      "inputs": [
+        {
+          "name": "menuOpen",
+          "type": "model<boolean>",
+          "default": "false",
+          "description": "Tiroir ouvert (petits écrans) ; [(menuOpen)]."
+        },
+        {
+          "name": "breakpoint",
+          "type": "'md' | 'lg'",
+          "default": "'lg'",
+          "description": "Largeur de fenêtre à partir de laquelle le menu est fixe à gauche (768 ou 1024 px) ; en dessous, tiroir."
+        },
+        {
+          "name": "closeOnNavigate",
+          "type": "boolean",
+          "default": "true",
+          "description": "Ferme le tiroir quand un lien du menu est activé."
+        },
+        {
+          "name": "menuLabel",
+          "type": "string",
+          "default": "'Menu de navigation'",
+          "description": "Nom de la barre latérale (<aside>) et du bouton qui ouvre le tiroir."
+        },
+        {
+          "name": "skipLinkLabel",
+          "type": "string",
+          "default": "'Aller au contenu'",
+          "description": "Texte du lien d'évitement."
+        },
+        {
+          "name": "collapsed",
+          "type": "model<boolean>",
+          "default": "false",
+          "description": "Menu réduit en rail d'icônes sur grand écran ; [(collapsed)]."
+        },
+        {
+          "name": "collapsible",
+          "type": "boolean",
+          "default": "true",
+          "description": "Bouton « Réduire le menu » en bas de la barre latérale."
+        },
+        {
+          "name": "sidebarWidth",
+          "type": "string",
+          "default": "'16rem'",
+          "description": "Largeur du menu déplié."
+        },
+        {
+          "name": "railWidth",
+          "type": "string",
+          "default": "'4.5rem'",
+          "description": "Largeur du menu réduit."
+        },
+        {
+          "name": "collapseLabel",
+          "type": "string",
+          "default": "'Réduire le menu'",
+          "description": "Texte du bouton de réduction."
+        },
+        {
+          "name": "expandLabel",
+          "type": "string",
+          "default": "'Déplier le menu'",
+          "description": "Nom du bouton quand le menu est réduit."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "menuOpenChange",
+          "type": "boolean",
+          "description": "Ouverture / fermeture du tiroir."
+        },
+        {
+          "name": "collapsedChange",
+          "type": "boolean",
+          "description": "Réduction / dépliage du menu."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "[gestioLayoutBrand]",
+          "description": "Haut de la barre latérale : logo, nom."
+        },
+        {
+          "selector": "[gestioLayoutNav]",
+          "description": "Menu : <nav gestioNavmenu gestioLayoutNav aria-label=\"…\"> (vertical, rail sur grand écran selon le layout)."
+        },
+        {
+          "selector": "[gestioLayoutSidebarFooter]",
+          "description": "Bas de la barre latérale."
+        },
+        {
+          "selector": "[gestioLayoutHeader]",
+          "description": "En-tête au-dessus du contenu, en général <gestio-navbar> (qui affiche alors le bouton du tiroir)."
+        },
+        {
+          "selector": "(défaut)",
+          "description": "Contenu principal (<main> fourni)."
+        },
+        {
+          "selector": "[gestioLayoutFooter]",
+          "description": "Pied de page sous le contenu (ex. <footer>)."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Application avec routeur",
+          "code": "// imports: [GestioSidebarLayout, GestioNavbar, GESTIO_NAVMENU_IMPORTS, RouterOutlet, RouterLink, RouterLinkActive]\n<gestio-sidebar-layout #layout [(collapsed)]=\"menuReduit\">\n  <a gestioLayoutBrand routerLink=\"/\">\n    <img src=\"logo.svg\" alt=\"\" width=\"32\" height=\"32\" />\n    @if (!layout.railMode()) { <span>Mon ERP</span> }\n  </a>\n  <nav gestioNavmenu gestioLayoutNav aria-label=\"Navigation principale\">\n    <a gestioNavItem routerLink=\"/projets\" routerLinkActive ariaCurrentWhenActive=\"page\">\n      <svg gestioNavIcon viewBox=\"0 0 20 20\" aria-hidden=\"true\">…</svg>\n      Projets\n    </a>\n  </nav>\n  <gestio-navbar gestioLayoutHeader>\n    <div gestioNavbarEnd>…profil…</div>\n  </gestio-navbar>\n  <router-outlet />\n</gestio-sidebar-layout>"
+        }
+      ],
+      "pitfalls": [
+        "Ne pas imbriquer d'autre <main> dans les pages.",
+        "En mode rail, la marque doit tenir dans le rail : utiliser layout.railMode() (référence #layout) pour masquer le nom (le garder en texte masqué visuellement pour le nom accessible du lien).",
+        "Après une navigation, déplacer le focus sur le titre de la nouvelle page."
+      ]
+    },
+    {
+      "id": "rail-layout",
+      "title": "Layout à menu vertical (rail)",
+      "kind": "component",
+      "entryPoint": "@gestiolabs336/ui/layout",
+      "exports": ["GestioRailLayout"],
+      "classes": [
+        {
+          "class": "GestioRailLayout",
+          "selector": "gestio-rail-layout"
+        }
+      ],
+      "summary": "Page avec un rail vertical étroit d'icônes (libellés en bulle au survol et au focus, sous-menus en panneau latéral), en-tête et contenu à droite. Sous le point de rupture, le menu devient un tiroir avec les libellés.",
+      "api": "Méthodes : openMenu(), closeMenu(restoreFocus = false), toggleMenu(). Signaux : isDesktop, railMode.\nFournit <aside aria-label> (barre latérale), <header>, <main> et un lien d'évitement ; tiroir sous le point de rupture : focus sur la page courante, Échap, clic sur le fond, contenu inerte, retour du focus.",
+      "inputs": [
+        {
+          "name": "menuOpen",
+          "type": "model<boolean>",
+          "default": "false",
+          "description": "Tiroir ouvert (petits écrans) ; [(menuOpen)]."
+        },
+        {
+          "name": "breakpoint",
+          "type": "'md' | 'lg'",
+          "default": "'lg'",
+          "description": "Largeur de fenêtre à partir de laquelle le menu est fixe à gauche (768 ou 1024 px) ; en dessous, tiroir."
+        },
+        {
+          "name": "closeOnNavigate",
+          "type": "boolean",
+          "default": "true",
+          "description": "Ferme le tiroir quand un lien du menu est activé."
+        },
+        {
+          "name": "menuLabel",
+          "type": "string",
+          "default": "'Menu de navigation'",
+          "description": "Nom de la barre latérale (<aside>) et du bouton qui ouvre le tiroir."
+        },
+        {
+          "name": "skipLinkLabel",
+          "type": "string",
+          "default": "'Aller au contenu'",
+          "description": "Texte du lien d'évitement."
+        },
+        {
+          "name": "railWidth",
+          "type": "string",
+          "default": "'4.5rem'",
+          "description": "Largeur du rail."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "menuOpenChange",
+          "type": "boolean",
+          "description": "Ouverture / fermeture du tiroir."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "[gestioLayoutBrand]",
+          "description": "Haut de la barre latérale : logo, nom."
+        },
+        {
+          "selector": "[gestioLayoutNav]",
+          "description": "Menu : <nav gestioNavmenu gestioLayoutNav aria-label=\"…\"> (vertical, rail sur grand écran selon le layout)."
+        },
+        {
+          "selector": "[gestioLayoutSidebarFooter]",
+          "description": "Bas de la barre latérale."
+        },
+        {
+          "selector": "[gestioLayoutHeader]",
+          "description": "En-tête au-dessus du contenu, en général <gestio-navbar> (qui affiche alors le bouton du tiroir)."
+        },
+        {
+          "selector": "(défaut)",
+          "description": "Contenu principal (<main> fourni)."
+        },
+        {
+          "selector": "[gestioLayoutFooter]",
+          "description": "Pied de page sous le contenu (ex. <footer>)."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Rail d’icônes",
+          "code": "// imports: [GestioRailLayout, GestioNavbar, GESTIO_NAVMENU_IMPORTS, RouterOutlet, RouterLink, RouterLinkActive]\n<gestio-rail-layout>\n  <a gestioLayoutBrand routerLink=\"/\" aria-label=\"Accueil\"><img src=\"logo.svg\" alt=\"\" width=\"32\" height=\"32\" /></a>\n  <nav gestioNavmenu gestioLayoutNav aria-label=\"Navigation principale\">\n    <a gestioNavItem routerLink=\"/projets\" routerLinkActive ariaCurrentWhenActive=\"page\">\n      <svg gestioNavIcon viewBox=\"0 0 20 20\" aria-hidden=\"true\">…</svg>\n      Projets\n    </a>\n  </nav>\n  <gestio-navbar gestioLayoutHeader>…</gestio-navbar>\n  <router-outlet />\n</gestio-rail-layout>"
+        }
+      ],
+      "pitfalls": [
+        "Chaque lien de premier niveau doit avoir une icône : le libellé n'est visible qu'en bulle.",
+        "Marque : un logo seul tient dans le rail ; lui donner un nom accessible (aria-label ou texte masqué visuellement)."
+      ]
+    },
+    {
+      "id": "topnav-layout",
+      "title": "Layout à menu horizontal",
+      "kind": "component",
+      "entryPoint": "@gestiolabs336/ui/layout",
+      "exports": ["GestioTopnavLayout"],
+      "classes": [
+        {
+          "class": "GestioTopnavLayout",
+          "selector": "gestio-topnav-layout"
+        }
+      ],
+      "summary": "Page avec en-tête en haut (gestio-navbar portant le menu horizontal), contenu dessous et pied de page facultatif. Sur petit écran, la navbar replie son menu dans un panneau.",
+      "api": "Fournit <header> (collant), <main> et un lien d'évitement.",
+      "inputs": [
+        {
+          "name": "sticky",
+          "type": "boolean",
+          "default": "true",
+          "description": "En-tête fixé en haut lors du défilement."
+        },
+        {
+          "name": "skipLinkLabel",
+          "type": "string",
+          "default": "'Aller au contenu'",
+          "description": "Texte du lien d'évitement."
+        }
+      ],
+      "outputs": [],
+      "slots": [
+        {
+          "selector": "[gestioLayoutHeader]",
+          "description": "En-tête : <gestio-navbar> avec <nav gestioNavmenu gestioNavbarMenu>."
+        },
+        {
+          "selector": "(défaut)",
+          "description": "Contenu principal (<main> fourni)."
+        },
+        {
+          "selector": "[gestioLayoutFooter]",
+          "description": "Pied de page (ex. <footer>)."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Menu horizontal dans une navbar sombre",
+          "code": "// imports: [GestioTopnavLayout, GestioNavbar, GESTIO_NAVMENU_IMPORTS, RouterOutlet, RouterLink, RouterLinkActive]\n<gestio-topnav-layout>\n  <gestio-navbar gestioLayoutHeader tone=\"inverse\" collapseBelow=\"lg\">\n    <a gestioNavbarBrand routerLink=\"/\">Mon ERP</a>\n    <nav gestioNavmenu gestioNavbarMenu aria-label=\"Navigation principale\">\n      <a gestioNavItem routerLink=\"/projets\" routerLinkActive ariaCurrentWhenActive=\"page\">Projets</a>\n      <gestio-nav-submenu label=\"Rapports\">\n        <a gestioNavItem routerLink=\"/rapports/ventes\" routerLinkActive ariaCurrentWhenActive=\"page\">Ventes</a>\n      </gestio-nav-submenu>\n    </nav>\n    <div gestioNavbarEnd>…profil…</div>\n  </gestio-navbar>\n  <router-outlet />\n</gestio-topnav-layout>"
+        }
+      ],
+      "pitfalls": [
+        "Choisir collapseBelow selon le nombre de liens : le menu horizontal ne passe pas à la ligne."
+      ]
     },
     {
       "id": "container",
@@ -1922,6 +2204,178 @@
         "<gestio-menu> doit être la racine du <ng-template> passé à gestioMenuTriggerFor.",
         "Pas de sous-menus ni d’éléments à cocher dans cette version.",
         "Un déclencheur avec seulement une icône a besoin d’aria-label."
+      ]
+    },
+    {
+      "id": "navbar",
+      "title": "Barre de navigation",
+      "kind": "component",
+      "entryPoint": "@gestiolabs336/ui/navigation",
+      "exports": ["GestioNavbar", "GestioNavbarTone"],
+      "classes": [
+        {
+          "class": "GestioNavbar",
+          "selector": "gestio-navbar"
+        }
+      ],
+      "summary": "Barre supérieure : marque, menu horizontal (replié dans un panneau sous collapseBelow, bouton Menu avec aria-expanded, Échap pour fermer), contenu libre (recherche) et actions. Dans gestio-sidebar-layout ou gestio-rail-layout, elle affiche le bouton du tiroir de navigation sur petit écran. Ton inverse : bleu nuit, tokens du thème sombre pour son contenu.",
+      "api": "Variables CSS : --gestio-navbar-height (4rem), --gestio-navbar-inverse-background (#1b2340).\nSignal compact : vrai quand le menu est replié dans le panneau.",
+      "inputs": [
+        {
+          "name": "tone",
+          "type": "'surface' | 'inverse'",
+          "default": "'surface'",
+          "description": "Teinte de la barre."
+        },
+        {
+          "name": "sticky",
+          "type": "boolean",
+          "default": "false",
+          "description": "Barre fixée en haut lors du défilement (inutile dans un layout Gestio, déjà collant)."
+        },
+        {
+          "name": "collapseBelow",
+          "type": "'sm' | 'md' | 'lg' | 'xl' | 'never'",
+          "default": "'md'",
+          "description": "Sous ce point de rupture, le menu [gestioNavbarMenu] passe dans un panneau."
+        },
+        {
+          "name": "menuOpen",
+          "type": "model<boolean>",
+          "default": "false",
+          "description": "Panneau du menu ouvert (petits écrans) ; [(menuOpen)]."
+        },
+        {
+          "name": "menuLabel",
+          "type": "string",
+          "default": "'Menu'",
+          "description": "Nom accessible du bouton du menu."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "menuOpenChange",
+          "type": "boolean",
+          "description": "Ouverture / fermeture du panneau du menu."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "[gestioNavbarBrand]",
+          "description": "Logo et nom, à gauche."
+        },
+        {
+          "selector": "[gestioNavbarMenu]",
+          "description": "Menu : <nav gestioNavmenu gestioNavbarMenu aria-label=\"…\">."
+        },
+        {
+          "selector": "(défaut)",
+          "description": "Contenu central (recherche)."
+        },
+        {
+          "selector": "[gestioNavbarEnd]",
+          "description": "Actions à droite (notifications, profil)."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Barre avec menu et profil",
+          "code": "// imports: [GestioNavbar, GESTIO_NAVMENU_IMPORTS, RouterLink, RouterLinkActive]\n<gestio-navbar tone=\"inverse\">\n  <a gestioNavbarBrand routerLink=\"/\">Mon ERP</a>\n  <nav gestioNavmenu gestioNavbarMenu aria-label=\"Navigation principale\">\n    <a gestioNavItem routerLink=\"/projets\" routerLinkActive ariaCurrentWhenActive=\"page\">Projets</a>\n    <a gestioNavItem routerLink=\"/equipe\" routerLinkActive ariaCurrentWhenActive=\"page\">Équipe</a>\n  </nav>\n  <div gestioNavbarEnd>…profil…</div>\n</gestio-navbar>"
+        }
+      ],
+      "pitfalls": [
+        "La navbar n'est pas un repère : la placer dans un <header> (les layouts Gestio le fournissent).",
+        "En ton inverse, styler le contenu de l'application avec les tokens --gestio-color-* pour qu'il suive le thème sombre de la barre."
+      ]
+    },
+    {
+      "id": "navmenu",
+      "title": "Menu de navigation",
+      "kind": "component",
+      "entryPoint": "@gestiolabs336/ui/navigation",
+      "exports": [
+        "GestioNavmenu",
+        "GestioNavItem",
+        "GestioNavGroup",
+        "GestioNavSubmenu",
+        "GESTIO_NAVMENU_IMPORTS",
+        "GestioNavmenuOrientation"
+      ],
+      "classes": [
+        {
+          "class": "GestioNavmenu",
+          "selector": "nav[gestioNavmenu]"
+        },
+        {
+          "class": "GestioNavItem",
+          "selector": "a[gestioNavItem], button[gestioNavItem]"
+        },
+        {
+          "class": "GestioNavGroup",
+          "selector": "gestio-nav-group"
+        },
+        {
+          "class": "GestioNavSubmenu",
+          "selector": "gestio-nav-submenu"
+        }
+      ],
+      "summary": "Menu de navigation piloté par le contenu : liens avec icône et compteur, groupes titrés, sous-menus dépliables. Vertical (sous-menus en accordéon, ouverts d'office s'ils contiennent la page courante), horizontal (listes déroulantes) ou réduit en rail (icônes seules, libellé en bulle au survol et au focus, sous-menus en panneau latéral). Dans un layout ou une navbar Gestio, l'orientation et le mode rail viennent du conteneur.",
+      "api": "Page courante : aria-current=\"page\" sur le lien (routerLinkActive + ariaCurrentWhenActive=\"page\") ou classe is-active.\nSous-menus flottants (horizontal, rail) : fermés par Échap (focus rendu au bouton), clic extérieur, sortie du focus ou activation d'un lien.\nBulle du rail : survolable, masquée par Échap (WCAG 1.4.13).",
+      "inputs": [
+        {
+          "name": "orientation",
+          "type": "'horizontal' | 'vertical'",
+          "description": "nav[gestioNavmenu] : orientation ; par défaut celle du conteneur (layout : vertical ; navbar : horizontal, vertical dans le panneau mobile), sinon vertical."
+        },
+        {
+          "name": "collapsed",
+          "type": "boolean",
+          "description": "nav[gestioNavmenu] : rail d'icônes (menu vertical seulement) ; par défaut l'état du layout."
+        },
+        {
+          "name": "label",
+          "type": "string (requis)",
+          "description": "gestio-nav-group : titre du groupe ; gestio-nav-submenu : libellé du bouton."
+        },
+        {
+          "name": "expanded",
+          "type": "model<boolean>",
+          "default": "false",
+          "description": "gestio-nav-submenu : sous-menu déplié ; [(expanded)]."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "expandedChange",
+          "type": "boolean",
+          "description": "gestio-nav-submenu : ouverture / fermeture."
+        }
+      ],
+      "slots": [
+        {
+          "selector": "(défaut)",
+          "description": "nav : liens gestioNavItem, gestio-nav-group, gestio-nav-submenu ; lien : libellé ; groupe / sous-menu : liens."
+        },
+        {
+          "selector": "[gestioNavIcon]",
+          "description": "Lien ou sous-menu : icône avant le libellé. Icône : <svg gestioNavIcon viewBox=\"0 0 20 20\" aria-hidden=\"true\">…</svg>, dimensionnée à 1,25 rem."
+        },
+        {
+          "selector": "[gestioNavBadge]",
+          "description": "Lien : compteur après le libellé (ex. gestio-badge size=\"sm\")."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Menu vertical avec groupes et sous-menu",
+          "code": "// imports: [GESTIO_NAVMENU_IMPORTS, RouterLink, RouterLinkActive]\n<nav gestioNavmenu aria-label=\"Navigation principale\">\n  <gestio-nav-group label=\"Général\">\n    <a gestioNavItem routerLink=\"/tableau-de-bord\" routerLinkActive ariaCurrentWhenActive=\"page\">\n      <svg gestioNavIcon viewBox=\"0 0 20 20\" aria-hidden=\"true\">…</svg>\n      Tableau de bord\n    </a>\n    <a gestioNavItem routerLink=\"/projets\" routerLinkActive ariaCurrentWhenActive=\"page\">\n      <svg gestioNavIcon viewBox=\"0 0 20 20\" aria-hidden=\"true\">…</svg>\n      Projets\n      <gestio-badge gestioNavBadge size=\"sm\" variant=\"primary\">12</gestio-badge>\n    </a>\n  </gestio-nav-group>\n  <gestio-nav-submenu label=\"Rapports\">\n    <svg gestioNavIcon viewBox=\"0 0 20 20\" aria-hidden=\"true\">…</svg>\n    <a gestioNavItem routerLink=\"/rapports/ventes\" routerLinkActive ariaCurrentWhenActive=\"page\">Ventes</a>\n    <a gestioNavItem routerLink=\"/rapports/depenses\" routerLinkActive ariaCurrentWhenActive=\"page\">Dépenses</a>\n  </gestio-nav-submenu>\n</nav>"
+        }
+      ],
+      "pitfalls": [
+        "Donner un aria-label au <nav gestioNavmenu> (plusieurs <nav> sur la page doivent avoir des noms distincts).",
+        "Avec routerLinkActive, ajouter ariaCurrentWhenActive=\"page\" : c'est aria-current qui déclenche le style actif.",
+        "En mode rail, chaque lien de premier niveau doit avoir une icône gestioNavIcon : le libellé n'est visible qu'en bulle.",
+        "Les styles de lien sont chargés par nav[gestioNavmenu] : placer les liens gestioNavItem dans un menu."
       ]
     },
     {

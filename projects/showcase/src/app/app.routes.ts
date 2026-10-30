@@ -23,6 +23,27 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/form/form-page').then((m) => m.FormPage),
   },
   {
+    path: 'exemples/layout-menu-lateral',
+    title: 'Exemple : layout à menu latéral — Gestio UI',
+    data: { fullPage: true },
+    loadComponent: () =>
+      import('./pages/layout-examples/layout-examples').then((m) => m.SidebarLayoutExample),
+  },
+  {
+    path: 'exemples/layout-menu-vertical',
+    title: 'Exemple : layout à menu vertical — Gestio UI',
+    data: { fullPage: true },
+    loadComponent: () =>
+      import('./pages/layout-examples/layout-examples').then((m) => m.RailLayoutExample),
+  },
+  {
+    path: 'exemples/layout-menu-horizontal',
+    title: 'Exemple : layout à menu horizontal — Gestio UI',
+    data: { fullPage: true },
+    loadComponent: () =>
+      import('./pages/layout-examples/layout-examples').then((m) => m.TopnavLayoutExample),
+  },
+  {
     path: 'composants',
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'bouton' },
@@ -107,6 +128,16 @@ export const routes: Routes = [
         path: 'menu',
         title: 'Menu déroulant — Gestio UI',
         loadComponent: () => import('./pages/menu/menu-page').then((m) => m.MenuPage),
+      },
+      {
+        path: 'barre-de-navigation',
+        title: 'Barre de navigation — Gestio UI',
+        loadComponent: () => import('./pages/navbar/navbar-page').then((m) => m.NavbarPage),
+      },
+      {
+        path: 'menu-de-navigation',
+        title: 'Menu de navigation — Gestio UI',
+        loadComponent: () => import('./pages/navmenu/navmenu-page').then((m) => m.NavmenuPage),
       },
       {
         path: 'notifications',

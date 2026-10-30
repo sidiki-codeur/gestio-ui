@@ -28,7 +28,8 @@ projects/
     menu/ tooltip/ skeleton/ spinner/ ripple/ accordion/ breadcrumb/ avatar/ chips/
     combobox/ date-picker/ slider/ segmented-control/ progress/ stepper/ file-upload/
     popover/ drawer/
-    layout/                     Container, pile, grille, coque d’application, points de rupture
+    layout/                     Container, pile, grille, coque d’application, layouts de navigation
+    navigation/                 Barre de navigation, menu de navigation
     blocks/<bloc>/              Blocs (carrousel, calendrier, auth, graphiques, kanban…) : « @gestiolabs336/ui/blocks/<bloc> »
                                 Chaque dossier est un point d’entrée « @gestiolabs336/ui/<dossier> »
                                 (ng-package.json + public-api.ts)
@@ -160,43 +161,46 @@ export class ClientForm {
 }
 ```
 
-| Composant            | Sélecteur / API                                                                                                 |
-| -------------------- | --------------------------------------------------------------------------------------------------------------- |
-| Bouton               | `button[gestioButton]`, `a[gestioButton]`                                                                       |
-| Champ de saisie      | `gestio-input` (ControlValueAccessor ; `number \| null` si `type="number"`)                                     |
-| Zone de texte        | `gestio-textarea` (ControlValueAccessor)                                                                        |
-| Case à cocher        | `gestio-checkbox` (ControlValueAccessor booléen, `[(checked)]`)                                                 |
-| Sélecteur            | `gestio-select` (select natif, type string/number préservé)                                                     |
-| Carte                | `gestio-card` + `GESTIO_CARD_IMPORTS` (`[gestioCardActions]`, `[gestioCardFooter]`)                             |
-| Badge                | `gestio-badge`                                                                                                  |
-| Tableau              | `table[gestioTable]`, `gestio-table-container` (tableau HTML natif mis en forme)                                |
-| Mises en page        | `gestio-container`, `gestio-stack`, `gestio-grid` + `[gestioGridSpan]`, `gestio-app-shell`, `GestioBreakpoints` |
-| Datagrid             | `gestio-datagrid` + `ng-template[gestioCell]` (tri, recherche, pagination, sélection)                           |
-| Modale               | `GestioDialogService`, `gestio-dialog` + `GESTIO_DIALOG_IMPORTS`                                                |
-| Notifications        | `GestioToastService`, `gestio-toaster`, `provideGestioToast()`                                                  |
-| Onglets              | `gestio-tabs` / `gestio-tab`                                                                                    |
-| Boutons radio        | `gestio-radio-group` + `gestio-radio` (ControlValueAccessor, valeur de tout type)                               |
-| Interrupteur         | `gestio-switch` (`role="switch"`, ControlValueAccessor booléen)                                                 |
-| Champ natif          | `gestio-form-field` + `[gestioFieldControl]` (libellé, aide, erreur autour d’un `input type="date"`…)           |
-| Alerte               | `gestio-alert` (+ `[gestioAlertActions]`)                                                                       |
-| Pagination           | `gestio-pagination` (numéros ou mode compact, taille de page)                                                   |
-| Menu déroulant       | `[gestioMenuTriggerFor]`, `gestio-menu`, `[gestioMenuItem]`, `gestio-menu-divider` (CDK Menu)                   |
-| Info-bulle           | `[gestioTooltip]`                                                                                               |
-| Chargement           | `gestio-skeleton`, `gestio-spinner`                                                                             |
-| Accordéon            | `gestio-accordion` + `gestio-accordion-item` (CDK Accordion)                                                    |
-| Fil d’Ariane         | `gestio-breadcrumb` + `gestio-breadcrumb-entry`, `a[gestioBreadcrumbLink]`                                      |
-| Avatar               | `gestio-avatar`, `gestio-avatar-group`                                                                          |
-| Puces                | `gestio-chip`, `gestio-chip-input` (ControlValueAccessor `string[]`)                                            |
-| Liste avec recherche | `gestio-combobox` (filtrage, sélection multiple, recherche serveur)                                             |
-| Sélecteur de date    | `gestio-date-picker` (saisie + calendrier surgissant, date ou plage)                                            |
-| Curseur              | `gestio-slider` (valeur ou plage, ControlValueAccessor)                                                         |
-| Contrôle segmenté    | `gestio-segmented-control` + `gestio-segment`                                                                   |
-| Progression          | `gestio-progress-bar`, `gestio-progress-circle`                                                                 |
-| Étapes               | `gestio-stepper` + `gestio-step`, `button[gestioStepperNext]`                                                   |
-| Dépôt de fichiers    | `gestio-file-upload` (ControlValueAccessor `File[]`)                                                            |
-| Fenêtre surgissante  | `[gestioPopoverTrigger]`                                                                                        |
-| Panneau latéral      | `gestio-drawer`, `GestioDrawerService`                                                                          |
-| Onde de pression     | `[gestioRipple]` (active avec le style Material)                                                                |
+| Composant            | Sélecteur / API                                                                                                   |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Bouton               | `button[gestioButton]`, `a[gestioButton]`                                                                         |
+| Champ de saisie      | `gestio-input` (ControlValueAccessor ; `number \| null` si `type="number"`)                                       |
+| Zone de texte        | `gestio-textarea` (ControlValueAccessor)                                                                          |
+| Case à cocher        | `gestio-checkbox` (ControlValueAccessor booléen, `[(checked)]`)                                                   |
+| Sélecteur            | `gestio-select` (select natif, type string/number préservé)                                                       |
+| Carte                | `gestio-card` + `GESTIO_CARD_IMPORTS` (`[gestioCardActions]`, `[gestioCardFooter]`)                               |
+| Badge                | `gestio-badge`                                                                                                    |
+| Tableau              | `table[gestioTable]`, `gestio-table-container` (tableau HTML natif mis en forme)                                  |
+| Mises en page        | `gestio-container`, `gestio-stack`, `gestio-grid` + `[gestioGridSpan]`, `gestio-app-shell`, `GestioBreakpoints`   |
+| Layouts              | `gestio-sidebar-layout` (menu latéral), `gestio-rail-layout` (menu vertical), `gestio-topnav-layout` (horizontal) |
+| Barre de navigation  | `gestio-navbar` (marque, menu replié en panneau sur mobile, actions, ton inverse)                                 |
+| Menu de navigation   | `nav[gestioNavmenu]`, `a[gestioNavItem]`, `gestio-nav-group`, `gestio-nav-submenu` (vertical, horizontal, rail)   |
+| Datagrid             | `gestio-datagrid` + `ng-template[gestioCell]` (tri, recherche, pagination, sélection)                             |
+| Modale               | `GestioDialogService`, `gestio-dialog` + `GESTIO_DIALOG_IMPORTS`                                                  |
+| Notifications        | `GestioToastService`, `gestio-toaster`, `provideGestioToast()`                                                    |
+| Onglets              | `gestio-tabs` / `gestio-tab`                                                                                      |
+| Boutons radio        | `gestio-radio-group` + `gestio-radio` (ControlValueAccessor, valeur de tout type)                                 |
+| Interrupteur         | `gestio-switch` (`role="switch"`, ControlValueAccessor booléen)                                                   |
+| Champ natif          | `gestio-form-field` + `[gestioFieldControl]` (libellé, aide, erreur autour d’un `input type="date"`…)             |
+| Alerte               | `gestio-alert` (+ `[gestioAlertActions]`)                                                                         |
+| Pagination           | `gestio-pagination` (numéros ou mode compact, taille de page)                                                     |
+| Menu déroulant       | `[gestioMenuTriggerFor]`, `gestio-menu`, `[gestioMenuItem]`, `gestio-menu-divider` (CDK Menu)                     |
+| Info-bulle           | `[gestioTooltip]`                                                                                                 |
+| Chargement           | `gestio-skeleton`, `gestio-spinner`                                                                               |
+| Accordéon            | `gestio-accordion` + `gestio-accordion-item` (CDK Accordion)                                                      |
+| Fil d’Ariane         | `gestio-breadcrumb` + `gestio-breadcrumb-entry`, `a[gestioBreadcrumbLink]`                                        |
+| Avatar               | `gestio-avatar`, `gestio-avatar-group`                                                                            |
+| Puces                | `gestio-chip`, `gestio-chip-input` (ControlValueAccessor `string[]`)                                              |
+| Liste avec recherche | `gestio-combobox` (filtrage, sélection multiple, recherche serveur)                                               |
+| Sélecteur de date    | `gestio-date-picker` (saisie + calendrier surgissant, date ou plage)                                              |
+| Curseur              | `gestio-slider` (valeur ou plage, ControlValueAccessor)                                                           |
+| Contrôle segmenté    | `gestio-segmented-control` + `gestio-segment`                                                                     |
+| Progression          | `gestio-progress-bar`, `gestio-progress-circle`                                                                   |
+| Étapes               | `gestio-stepper` + `gestio-step`, `button[gestioStepperNext]`                                                     |
+| Dépôt de fichiers    | `gestio-file-upload` (ControlValueAccessor `File[]`)                                                              |
+| Fenêtre surgissante  | `[gestioPopoverTrigger]`                                                                                          |
+| Panneau latéral      | `gestio-drawer`, `GestioDrawerService`                                                                            |
+| Onde de pression     | `[gestioRipple]` (active avec le style Material)                                                                  |
 
 Chaque composant s’importe depuis son point d’entrée (`@gestiolabs336/ui/<dossier>`, voir
 « Structure »). Les champs acceptent Reactive Forms, `ngModel` et Signal Forms (`[formField]`).
@@ -283,6 +287,10 @@ Les entrées responsives acceptent une valeur fixe ou un objet par point de rupt
 - `gestio-app-shell` (en-tête, barre latérale, `<main>`) réagit à la fenêtre : barre latérale fixe
   à partir de `lg`, tiroir accessible en dessous (focus, Échap, fond, contenu inerte). Le
   showcase l’utilise comme coque.
+- Layouts de navigation : `gestio-sidebar-layout` (barre latérale large, réductible en rail),
+  `gestio-rail-layout` (rail d’icônes, libellés en bulle) et `gestio-topnav-layout` (menu dans la
+  `gestio-navbar`). Sous `lg`, les menus verticaux deviennent un tiroir ouvert par la navbar.
+  Exemples plein écran dans le showcase (page « Mises en page »).
 - `inject(GestioBreakpoints).md()` … pour adapter un comportement en TypeScript (`false` en SSR).
 
 ### 8. Datagrid
@@ -385,7 +393,7 @@ Familles de tokens : couleurs (`--gestio-color-*`), typographie (`--gestio-font-
    `core/navigation.ts`. Les extraits de code doivent refléter l’API réelle.
 6. `npm run build && npm test`.
 
-## Limites connues (v0.5)
+## Limites connues (v0.6)
 
 - `gestio-select` reste un select natif : pour la recherche ou la sélection multiple, utiliser
   `gestio-combobox`. Pas de groupes d’options.
@@ -406,6 +414,9 @@ Familles de tokens : couleurs (`--gestio-color-*`), typographie (`--gestio-font-
   ne sont pas atteignables avant la fermeture de la modale.
 - Les onglets utilisent l’activation automatique ; les panneaux inactifs restent instanciés
   (masqués par `hidden`).
+- Menu de navigation : sous-menus sur un seul niveau ; pas de menu « Plus » pour les liens
+  horizontaux qui ne tiennent pas (choisir `collapseBelow`). En mode rail, les bulles et
+  panneaux latéraux sont positionnés à l’ouverture et se ferment au redimensionnement.
 - Libellés internes en français par défaut (« Fermer », « Afficher le mot de passe »…) ;
   surchargeables par des entrées dédiées, sans système d’i18n intégré.
 - Signal Forms : les champs passent par leur ControlValueAccessor (`[formField]` les pilote,

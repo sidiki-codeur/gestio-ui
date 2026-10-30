@@ -37,6 +37,8 @@ export const NAVIGATION: readonly NavSection[] = [
       { path: '/composants/pagination', label: 'Pagination' },
       { path: '/composants/modale', label: 'Modale' },
       { path: '/composants/menu', label: 'Menu déroulant' },
+      { path: '/composants/barre-de-navigation', label: 'Barre de navigation' },
+      { path: '/composants/menu-de-navigation', label: 'Menu de navigation' },
       { path: '/composants/notifications', label: 'Notifications' },
       { path: '/composants/info-bulle', label: 'Info-bulle' },
       { path: '/composants/chargement', label: 'Skeleton et spinner' },

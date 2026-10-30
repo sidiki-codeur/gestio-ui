@@ -1,71 +1,76 @@
-<gestio-app-shell [(sidebarOpen)]="menuOpen">
-  <div gestioShellHeader class="sc-header">
-    <a class="sc-brand" routerLink="/">
-      <img class="sc-brand__mark" ngSrc="logo.svg" alt="" width="30" height="30" priority />
-      <span class="sc-brand__name">Gestio UI</span>
-    </a>
-    <gestio-badge variant="primary" size="sm" class="sc-header__version">v0.5</gestio-badge>
+@if (fullPage()) {
+  <!-- Exemple plein écran : la page fournit sa propre coque. -->
+  <router-outlet />
+} @else {
+  <gestio-app-shell [(sidebarOpen)]="menuOpen">
+    <div gestioShellHeader class="sc-header">
+      <a class="sc-brand" routerLink="/">
+        <img class="sc-brand__mark" ngSrc="logo.svg" alt="" width="30" height="30" priority />
+        <span class="sc-brand__name">Gestio UI</span>
+      </a>
+      <gestio-badge variant="primary" size="sm" class="sc-header__version">v0.6</gestio-badge>
 
-    <button
-      type="button"
-      class="sc-theme-toggle sc-design-toggle"
-      [attr.aria-pressed]="design.design() === 'material'"
-      (click)="design.toggle()"
-    >
-      <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-        <circle cx="6" cy="6" r="3" />
-        <rect x="11" y="3" width="6" height="6" rx="1.5" />
-        <path d="M3 17l3-5 3 5zM11 11h6v6h-6z" />
-      </svg>
-      <span class="sc-theme-toggle__label">Style Material</span>
-    </button>
+      <button
+        type="button"
+        class="sc-theme-toggle sc-design-toggle"
+        [attr.aria-pressed]="design.design() === 'material'"
+        (click)="design.toggle()"
+      >
+        <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+          <circle cx="6" cy="6" r="3" />
+          <rect x="11" y="3" width="6" height="6" rx="1.5" />
+          <path d="M3 17l3-5 3 5zM11 11h6v6h-6z" />
+        </svg>
+        <span class="sc-theme-toggle__label">Style Material</span>
+      </button>
 
-    <button
-      type="button"
-      class="sc-theme-toggle"
-      [attr.aria-pressed]="theme.theme() === 'dark'"
-      (click)="theme.toggle()"
-    >
-      <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-        @if (theme.theme() === 'dark') {
-          <path d="M16.5 12.5A7 7 0 0 1 7.5 3.5a7 7 0 1 0 9 9z" />
-        } @else {
-          <circle cx="10" cy="10" r="3.5" />
-          <path
-            d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"
-          />
-        }
-      </svg>
-      <span class="sc-theme-toggle__label">Mode sombre</span>
-    </button>
-  </div>
-
-  <nav gestioShellSidebar class="sc-nav" aria-label="Navigation principale">
-    @for (section of navigation; track section.title) {
-      <div class="sc-nav__section">
-        <h2 class="sc-nav__title">{{ section.title }}</h2>
-        <ul class="sc-nav__list">
-          @for (item of section.items; track item.path) {
-            <li>
-              <a
-                class="sc-nav__link"
-                [routerLink]="item.path"
-                routerLinkActive="is-active"
-                ariaCurrentWhenActive="page"
-                [routerLinkActiveOptions]="{ exact: true }"
-              >
-                {{ item.label }}
-              </a>
-            </li>
+      <button
+        type="button"
+        class="sc-theme-toggle"
+        [attr.aria-pressed]="theme.theme() === 'dark'"
+        (click)="theme.toggle()"
+      >
+        <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+          @if (theme.theme() === 'dark') {
+            <path d="M16.5 12.5A7 7 0 0 1 7.5 3.5a7 7 0 1 0 9 9z" />
+          } @else {
+            <circle cx="10" cy="10" r="3.5" />
+            <path
+              d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"
+            />
           }
-        </ul>
-      </div>
-    }
-  </nav>
+        </svg>
+        <span class="sc-theme-toggle__label">Mode sombre</span>
+      </button>
+    </div>
 
-  <div class="sc-main">
-    <router-outlet />
-  </div>
-</gestio-app-shell>
+    <nav gestioShellSidebar class="sc-nav" aria-label="Navigation principale">
+      @for (section of navigation; track section.title) {
+        <div class="sc-nav__section">
+          <h2 class="sc-nav__title">{{ section.title }}</h2>
+          <ul class="sc-nav__list">
+            @for (item of section.items; track item.path) {
+              <li>
+                <a
+                  class="sc-nav__link"
+                  [routerLink]="item.path"
+                  routerLinkActive="is-active"
+                  ariaCurrentWhenActive="page"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                >
+                  {{ item.label }}
+                </a>
+              </li>
+            }
+          </ul>
+        </div>
+      }
+    </nav>
+
+    <div class="sc-main">
+      <router-outlet />
+    </div>
+  </gestio-app-shell>
+}
 
 <gestio-toaster />

@@ -106,6 +106,15 @@ export class GestioAppShell {
     if (restoreFocus) this.toggleButton()?.nativeElement.focus();
   }
 
+  /**
+   * Lien d'évitement : focus direct sur le contenu. Un simple « #id » serait
+   * résolu par rapport à <base href> et quitterait la page courante.
+   */
+  protected skipToMain(event: Event, main: HTMLElement): void {
+    event.preventDefault();
+    main.focus();
+  }
+
   protected onEscape(): void {
     if (this.drawerOpen()) this.closeSidebar(true);
   }

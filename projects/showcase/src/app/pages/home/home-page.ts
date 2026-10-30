@@ -20,7 +20,7 @@ import { PageHeader } from '../../shared/page-header';
     PageHeader,
   ],
   template: `
-    <sc-page-header heading="Gestio UI" eyebrow="Version 0.5">
+    <sc-page-header heading="Gestio UI" eyebrow="Version 0.6">
       Une bibliothèque de composants Angular sobre et accessible, pensée pour les tableaux de bord,
       les logiciels de gestion et les interfaces d’administration.
     </sc-page-header>
@@ -97,7 +97,7 @@ import { PageHeader } from '../../shared/page-header';
     </section>
 
     <section class="sc-section" aria-labelledby="home-contenu">
-      <h2 id="home-contenu">Contenu de la version 0.5</h2>
+      <h2 id="home-contenu">Contenu de la version 0.6</h2>
       <div class="sc-row">
         @for (name of components; track name) {
           <gestio-badge variant="primary">{{ name }}</gestio-badge>
@@ -172,6 +172,9 @@ export class HomePage {
     'Sélecteur de date',
     'Fenêtre surgissante',
     'Panneau latéral',
+    'Barre de navigation',
+    'Menu de navigation',
+    'Layouts : menu latéral, menu vertical, menu horizontal',
     'Mises en page',
     'Onde de pression (ripple)',
     'Blocs : authentification, calendrier, e-commerce, tableau de bord, graphiques, kanban, palette de commandes, notifications, pages d’erreur',

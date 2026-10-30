@@ -1,0 +1,259 @@
+@use '../core/field' as field;
+
+// Styles communs à gestio-sidebar-layout, gestio-rail-layout et gestio-topnav-layout.
+
+:host {
+  --_side-width: 16rem;
+  --_rail-width: 4.5rem;
+
+  display: block;
+  min-height: 100dvh;
+  background: var(--gestio-color-background);
+  color: var(--gestio-color-text);
+  font-family: var(--gestio-font-sans);
+}
+
+.gestio-nav-layout__skip {
+  position: absolute;
+  top: -100px;
+  left: var(--gestio-space-4);
+  z-index: calc(var(--gestio-z-modal) + 1);
+  padding: var(--gestio-space-2) var(--gestio-space-4);
+  border-radius: var(--gestio-radius-md);
+  background: var(--gestio-color-primary);
+  color: var(--gestio-color-on-primary);
+  font-weight: var(--gestio-font-weight-semibold);
+
+  &:focus {
+    top: var(--gestio-space-2);
+  }
+}
+
+.gestio-nav-layout__main {
+  flex: 1 0 auto;
+  min-width: 0;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+/* ---- Menu horizontal ---- */
+.gestio-topnav-layout__header.is-sticky {
+  position: sticky;
+  top: 0;
+  z-index: var(--gestio-z-sticky);
+}
+
+:host(.gestio-topnav-layout) {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- Menu latéral et rail ---- */
+.gestio-nav-layout__side {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border-inline-end: var(--gestio-border-width) solid var(--gestio-color-border);
+  background: var(--gestio-color-surface);
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.gestio-nav-layout__brand {
+  display: flex;
+  flex: none;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 4rem;
+  padding: var(--gestio-space-2) var(--gestio-space-4);
+  overflow: hidden;
+  border-block-end: var(--gestio-border-width) solid var(--gestio-color-border);
+
+  &:empty {
+    display: none;
+  }
+}
+
+.gestio-nav-layout__nav {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: var(--gestio-space-3);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.gestio-nav-layout__side-footer {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: var(--gestio-space-2);
+  padding: var(--gestio-space-3);
+  border-block-start: var(--gestio-border-width) solid var(--gestio-color-border);
+
+  &:empty {
+    display: none;
+  }
+}
+
+.gestio-nav-layout__collapse,
+.gestio-nav-layout__toggle {
+  display: flex;
+  gap: var(--gestio-space-3);
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 2.5rem;
+  padding: var(--gestio-space-2) var(--gestio-space-3);
+  border: 0;
+  border-radius: var(--gestio-radius-md);
+  background: transparent;
+  color: var(--gestio-color-text-muted);
+  font: inherit;
+  font-weight: var(--gestio-font-weight-medium);
+  cursor: pointer;
+
+  svg {
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  &:hover {
+    background: var(--gestio-color-surface-hover);
+    color: var(--gestio-color-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--gestio-color-focus-ring);
+    outline-offset: -2px;
+  }
+}
+
+.gestio-nav-layout__toggle {
+  flex: none;
+  justify-content: center;
+  width: 2.5rem;
+  margin-inline-start: var(--gestio-space-3);
+  padding: 0;
+}
+
+.gestio-nav-layout__body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 100dvh;
+}
+
+.gestio-nav-layout__header {
+  position: sticky;
+  top: 0;
+  z-index: var(--gestio-z-sticky);
+  display: flex;
+  align-items: center;
+  background: var(--gestio-color-surface);
+
+  /* Ni bouton ni contenu : l'en-tête disparaît. */
+  &:not(:has(> button)):has(> .gestio-nav-layout__header-content:empty) {
+    display: none;
+  }
+}
+
+.gestio-nav-layout__header-content {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+}
+
+.gestio-nav-layout__sr-only {
+  @include field.sr-only;
+}
+
+/* Rail : icônes centrées, libellé du bouton de réduction masqué. */
+:host(.gestio-nav-layout--collapsed) {
+  .gestio-nav-layout__brand {
+    justify-content: center;
+    padding-inline: var(--gestio-space-2);
+  }
+
+  .gestio-nav-layout__nav,
+  .gestio-nav-layout__side-footer {
+    padding-inline: var(--gestio-space-2);
+  }
+
+  .gestio-nav-layout__collapse {
+    justify-content: center;
+    padding-inline: 0;
+  }
+}
+
+/* Points de rupture : une règle par valeur de [breakpoint] (les media queries n'acceptent pas de variable). */
+@each $name, $width in (md: 768px, lg: 1024px) {
+  /* Petits écrans : tiroir. */
+  @media (max-width: ($width - 0.02px)) {
+    :host(.gestio-nav-layout--bp-#{$name}) {
+      .gestio-nav-layout__side {
+        position: fixed;
+        inset-block: 0;
+        inset-inline-start: 0;
+        z-index: var(--gestio-z-modal);
+        display: none;
+        width: min(18rem, 85vw);
+        box-shadow: var(--gestio-shadow-lg);
+      }
+
+      .gestio-nav-layout__backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: var(--gestio-z-overlay);
+        background: var(--gestio-color-backdrop);
+      }
+    }
+
+    :host(.gestio-nav-layout--bp-#{$name}.gestio-nav-layout--drawer-open) .gestio-nav-layout__side {
+      display: flex;
+      animation: gestio-nav-layout-drawer var(--gestio-duration-slow) var(--gestio-easing-standard);
+    }
+  }
+
+  /* Grands écrans : menu fixe à gauche. */
+  @media (min-width: $width) {
+    :host(.gestio-nav-layout--bp-#{$name}) {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+
+      .gestio-nav-layout__side {
+        position: sticky;
+        top: 0;
+        width: var(--_side-width);
+        height: 100dvh;
+        transition: width var(--gestio-duration-normal) var(--gestio-easing-standard);
+      }
+    }
+
+    :host(.gestio-nav-layout--bp-#{$name}.gestio-nav-layout--collapsed) .gestio-nav-layout__side {
+      width: var(--_rail-width);
+    }
+  }
+}
+
+@keyframes gestio-nav-layout-drawer {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gestio-nav-layout__side {
+    transition: none !important;
+    animation: none !important;
+  }
+}

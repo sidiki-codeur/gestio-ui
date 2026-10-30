@@ -1,0 +1,53 @@
+<div class="gestio-navbar__bar" [attr.data-gestio-theme]="theme()">
+  @if (layout?.drawerMode()) {
+    <button
+      type="button"
+      class="gestio-navbar__icon-button"
+      [attr.aria-expanded]="layout!.drawerOpen()"
+      [attr.aria-controls]="layout!.drawerId"
+      (click)="layout!.toggleDrawer()"
+    >
+      <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+        <path d="M3 6h14M3 10h14M3 14h14" />
+      </svg>
+      <span class="gestio-navbar__sr-only">{{ layout!.menuLabel() }}</span>
+    </button>
+  }
+
+  <div class="gestio-navbar__brand"><ng-content select="[gestioNavbarBrand]" /></div>
+
+  <div
+    #menuSlot
+    class="gestio-navbar__menu"
+    [id]="menuId"
+    [class.is-compact]="compact()"
+    [class.is-open]="menuOpen()"
+    (click)="onMenuClick($event)"
+  >
+    <ng-content select="[gestioNavbarMenu]" />
+  </div>
+
+  <div class="gestio-navbar__content"><ng-content /></div>
+
+  <div class="gestio-navbar__end"><ng-content select="[gestioNavbarEnd]" /></div>
+
+  @if (compact()) {
+    <button
+      #menuToggle
+      type="button"
+      class="gestio-navbar__icon-button"
+      [attr.aria-expanded]="menuOpen()"
+      [attr.aria-controls]="menuId"
+      (click)="toggleMenu()"
+    >
+      <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+        @if (menuOpen()) {
+          <path d="M5 5l10 10M15 5L5 15" />
+        } @else {
+          <path d="M3 6h14M3 10h14M3 14h14" />
+        }
+      </svg>
+      <span class="gestio-navbar__sr-only">{{ menuLabel() }}</span>
+    </button>
+  }
+</div>

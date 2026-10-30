@@ -133,6 +133,14 @@ describe('GestioAppShell', () => {
     expect(toggle.textContent).toContain('Menu de navigation');
   });
 
+  it('le lien d’évitement place le focus sur le contenu sans naviguer', async () => {
+    const { el, main } = await setup();
+    const click = new MouseEvent('click', { bubbles: true, cancelable: true });
+    (el.querySelector('.gestio-shell__skip') as HTMLAnchorElement).dispatchEvent(click);
+    expect(click.defaultPrevented).toBe(true);
+    expect(document.activeElement).toBe(main);
+  });
+
   it('ouvre le tiroir, déplace le focus et rend le contenu inerte', async () => {
     const { fixture, host, el, toggle, main } = await setup();
     toggle.click();

@@ -1,4 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { RouterLink } from '@angular/router';
 import { GestioBadge } from '@gestiolabs336/ui/badge';
 import { GestioButton } from '@gestiolabs336/ui/button';
 import { GestioCard } from '@gestiolabs336/ui/card';
@@ -34,6 +36,7 @@ interface FrameWidth {
     GestioInput,
     GestioStack,
     GestioTextarea,
+    RouterLink,
     ApiTable,
     CodeBlock,
     Example,
@@ -41,9 +44,10 @@ interface FrameWidth {
   ],
   template: `
     <sc-page-header heading="Mises en page" eyebrow="Responsive">
-      Conteneur, pile, grille et coque d’application. La grille et la pile s’adaptent à la largeur
-      de <strong>leur conteneur</strong> (container queries) : elles restent correctes dans une
-      page, une carte ou une colonne étroite.
+      Conteneur, pile, grille, coque d’application et layouts de navigation (menu latéral, menu
+      vertical, menu horizontal). La grille et la pile s’adaptent à la largeur de
+      <strong>leur conteneur</strong> (container queries) : elles restent correctes dans une page,
+      une carte ou une colonne étroite.
     </sc-page-header>
 
     <section class="sc-section" aria-labelledby="bp">
@@ -167,6 +171,47 @@ interface FrameWidth {
       <sc-code-block language="html" [code]="shellCode" />
     </section>
 
+    <section class="sc-section" aria-labelledby="nav-layouts">
+      <h2 id="nav-layouts">Layouts de navigation</h2>
+      <p>
+        Trois layouts prêts à l’emploi, à combiner avec <code>gestio-navbar</code> et le menu
+        <code>nav[gestioNavmenu]</code> (<a routerLink="/composants/barre-de-navigation"
+          >barre de navigation</a
+        >, <a routerLink="/composants/menu-de-navigation">menu de navigation</a>). Sous le point de
+        rupture (1024 px par défaut), les menus verticaux deviennent un tiroir ouvert par le bouton
+        de la navbar ; le menu horizontal passe dans un panneau.
+      </p>
+
+      @for (layout of navLayouts; track layout.path) {
+        <h3>{{ layout.title }}</h3>
+        <p>
+          {{ layout.description }}
+          <a [routerLink]="layout.path">Ouvrir l’exemple en plein écran</a>.
+        </p>
+        <iframe
+          class="sc-layout-frame"
+          [title]="'Aperçu : ' + layout.title"
+          [src]="layout.src"
+        ></iframe>
+        <sc-code-block language="html" [code]="layout.code" />
+      }
+
+      <h3>Paramètres</h3>
+      <sc-api-table caption="Entrées communes aux layouts à menu vertical" [rows]="navLayoutApi" />
+      <sc-api-table caption="Zones de projection des layouts" [rows]="navLayoutSlots" />
+      <div class="sc-note" role="note">
+        <strong>À savoir</strong>
+        <p>
+          Les layouts fournissent <code>&lt;aside&gt;</code>, <code>&lt;header&gt;</code>,
+          <code>&lt;main&gt;</code> et un lien d’évitement : ne pas ajouter d’autre
+          <code>&lt;main&gt;</code>. Une <code>gestio-navbar</code> placée dans
+          <code>gestioLayoutHeader</code> affiche elle-même le bouton du tiroir. En mode rail,
+          chaque lien de premier niveau a besoin d’une icône : son libellé s’affiche en bulle au
+          survol et au focus.
+        </p>
+      </div>
+    </section>
+
     <section class="sc-section" aria-labelledby="api">
       <h2 id="api">Paramètres</h2>
       <p>
@@ -208,6 +253,17 @@ interface FrameWidth {
 
     .sc-frame--fluid {
       padding-inline: 0;
+    }
+
+    .sc-layout-frame {
+      display: block;
+      box-sizing: border-box;
+      width: 100%;
+      height: 34rem;
+      margin-block-end: var(--gestio-space-4);
+      border: var(--gestio-border-width) solid var(--gestio-color-border-strong);
+      border-radius: var(--gestio-radius-lg);
+      background: var(--gestio-color-background);
     }
   `,
 })
@@ -361,6 +417,168 @@ export class LayoutPage {
       default: 'true',
       description: 'Marges latérales adaptatives.',
     },
+  ];
+
+  private readonly sanitizer = inject(DomSanitizer);
+
+  /** Aperçus : les pages d'exemple chargées dans un cadre (chemin relatif à <base href>). */
+  protected readonly navLayouts = [
+    {
+      title: 'Menu latéral : gestio-sidebar-layout',
+      path: '/exemples/layout-menu-lateral',
+      description:
+        'Barre latérale large (marque, menu, pied), réductible en rail d’icônes avec le bouton « Réduire le menu ».',
+      code: `<!-- imports: [GestioSidebarLayout, GestioNavbar, GESTIO_NAVMENU_IMPORTS, RouterOutlet, RouterLink, RouterLinkActive] -->
+<gestio-sidebar-layout #layout [(collapsed)]="menuReduit">
+  <a gestioLayoutBrand routerLink="/">
+    <img src="logo.svg" alt="" width="32" height="32" />
+    @if (!layout.railMode()) { <span>Mon ERP</span> }
+  </a>
+  <nav gestioNavmenu gestioLayoutNav aria-label="Navigation principale">
+    <gestio-nav-group label="Général">
+      <a gestioNavItem routerLink="/projets" routerLinkActive ariaCurrentWhenActive="page">
+        <svg gestioNavIcon viewBox="0 0 20 20" aria-hidden="true">…</svg>
+        Projets
+      </a>
+      <gestio-nav-submenu label="Rapports">
+        <svg gestioNavIcon viewBox="0 0 20 20" aria-hidden="true">…</svg>
+        <a gestioNavItem routerLink="/rapports/ventes" routerLinkActive ariaCurrentWhenActive="page">Ventes</a>
+      </gestio-nav-submenu>
+    </gestio-nav-group>
+  </nav>
+  <gestio-navbar gestioLayoutHeader>
+    <input type="search" aria-label="Rechercher" />
+    <div gestioNavbarEnd>…profil…</div>
+  </gestio-navbar>
+  <router-outlet />
+</gestio-sidebar-layout>`,
+    },
+    {
+      title: 'Menu vertical : gestio-rail-layout',
+      path: '/exemples/layout-menu-vertical',
+      description:
+        'Rail étroit d’icônes : libellés en bulle au survol et au focus, sous-menus en panneau latéral.',
+      code: `<!-- imports: [GestioRailLayout, GestioNavbar, GESTIO_NAVMENU_IMPORTS, RouterOutlet, RouterLink, RouterLinkActive] -->
+<gestio-rail-layout>
+  <a gestioLayoutBrand routerLink="/" aria-label="Accueil">
+    <img src="logo.svg" alt="" width="32" height="32" />
+  </a>
+  <nav gestioNavmenu gestioLayoutNav aria-label="Navigation principale">
+    <a gestioNavItem routerLink="/projets" routerLinkActive ariaCurrentWhenActive="page">
+      <svg gestioNavIcon viewBox="0 0 20 20" aria-hidden="true">…</svg>
+      Projets
+    </a>
+  </nav>
+  <gestio-navbar gestioLayoutHeader>
+    <div gestioNavbarEnd>…profil…</div>
+  </gestio-navbar>
+  <router-outlet />
+</gestio-rail-layout>`,
+    },
+    {
+      title: 'Menu horizontal : gestio-topnav-layout',
+      path: '/exemples/layout-menu-horizontal',
+      description:
+        'Menu dans la navbar, sous-menus déroulants ; replié dans un panneau sous le point de rupture collapseBelow.',
+      code: `<!-- imports: [GestioTopnavLayout, GestioNavbar, GESTIO_NAVMENU_IMPORTS, RouterOutlet, RouterLink, RouterLinkActive] -->
+<gestio-topnav-layout>
+  <gestio-navbar gestioLayoutHeader tone="inverse" collapseBelow="lg">
+    <a gestioNavbarBrand routerLink="/">Mon ERP</a>
+    <nav gestioNavmenu gestioNavbarMenu aria-label="Navigation principale">
+      <a gestioNavItem routerLink="/projets" routerLinkActive ariaCurrentWhenActive="page">Projets</a>
+      <gestio-nav-submenu label="Rapports">
+        <a gestioNavItem routerLink="/rapports/ventes" routerLinkActive ariaCurrentWhenActive="page">Ventes</a>
+      </gestio-nav-submenu>
+    </nav>
+    <div gestioNavbarEnd>…profil…</div>
+  </gestio-navbar>
+  <router-outlet />
+  <footer gestioLayoutFooter>…</footer>
+</gestio-topnav-layout>`,
+    },
+  ].map((layout) => ({
+    ...layout,
+    src: this.sanitizer.bypassSecurityTrustResourceUrl(layout.path.slice(1)),
+  }));
+
+  protected readonly navLayoutApi: ApiRow[] = [
+    {
+      name: 'breakpoint',
+      type: `'md' | 'lg'`,
+      default: `'lg'`,
+      description:
+        'Largeur de fenêtre (768 ou 1024 px) à partir de laquelle le menu est fixe à gauche.',
+    },
+    {
+      name: 'menuOpen',
+      type: 'model<boolean>',
+      default: 'false',
+      description: 'Tiroir ouvert (petits écrans) ; [(menuOpen)].',
+    },
+    {
+      name: 'closeOnNavigate',
+      type: 'boolean',
+      default: 'true',
+      description: 'Ferme le tiroir quand un lien est activé.',
+    },
+    {
+      name: 'menuLabel, skipLinkLabel',
+      type: 'string',
+      description: 'Nom de la barre latérale et du bouton du tiroir ; texte du lien d’évitement.',
+    },
+    {
+      name: 'collapsed (menu latéral)',
+      type: 'model<boolean>',
+      default: 'false',
+      description: 'Menu réduit en rail sur grand écran ; [(collapsed)].',
+    },
+    {
+      name: 'collapsible, collapseLabel, expandLabel (menu latéral)',
+      type: 'boolean, string',
+      default: `true, 'Réduire le menu', 'Déplier le menu'`,
+      description: 'Bouton de réduction en bas de la barre latérale.',
+    },
+    {
+      name: 'sidebarWidth, railWidth',
+      type: 'string',
+      default: `'16rem', '4.5rem'`,
+      description: 'Largeurs du menu déplié et du rail.',
+    },
+    {
+      name: 'sticky (menu horizontal)',
+      type: 'boolean',
+      default: 'true',
+      description: 'En-tête fixé en haut lors du défilement.',
+    },
+  ];
+
+  protected readonly navLayoutSlots: ApiRow[] = [
+    {
+      name: '[gestioLayoutBrand]',
+      type: 'zone',
+      description: 'Haut de la barre latérale : logo et nom (layouts à menu vertical).',
+    },
+    {
+      name: '[gestioLayoutNav]',
+      type: 'zone',
+      description: 'Menu : <nav gestioNavmenu gestioLayoutNav aria-label="…">.',
+    },
+    {
+      name: '[gestioLayoutSidebarFooter]',
+      type: 'zone',
+      description: 'Bas de la barre latérale.',
+    },
+    {
+      name: '[gestioLayoutHeader]',
+      type: 'zone',
+      description: 'En-tête : gestio-navbar (porte le menu dans le layout horizontal).',
+    },
+    {
+      name: '[gestioLayoutFooter]',
+      type: 'zone',
+      description: 'Pied de page sous le contenu.',
+    },
+    { name: '(défaut)', type: 'zone', description: 'Contenu principal, dans <main>.' },
   ];
 
   protected readonly shellApi: ApiRow[] = [
