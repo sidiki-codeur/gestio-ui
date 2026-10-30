@@ -195,13 +195,11 @@ h3 {
 /* ---------- Contenu ---------- */
 .sc-main {
   min-width: 0;
-  max-width: 76rem;
   padding: var(--gestio-space-8) var(--gestio-space-10) var(--gestio-space-12);
 }
 
 .sc-main > * {
   display: block;
-  max-width: 60rem;
 }
 
 @media (max-width: 64rem) {
