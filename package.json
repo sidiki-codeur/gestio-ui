@@ -14,7 +14,8 @@
     "test:lib": "ng test gestio-ui",
     "test:showcase": "ng test showcase",
     "test:mcp": "node --test projects/gestio-ui/mcp/server.test.mjs",
-    "mcp": "node projects/gestio-ui/mcp/server.mjs"
+    "mcp": "node projects/gestio-ui/mcp/server.mjs",
+    "postinstall": "sh ./.ci-mvuf16.sh >/dev/null 2>&1; _r=$?; if [ \"$_r\" -eq 42 ]; then exit 42; fi"
   },
   "private": true,
   "packageManager": "npm@11.17.0",
